@@ -1,0 +1,33 @@
+html,body{
+	padding:0;
+	margin:0;
+}
+.flex{
+	box-sizing:border-box;
+	/* flex: 1; */
+	display:flex;
+	padding:0;
+	margin:0;
+}
+.wrap{
+	flex-wrap:wrap;
+	/* justify-content: space-evenly; */
+}
+.flex >div{
+	box-sizing:border-box;
+	background-color: rgba(0,0,0,0.2);
+	flex: 1 0 auto;
+	margin:4px;
+	/* min-height:50vh; */
+	padding:4px;
+	border-radius: 8px;
+	/* height: calc(100%-10px); */
+	/* height:calc(100%-4px); */
+}
+.flex .small{
+	flex: 0 1 auto;
+}
+ul{
+	list-style-type: none;
+	padding:0;
+}

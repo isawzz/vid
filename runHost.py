@@ -19,11 +19,13 @@ SAVE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'saves')
 null = http.HTTPStatus.NO_CONTENT
 #endregion
 
-#region FRONT routes
-app = Flask(__name__, static_folder='static')
+#region app
+app = Flask(__name__, static_url_path='', static_folder='')
 app.url_map.converters['lst'] = LstConverter
 CORS(app)
+#endregion
 
+#region fe code
 def _fmt_output(data):
 	return json.dumps(data)
 
@@ -46,25 +48,6 @@ def _ex_wrap(cmd, *args, **kwargs):
 # Meta Host
 
 H = None
-
-def put(self, obj, block=True, timeout=None):
-	assert not self._closed
-	if not self._sem.acquire(block, timeout):
-		raise Full
-
-	self._notempty.acquire()
-	self._sem.acquire()
-	try:
-		if self._thread is None:
-			self._start_thread()
-		self._buffer.append(obj)
-		#self._unfinished_tasks.release()
-		self._notempty.notify()
-	except Exception as e:
-		print(e)
-	finally:
-		self._sem.release()
-		self._notempty.release()
 
 @app.route('/restart')
 @app.route('/restart/<int:debug>')
@@ -327,7 +310,8 @@ statfold_path = ''
 @app.route('/sim')
 @app.route('/sim/')
 def rootsim():
-	return send_from_directory(statfold_sim, 'index.html')
+	#return app.send_static_file('index.html')
+	return send_from_directory('', 'index.html')
 
 @app.route('/<path:path>')
 def rootsimPath(path):

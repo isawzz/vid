@@ -2,97 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fcf9bf12-3abd-4bdc-ba6f-ea1b8b40aa80" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/games/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/games/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/_rsg/s1_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/_rsg/s1_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1/phases/tic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/_rsg/s1_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/_rsg/s1_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/phases/tic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/_rsg/s1_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/_rsg/s1_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/phases/tic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/_rsg/s1_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/_rsg/s1_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/phases/tic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/_rsg/s1_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/_rsg/s1_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/phases/tic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/_rsg/empty_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/_rsg/empty_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/ai/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/ai/ops.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/ai/regular.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/config/rules.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/ops.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/empty/phases/examplePhase.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/_rsg/innovation_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/_rsg/innovation_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/innovation/ops.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/_rsg/s1_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/_rsg/s1_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/s1/phases/tic.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/_rsg/starter_ui.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/_rsg/starter_ui.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/info.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/starter/phases/phase1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/testing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/config/basics.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/objects.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/phases/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/phases/turn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runHost.py" beforeDir="false" afterPath="$PROJECT_DIR$/runHost.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,45 +94,49 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state width="528" height="918" key="GridCell.Tab.0.bottom" timestamp="1581391166145">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state x="484" y="58" key="CommitChangelistDialog2" timestamp="1581393005426">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.0.bottom/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state x="484" y="58" key="CommitChangelistDialog2/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393005426" />
+    <state width="528" height="920" key="GridCell.Tab.0.bottom" timestamp="1581393226201">
+      <screen x="0" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.0.bottom/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226201" />
     <state width="528" height="918" key="GridCell.Tab.0.bottom/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166145" />
-    <state width="528" height="918" key="GridCell.Tab.0.center" timestamp="1581391166144">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.0.center" timestamp="1581393226201">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.0.center/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.0.center/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226201" />
     <state width="528" height="918" key="GridCell.Tab.0.center/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166144" />
-    <state width="528" height="918" key="GridCell.Tab.0.left" timestamp="1581391166142">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.0.left" timestamp="1581393226200">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.0.left/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.0.left/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226200" />
     <state width="528" height="918" key="GridCell.Tab.0.left/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166142" />
-    <state width="528" height="918" key="GridCell.Tab.0.right" timestamp="1581391166145">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.0.right" timestamp="1581393226201">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.0.right/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.0.right/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226201" />
     <state width="528" height="918" key="GridCell.Tab.0.right/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166145" />
-    <state width="528" height="920" key="GridCell.Tab.1.bottom" timestamp="1581389917190">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.1.bottom" timestamp="1581393226109">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.1.bottom/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.bottom/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226109" />
     <state width="528" height="920" key="GridCell.Tab.1.bottom/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
-    <state width="528" height="920" key="GridCell.Tab.1.center" timestamp="1581389917190">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.1.center" timestamp="1581393226109">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.1.center/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.center/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226109" />
     <state width="528" height="920" key="GridCell.Tab.1.center/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
-    <state width="528" height="920" key="GridCell.Tab.1.left" timestamp="1581389917190">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.1.left" timestamp="1581393226108">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.1.left/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.left/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226108" />
     <state width="528" height="920" key="GridCell.Tab.1.left/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
-    <state width="528" height="920" key="GridCell.Tab.1.right" timestamp="1581389917190">
-      <screen x="1920" y="0" width="1858" height="1080" />
+    <state width="528" height="920" key="GridCell.Tab.1.right" timestamp="1581393226109">
+      <screen x="0" y="0" width="1858" height="1080" />
     </state>
-    <state width="528" height="920" key="GridCell.Tab.1.right/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.right/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581393226109" />
     <state width="528" height="920" key="GridCell.Tab.1.right/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
   </component>
   <component name="XDebuggerManager">

@@ -1,6 +1,6 @@
 games/saves/
 .git
-.gitignore
+#.gitignore
 __pycache__/
 .vscode/
 

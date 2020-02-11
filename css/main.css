@@ -24,7 +24,7 @@ html,body{
 	/* height: calc(100%-10px); */
 	/* height:calc(100%-4px); */
 }
-.flex .small{
+.flex .side{
 	flex: 0 1 auto;
 }
 ul{

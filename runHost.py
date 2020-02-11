@@ -310,13 +310,14 @@ statfold_path = ''
 @app.route('/sim')
 @app.route('/sim/')
 def rootsim():
-	#return app.send_static_file('index.html')
-	return send_from_directory('', 'index.html')
+	return app.send_static_file('index.html')
+	#return send_from_directory('', 'index.html')
 
 @app.route('/<path:path>')
 def rootsimPath(path):
-	res = send_from_directory('', path)
-	return send_from_directory('', path)
+	# res = send_from_directory('', path)
+	# return send_from_directory('', path)
+	return app.send_static_file(path)
 
 @app.route('/spec/<game>')
 def _rootsimPathSpec(game):

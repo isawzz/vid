@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fcf9bf12-3abd-4bdc-ba6f-ea1b8b40aa80" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/games/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/games/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/_rsg/s1_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/_rsg/s1_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1/phases/tic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/_rsg/s1_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/_rsg/s1_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_01/phases/tic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/_rsg/s1_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/_rsg/s1_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_02/phases/tic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/_rsg/s1_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/_rsg/s1_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_3_Players/phases/tic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/_rsg/s1_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/_rsg/s1_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/_tests/s1_configStride/phases/tic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/_rsg/empty_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/_rsg/empty_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/ai/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/ai/ops.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/ai/regular.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/config/rules.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/ops.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/empty/phases/examplePhase.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/_rsg/innovation_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/_rsg/innovation_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/innovation/ops.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/_rsg/s1_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/_rsg/s1_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/s1/phases/tic.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/_rsg/starter_ui.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/_rsg/starter_ui.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/info.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/starter/phases/phase1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/testing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/config/basics.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/objects.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/phases/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/games/tictactoe_old/phases/turn.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1UwEiLHW6lyoJhwK36risYawby4" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/exam/s1" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\D\a00\vid\exam\aristocracy" />
+      <recent name="C:\D\a00\vid\games" />
+      <recent name="C:\D\a00\pylibs\gsm\code\examples\innovation" />
+      <recent name="C:\D\a00\pylibs\gsm\code\examples" />
+      <recent name="C:\D\a00\pylibs\gsm\code\examples\bluff" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="runHost" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="vid" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/runHost.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.runHost" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fcf9bf12-3abd-4bdc-ba6f-ea1b8b40aa80" name="Default Changelist" comment="" />
+      <created>1576259385072</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1576259385072</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="528" height="918" key="GridCell.Tab.0.bottom" timestamp="1581391166145">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.0.bottom/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="918" key="GridCell.Tab.0.bottom/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166145" />
+    <state width="528" height="918" key="GridCell.Tab.0.center" timestamp="1581391166144">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.0.center/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="918" key="GridCell.Tab.0.center/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166144" />
+    <state width="528" height="918" key="GridCell.Tab.0.left" timestamp="1581391166142">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.0.left/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="918" key="GridCell.Tab.0.left/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166142" />
+    <state width="528" height="918" key="GridCell.Tab.0.right" timestamp="1581391166145">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.0.right/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="918" key="GridCell.Tab.0.right/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581391166145" />
+    <state width="528" height="920" key="GridCell.Tab.1.bottom" timestamp="1581389917190">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.1.bottom/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.bottom/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
+    <state width="528" height="920" key="GridCell.Tab.1.center" timestamp="1581389917190">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.1.center/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.center/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
+    <state width="528" height="920" key="GridCell.Tab.1.left" timestamp="1581389917190">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.1.left/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.left/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
+    <state width="528" height="920" key="GridCell.Tab.1.right" timestamp="1581389917190">
+      <screen x="1920" y="0" width="1858" height="1080" />
+    </state>
+    <state width="528" height="920" key="GridCell.Tab.1.right/0.0.1858.1080/1920.0.1858.1080@0.0.1858.1080" timestamp="1581383559626" />
+    <state width="528" height="920" key="GridCell.Tab.1.right/0.0.1858.1080/1920.0.1858.1080@1920.0.1858.1080" timestamp="1581389917190" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="player.hand" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

@@ -1,0 +1,5 @@
+games/saves/
+.git
+__pycache__/
+.vscode/
+

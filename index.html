@@ -7,6 +7,9 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link href="/css/main.css" rel="stylesheet">
 	<title>RSG</title>
+	<script src="/js/helpers.js"></script>
+	<script src="/js/helpersMore.js"></script>
+
 </head>
 
 <body>
@@ -26,8 +29,6 @@
 
 	<script>
 
-		function createNode(element) { return document.createElement(element); }
-		function append(parent, el) { return parent.appendChild(el); }
 
 		const ul = document.getElementById('authors'); // Get the list where we will place our authors
 		const url = 'https://randomuser.me/api/?results=30'; // Get 10 random users
@@ -55,8 +56,8 @@
 		const url1 = './js/helpers.js'
 
 		fetch(url1)
-			.then(resp => resp.text())
-			.then(txt => console.log(txt));
+			.then(resp => {console.log(resp.clone());resp.text();})
+			//.then(txt => console.log(txt));
 	</script>
 
 	<!-- <div id='rsg1' class='flexWrap'>

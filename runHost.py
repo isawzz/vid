@@ -23,6 +23,7 @@ null = http.HTTPStatus.NO_CONTENT
 app = Flask(__name__, static_url_path='', static_folder='')
 app.url_map.converters['lst'] = LstConverter
 CORS(app)
+
 #endregion
 
 #region fe code
@@ -34,14 +35,14 @@ def _ex_wrap(cmd, *args, **kwargs):
 		return cmd(*args, **kwargs)
 	except Exception as e:
 		if isinstance(e, gsm.signals.WrappedException):
-			msg = {'error':{'type':str(e.etype), 'msg':e.emsg}}
+			msg = {'error': {'type': str(e.etype), 'msg': e.emsg}}
 		else:
-		
+
 			msg = {
-				'error': {
-					'type': e.__class__.__name__ if '__name__' in e.__class__ else e.__class__,
-					'msg': ''.join(traceback.format_exception(*sys.exc_info())),
-				},
+			    'error': {
+			        'type': e.__class__.__name__ if '__name__' in e.__class__ else e.__class__,
+			        'msg': ''.join(traceback.format_exception(*sys.exc_info())),
+			    },
 			}
 		return _fmt_output(msg)
 
@@ -53,15 +54,15 @@ H = None
 @app.route('/restart/<int:debug>')
 def _hard_restart(address=None, debug=False, **settings):
 	global H
-	
-	address = 'http://localhost:5000' 
+
+	address = 'http://localhost:5000'
 
 	if address is None:
 		assert H is not None, 'must provide an address if no host is running'
 		address = H.address
-	
+
 	debug = bool(debug)
-	
+
 	H = gsm.Host(address, debug=debug, **settings)
 	return 'Host restarted (debug={})'.format(debug)
 
@@ -84,7 +85,6 @@ def _get_available_games():
 @app.route('/game/select/<name>')
 def _set_game(name):
 	return _ex_wrap(H.set_game, name)
-	
 
 @app.route('/game/players')
 def _get_available_players():
@@ -93,8 +93,7 @@ def _get_available_players():
 @app.route('/setting/<key>/<value>')
 def _setting(key, value):
 	return _ex_wrap(H.set_setting, key, value)
-	
-	
+
 @app.route('/del/setting/<key>')
 def _del_setting(key):
 	return _ex_wrap(H.del_setting, key)
@@ -107,21 +106,17 @@ def _clear_settings():
 def _update_settings():
 	settings = request.get_json(force=True)
 	return _ex_wrap(H.update_settings, settings)
-	
 
 # Managing clients
 
-@app.route('/add/client/<interface>/<lst:users>', methods=['POST']) # post data are the interface settings
-@app.route('/add/client/<lst:users>', methods=['POST']) # post data is the passive frontend address
+@app.route('/add/client/<interface>/<lst:users>', methods=['POST'])  # post data are the interface settings
+@app.route('/add/client/<lst:users>', methods=['POST'])  # post data is the passive frontend address
 def _add_passive_client(users, interface=None):
-	
+
 	address = request.get_json(force=True) if interface is None else None
 	settings = {} if interface is None else request.get_json(force=True)
-	
-	return _ex_wrap(H.add_passive_client, *users,
-	                address=address, interface=interface,
-	                settings=settings)
-	
+
+	return _ex_wrap(H.add_passive_client, *users, address=address, interface=interface, settings=settings)
 
 @app.route('/ping/clients')
 def _ping_clients():
@@ -132,7 +127,6 @@ def _ping_clients():
 @app.route('/add/player/<user>/<player>')
 def _add_player(user, player):
 	return _ex_wrap(H.add_player, user, player)
-	
 
 @app.route('/add/spectator/<user>')
 def _add_spectator(user):
@@ -141,49 +135,47 @@ def _add_spectator(user):
 @app.route('/add/advisor/<user>/<player>')
 def _add_advisor(user, player):
 	return _ex_wrap(H.add_spectator, user, player)
-	
+
 # Game Management
 
 @app.route('/begin')
 @app.route('/begin/<int:seed>')
 def _begin_game(seed=None):
 	return _ex_wrap(H.begin_game, seed)
-	
 
 @app.route('/save/<name>')
 @app.route('/save/<name>/<overwrite>')
 def _save(name, overwrite='false'):
-	
+
 	if H.game is None:
 		raise Exception('No game selected')
-	
+
 	filename = '{}.gsm'.format(name)
 	filedir = os.path.join(SAVE_PATH, H.info['short_name'])
-	
+
 	if H.info['short_name'] not in os.listdir(SAVE_PATH):
 		create_dir(filedir)
-	
+
 	if overwrite != 'true' and filename in os.listdir(filedir):
 		raise Exception('This savefile already exists')
-	
-	return _ex_wrap(H.save_game, os.path.join(filedir, filename),
-	                save_interfaces=True)
-	
+
+	return _ex_wrap(H.save_game, os.path.join(filedir, filename), save_interfaces=True)
+
 @app.route('/load/<name>')
 @app.route('/load/<name>/<load_interfaces>')
 def _load(name, load_interfaces='true'):
-	
+
 	if H.game is None:
 		raise Exception('No game selected')
-	
+
 	filename = '{}.gsm'.format(name)
 	filedir = os.path.join(SAVE_PATH, H.info['short_name'])
-	
+
 	if H.info['short_name'] not in os.listdir(SAVE_PATH):
 		return
-	
-	return _ex_wrap(H.load_game, os.path.join(filedir, filename), load_interfaces=='true')
-	
+
+	return _ex_wrap(H.load_game, os.path.join(filedir, filename), load_interfaces == 'true')
+
 # In-game Operations
 
 @app.route('/autopause')
@@ -219,6 +211,7 @@ def _get_roles():
 @app.route('/active')
 def _get_active_players():
 	return _ex_wrap(H.get_active_players)
+
 #endregion
 
 #region socketio: chat and messaging
@@ -275,26 +268,26 @@ def defaultLogin():
 def login(username):
 	user = User.query.filter_by(username=username).first()
 	if username in usersLoggedIn:
-		return username+' already logged in in another window!'
+		return username + ' already logged in in another window!'
 	if not user:
 		#TODO: add this user to db
 		# print('found user!!!')
-		return 'not authorized: '+username
+		return 'not authorized: ' + username
 	usersLoggedIn.append(username)
 	login_user(user)
-	print('logged in',username,usersLoggedIn,'................')
+	print('logged in', username, usersLoggedIn, '................')
 	return username
 
 @app.route('/logout/<username>')
 @login_required
 def logout(username):
 	if not username in usersLoggedIn:
-		print(username,'not in usersLoggedIn!!!!!')
+		print(username, 'not in usersLoggedIn!!!!!')
 	else:
 		usersLoggedIn.remove(username)
 	logout_user()
-	print('logged out',username,usersLoggedIn,'................')
-	return username+', you are logged out!'
+	print('logged out', username, usersLoggedIn, '................')
+	return username + ', you are logged out!'
 
 @app.route('/lobby')
 @login_required
@@ -303,24 +296,68 @@ def lobby():
 
 #endregion
 
-#region static front
+#region helpers front routes
 import yaml
-statfold_sim = ''
-statfold_path = ''
+
+def _asText(path):
+	f=open(path, "r")
+	txt = f.read()
+	# print(txt)
+	return txt
+
+def _fromRoot(path):
+	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
+	path = os.path.join(rootPath, path)
+	return path
+
+def _makePath(game,file=None,ext='yaml'):
+	fname = file if file else game+'_ui'
+	partial = 'games/' + game + '/_rsg/' + fname + '.' + ext
+	path = _fromRoot(partial)
+	print(path)
+	return path
+
+def userSpecPath(game, ext, file):
+	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
+	fname = file if file else game
+	path = os.path.join(rootPath, 'games/' + game + '/_rsg/' + fname + '_ui.' + ext)
+	print(path)
+	return path
+
+def ymlFile_jString(path):
+	try:
+		content = open(path, 'r')
+		return json.dumps(yaml.load(content))
+	except Exception as e:
+		msg = 'no such file' + path
+		print(msg)
+		return msg
+
+def ymlText(path):
+	return yaml.load(open(path, 'r'))
+
+def ymlFile_pyObject(path):
+	return yaml.load(open(path, 'r'))
+
+
+
+#endregion
+
+#region front vid0
+statfold_sim = 'vid0/templates'
+statfold_path = 'vid0/static'
 @app.route('/sim')
 @app.route('/sim/')
-def rootsim():
-	return app.send_static_file('index.html')
-	#return send_from_directory('', 'index.html')
+def vid0_sim():
+	return send_from_directory(statfold_sim, 'index.html')
 
 @app.route('/<path:path>')
-def rootsimPath(path):
-	# res = send_from_directory('', path)
-	# return send_from_directory('', path)
-	return app.send_static_file(path)
+def vid0_path(path):
+	res = send_from_directory('', path)
+	return res
 
 @app.route('/spec/<game>')
-def _rootsimPathSpec(game):
+def vid0_spec(game):
 	path = userSpecPath(game,'yaml',None)
 	f=open(path, "r")
 	txt = f.read()
@@ -328,75 +365,38 @@ def _rootsimPathSpec(game):
 	return txt
 
 @app.route('/behaviors/<game>')
-def _rootsimPathCode(game):
+def vid0_code(game):
 	path = userSpecPath(game,'js',None)
 	f=open(path, "r")
 	txt = f.read()
 	# print(txt)
 	return txt
 
-def userSpecPath(game,ext,v=None):
-	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
-	fname = game
-	if v != None:
-		fname += '_'+v
-	#path = os.path.join(rootPath, 'examples_front/' + game + '/' + fname + '_ui.' + ext)
-	path = os.path.join(rootPath, 'games/' + game + '/_rsg/' + fname + '_ui.' + ext)
-	return path
-
-def ymlFile_jString(path):
-	try:
-		content=open(path, 'r')
-		return json.dumps(yaml.load(content))
-	except Exception as e:
-		msg = 'no such file'+path
-		print(msg)
-		return msg
-
-def ymlText(path):
-	return yaml.load(open(path, 'r'))
-def ymlFile_pyObject(path):
-	return yaml.load(open(path, 'r'))
-
 @app.route('/get_UI_spec/<game>')
 @app.route('/get_UI_spec/<game>/<v>')
-def _get_UI_spec(game,v=None):
+def vid0_get_UI_spec(game,v=None):
 	path = userSpecPath(game,'yaml',v)
 	res = ymlFile_jString(path) #ymlText(path) 
 	return res
 
 @app.route('/loadYML/<fname>')
-def _loadYML(fname):
+def vid0_loadYML(fname):
 	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
 	path = os.path.join(rootPath, 'static/rsg/assets/' + fname + '.yml')
 	res = ymlFile_jString(path) #ymlText(path) 
 	return res
-# @app.route('/get_UI_code/<game>')
-# @app.route('/get_UI_code/<game>/<v>')
-# def _get_UI_code(game,v=None):
-# 	path = userSpecPath(game,'js',v)
-# 	res = ymlFile_jString(path)
-# 	return res
 
 @app.route('/save_UI_spec/<game>/<code>')
 @app.route('/save_UI_spec/<game>/<code>/<v>')
-def _save_UI_spec(game,code,v=None):
+def vid0_save_UI_spec(game,code,v=None):
 	path = userSpecPath(game,'yaml',v)
 	f = open(path,"w+")
 	f.write(code)
 	return path
 
-# @app.route('/saveYML/<fname>/<code>')
-# @app.route('/save_UI_spec/<game>/<code>/<v>')
-# def _save_UI_spec(game,code,v=None):
-# 	path = userSpecPath(game,'yaml',v)
-# 	f = open(path,"w+")
-# 	f.write(code)
-# 	return path
-
 @app.route('/save_UI_code/<game>/<code>')
 @app.route('/save_UI_code/<game>/<code>/<v>')
-def _save_UI_code(game,code,v=None):
+def vid0_save_UI_code(game,code,v=None):
 	path = userSpecPath(game,'yaml',v)
 	f = open(path,"w+")
 	f.write(code)
@@ -404,33 +404,74 @@ def _save_UI_code(game,code,v=None):
 
 #endregion
 
+#region front vid1
+@app.route('/')
+def rootsim():
+	# return app.send_static_file('vid1/index.html')
+	return send_from_directory('vid1', 'index.html')
 
+# @app.route('/<path:path>')
+# def rootsimPath(path):
+# 	return app.send_static_file(path)
 
+@app.route('/text/<path:path>')
+def rootsimTextPath(path):
+	return _asText(_fromRoot(path))
+
+@app.route('/spec/<game>')
+@app.route('/spec/<game>/<file>')
+def _rootsimSpec(game, file=None):
+	path = _makePath(game,file)
+	return _asText(path)
+
+@app.route('/code/<game>')
+@app.route('/code/<game>/<file>')
+def _rootsimCode(game, file=None):
+	path = _makePath(game,file,'js')
+	return _asText(path)
+
+@app.route('/loadYML/<fname>')
+def _loadYML(fname):
+	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
+	path = os.path.join(rootPath, 'static/rsg/assets/' + fname + '.yml')
+	res = ymlFile_jString(path)  #ymlText(path)
+	return res
+
+@app.route('/save_UI_spec/<game>/<code>')
+@app.route('/save_UI_spec/<game>/<code>/<v>')
+def _save_UI_spec(game, code, v=None):
+	path = userSpecPath(game, 'yaml', v)
+	f = open(path, "w+")
+	f.write(code)
+	return path
+
+@app.route('/save_UI_code/<game>/<code>')
+@app.route('/save_UI_code/<game>/<code>/<v>')
+def _save_UI_code(game, code, v=None):
+	path = userSpecPath(game, 'yaml', v)
+	f = open(path, "w+")
+	f.write(code)
+	return path
+
+#endregion
 
 def main(argv=None):
 	parser = argparse.ArgumentParser(description='Start the host server.')
-	
-	parser.add_argument('--host', default='localhost', type=str,
-	                    help='host for the backend')
-	parser.add_argument('--port', default=5000, type=int,
-	                    help='port for the backend')
-	
-	parser.add_argument('--settings', type=str, default='{}',
-	                    help='optional args for interface, specified as a json str (of a dict with kwargs)')
-	
+
+	parser.add_argument('--host', default='localhost', type=str, help='host for the backend')
+	parser.add_argument('--port', default=5000, type=int, help='port for the backend')
+
+	parser.add_argument('--settings', type=str, default='{}', help='optional args for interface, specified as a json str (of a dict with kwargs)')
+
 	args = parser.parse_args(argv)
-	
+
 	address = 'http://{}:{}/'.format(args.host, args.port)
 	settings = json.loads(args.settings)
-	
+
 	_hard_restart(address, **settings)
-	
+
 	app.run(host=args.host, port=args.port)
 	#socketio.run(app, host=args.host,port=args.port) #, debug=True)
-	
-	
 
 if __name__ == "__main__":
 	main()
-	
-	

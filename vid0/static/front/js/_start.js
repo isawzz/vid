@@ -3,10 +3,22 @@ var maxZIndex = 110;
 var iconChars = null;
 var browserZoom = null;
 
+//#region testing
+function _test01_load_game_info() {
+	timit = new TimeIt('*');
+	timit.showTime('hallo');
+	ensureAllGames([() => timit.showTime('done')]);
+
+}
+//#endregion
+
 function _start() {
+	//#region testing
+	// _test01_load_game_info();
+	// return;
+	//#endregion
 
-
-	_initServer([loadIconChars, ensureAllGames, ()=>{
+	_initServer([loadIconChars, ensureAllGames, () => {
 
 		//START HERE!!!! have iconChars,allGames,gcs
 		gcsAuto();
@@ -64,7 +76,7 @@ function _startNewGame(role = 'starter') {
 }
 function _startRestartSame() {
 	checkCleanup_I();
-	sendRestartGame(USERNAME,SEED,[gameStep]);
+	sendRestartGame(USERNAME, SEED, [gameStep]);
 
 }
 
@@ -159,7 +171,7 @@ function _initPlayers() {
 		i += 1;
 	}
 }
-function _initServer(callbacks=[]) {
+function _initServer(callbacks = []) {
 	//init host and get gameInfo for all games
 	//for now just cheat since I have that info anyway!
 	timit = new TimeIt(getFunctionCallerName());

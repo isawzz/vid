@@ -1,15 +1,27 @@
+window.onload = ()=>_start();
+
+async function _start(){
+	timit.showTime('hallo hallo hallo')
+	allGames = await loadGameInfo();
+	timit.showTime('done')
+
+}
+
+
 //send a fetch command to backend
 //console.log('loaded...');
 
-var S = {};
+//goal: produce fastest possible:
+//S.spec, S.code, allGames, playerConfig, G.serverData
+async function initVid(){
+	await loadGameInfo();
+}
 
 async function initGame(game) {
 	await loadSpec(game);
 	if (S.spec) await loadCode(game, S.spec.CODE);
 	console.log('spec and code loaded', S.code);
 }
-
-function rsgPath(game,fname,ext){return }
 
 async function loadCode(game, fname) {
 	try {
@@ -65,7 +77,7 @@ function loadSpec_dep(game) {
 
 //let spec=loadSpec_dep('catan'); //geht
 //let spec=loadSpec('catan'); //geht
-initGame('catan')
+//initGame('catan')
 
 
 // const request = async () => {

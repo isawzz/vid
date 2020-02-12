@@ -157,18 +157,7 @@ function initDom() {
 			browserZoom = newBrowserZoom;
 		};
 	}
-	if (!window.onwheel){
-		window.onwheel = ev => {
-			if (!ev.altKey || ev.ctrlKey) return;
-			//console.log('@@@WHEEL',ev);
-			//ev.preventDefault();
-			if (ev.deltaY > 0){
-				//soll kleiner werden also zoom out!
-				zoomOut();
-			}else if (ev.deltaY<0) zoomIn();
-		};
-	}
-
+	zoom_on_wheel_alt();
 }
 function createMSTree(ms) {
 	let areas = ms.elem.children;

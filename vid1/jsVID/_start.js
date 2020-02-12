@@ -1,42 +1,50 @@
 //send a fetch command to backend
 //console.log('loaded...');
 
-const SERVER = 'http://localhost:5000';
 var S = {};
 
 async function initGame(game) {
 	await loadSpec(game);
-	await loadCode(game, S.spec.CODE);
-	//console.log(S);
+	if (S.spec) await loadCode(game, S.spec.CODE);
+	console.log('spec and code loaded', S.code);
 }
+
+function rsgPath(game,fname,ext){return }
 
 async function loadCode(game, fname) {
-	S.codePath = '/games/' + game + '/_rsg/' + fname + '.js';
-	let url = SERVER + '/code/' + game;
-	let data = await fetch(url);
-	let text = await data.text();
-	//console.log(text)
-	var scriptTag = document.createElement("script");
-	scriptTag.onload = () => console.log('script loaded');
-	scriptTag.setAttribute("type", "text/javascript");
-	scriptTag.innerHTML = text; // "console.log('HALLOOOOOOOOOO DU!!!!!!!');";
-	document.getElementsByTagName("body")[0].appendChild(scriptTag);
+	try {
+		S.codePath = '/games/' + game + '/_rsg/' + fname + '.js';
+		let url = SERVER + '/code/' + game + (isdef(fname) ? '/' + fname : '');
+		let data = await fetch(url);
+		let text = await data.text();
+		//console.log(text)
+		S.code = text;
+		var scriptTag = document.createElement("script");
+		scriptTag.onload = () => console.log('script loaded');
+		scriptTag.setAttribute("type", "text/javascript");
+		scriptTag.innerHTML = text; // "console.log('HALLOOOOOOOOOO DU!!!!!!!');";
+		document.getElementsByTagName("body")[0].appendChild(scriptTag);
+	} catch{ S.code = null; }
 
 }
 
-async function loadSpec(game) {
-	let url = SERVER + '/spec/' + game;
-	let data = await fetch(url);
-	let text = await data.text();
-	S.specText = text;
-	//console.log(text);
-	S.spec = jsyaml.load(text);
-	// document.getElementById('table').innerHTML = jsyaml.dump(S.spec) //NO!!!
-	// document.getElementById('table').textContent = `${jsyaml.dump(S.spec)}`; //NO!!!
-	//document.getElementById('table').innerHTML = '<pre>'+jsyaml.dump(S.spec)+'</pre>'; //YES!!!
-	document.getElementById('table').innerHTML = '<pre>' + text + '</pre>'; //PERFECT!!!!!!!!!!
-	//console.log('done loading spec', S.spec);
-	return true;
+//load spec from server, sets S.spec (object | null if not found!) and S.specText
+async function loadSpec(game, fname) {
+	try {
+		let url = SERVER + '/spec/' + game + (isdef(fname) ? '/' + fname : '');
+		let data = await fetch(url);
+		let text = await data.text();
+		S.specText = text;
+		//console.log(text);
+		S.spec = jsyaml.load(text);
+		// document.getElementById('table').innerHTML = jsyaml.dump(S.spec) //NO!!!
+		// document.getElementById('table').textContent = `${jsyaml.dump(S.spec)}`; //NO!!!
+		//document.getElementById('table').innerHTML = '<pre>'+jsyaml.dump(S.spec)+'</pre>'; //YES!!!
+		document.getElementById('table').innerHTML = '<pre>' + text + '</pre>'; //PERFECT!!!!!!!!!!
+		//console.log('done loading spec', S.spec);
+	} catch{
+		S.spec = null;
+	}
 }
 
 

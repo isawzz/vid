@@ -166,10 +166,13 @@ function onClickReloadSpec() {
 function loadUserSpec(callbacks = []) {
 	sendRoute('/get_UI_spec/' + GAME, d1 => {
 		try {
-			//console.log('back from loadUserSpec',d1)
 			S.user.spec = JSON.parse(d1);
-			S.user.specText = d1;
-			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
+			//console.log(S.user.spec);
+			sendRoute('/spec/' + GAME, d2 => {
+				//console.log(d2);
+				S.user.specText = d2;
+				if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
+			});
 		} catch{
 			S.user.spec = null;
 			S.user.specText = 'null';
@@ -177,6 +180,21 @@ function loadUserSpec(callbacks = []) {
 		}
 	});
 }
+
+// function loadUserSpecNE(callbacks = []) {
+// 	sendRoute('/get_UI_spec/' + GAME, d1 => {
+// 		try {
+// 			//console.log('back from loadUserSpec',d1)
+// 			S.user.spec = JSON.parse(d1);
+// 			S.user.specText = d1;
+// 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
+// 		} catch{
+// 			S.user.spec = null;
+// 			S.user.specText = 'null';
+// 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
+// 		}
+// 	});
+// }
 function loadUserCode(callbacks = []) {
 	//timit.showTime(getFunctionCallerName());
 	let fname = S.user.spec ? S.user.spec.CODE : null;

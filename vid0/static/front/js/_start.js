@@ -1,7 +1,6 @@
 var commandChain = [];
 var maxZIndex = 110;
 var iconChars = null;
-var bodyZoom = null;
 var browserZoom = null;
 
 function _start() {

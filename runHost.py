@@ -345,7 +345,7 @@ def ymlFile_pyObject(path):
 
 #region front vid0
 statfold_sim = 'vid0/templates'
-statfold_path = 'vid0/static'
+
 @app.route('/sim')
 @app.route('/sim/')
 def vid0_sim():
@@ -356,13 +356,13 @@ def vid0_path(path):
 	res = send_from_directory('', path)
 	return res
 
-@app.route('/spec/<game>')
-def vid0_spec(game):
-	path = userSpecPath(game,'yaml',None)
-	f=open(path, "r")
-	txt = f.read()
-	# print(txt)
-	return txt
+# @app.route('/spec/<game>')
+# def vid0_spec(game):
+# 	path = userSpecPath(game,'yaml',None)
+# 	f=open(path, "r")
+# 	txt = f.read()
+# 	# print(txt)
+# 	return txt
 
 @app.route('/behaviors/<game>')
 def vid0_code(game):
@@ -410,10 +410,6 @@ def rootsim():
 	# return app.send_static_file('vid1/index.html')
 	return send_from_directory('vid1', 'index.html')
 
-# @app.route('/<path:path>')
-# def rootsimPath(path):
-# 	return app.send_static_file(path)
-
 @app.route('/text/<path:path>')
 def rootsimTextPath(path):
 	return _asText(_fromRoot(path))
@@ -429,29 +425,6 @@ def _rootsimSpec(game, file=None):
 def _rootsimCode(game, file=None):
 	path = _makePath(game,file,'js')
 	return _asText(path)
-
-@app.route('/loadYML/<fname>')
-def _loadYML(fname):
-	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
-	path = os.path.join(rootPath, 'static/rsg/assets/' + fname + '.yml')
-	res = ymlFile_jString(path)  #ymlText(path)
-	return res
-
-@app.route('/save_UI_spec/<game>/<code>')
-@app.route('/save_UI_spec/<game>/<code>/<v>')
-def _save_UI_spec(game, code, v=None):
-	path = userSpecPath(game, 'yaml', v)
-	f = open(path, "w+")
-	f.write(code)
-	return path
-
-@app.route('/save_UI_code/<game>/<code>')
-@app.route('/save_UI_code/<game>/<code>/<v>')
-def _save_UI_code(game, code, v=None):
-	path = userSpecPath(game, 'yaml', v)
-	f = open(path, "w+")
-	f.write(code)
-	return path
 
 #endregion
 

@@ -22,14 +22,19 @@
 	<script>
 		window.onload = () => _start(); // _start | _startTest01
 
+		var COMMON_JS = [
+			'features',
+			'helpers',
+		];
+
 		var FRONT_JS = [
 			'_config',
 			'_start',
 			'chat',
 			'clear',
-			'features',
+			//'features',
 			'gameConfig',
-			'helpers', //old helpers is now: helpers_19
+			//'helpers', //old helpers is now: helpers_19
 			'identity',
 			'login',
 			'server',
@@ -115,6 +120,7 @@
 		}
 		for (const fname of FRONT_STYLES) styleLoader(fname, 'vid0/static/front/css', false, OFFLINE);
 		for (const fname of RSG_STYLES) styleLoader(fname, 'vid0/static/rsg/css', false, OFFLINE);
+		for (const fname of COMMON_JS) scriptLoader(fname, 'vid_common/js', false, OFFLINE);
 		for (const fname of FRONT_JS) scriptLoader(fname, 'vid0/static/front/js', false, OFFLINE);
 		for (const fname of RSG_JS) scriptLoader(fname, 'vid0/static/rsg/js', false, OFFLINE);
 
@@ -249,7 +255,7 @@
 	</div>
 
 	<!-- game -->
-	<div id="R_d_root" class="layout1" style='display:none;'>
+	<div id="R_d_root" class="layout1" style='width:100%;display:none;'>
 		<div id="a_d_header" class="area">
 			<div id='a_d_outerDivGamename' style='float:right;margin:4px;color:dimgray;'>
 				Game:

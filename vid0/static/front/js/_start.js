@@ -1,7 +1,7 @@
 var commandChain = [];
 var maxZIndex = 110;
 var iconChars = null;
-var browserZoom = null;
+var domLoaded = null;
 
 //#region testing
 function _test01_load_game_info() {
@@ -82,7 +82,7 @@ function _startRestartSame() {
 
 //#region views
 function gameView() {
-	if (bodyZoom) document.body.style.transform = 'scale(' + bodyZoom + ')';
+	//if (bodyZoom) document.body.style.transform = 'scale(' + bodyZoom + ')';
 
 	setIsReallyMultiplayer();
 
@@ -103,7 +103,7 @@ function loginView() {
 	addLoginViewHandlers();
 }
 function lobbyView() {
-	document.body.style.transform = null; //'scale('+1+')'; //.5)'; //+(percent/100)+")";
+	//document.body.style.transform = null; //'scale('+1+')'; //.5)'; //+(percent/100)+")";
 
 	console.log('lobby view!')
 	view = 'lobby';

@@ -82,15 +82,6 @@ function notMyTurn(){
 function isMyTurn(){
 	disableButton('c_b_PollStatus');
 }
-function zoom(percent) {
-	//console.log('zoom level',percent,'%')
-	//document.body.style.zoom = ''+percent+"%"; //unangenehmer hack messes with Ctrl+
-	document.body.style.transformOrigin = '0% 0%';
-	let factor = percent/100;
-	bodyZoom = factor;
-	document.body.style.transform = 'scale('+factor+')'; //.5)'; //+(percent/100)+")";
-	//console.log('body scaled to',percent+'%')
-}
 function onClickAreaSizes(){
 	if (nundef(bodyZoom)) bodyZoom=1.0;
 	//var width = window.innerWidth;//*bodyZoom;
@@ -98,8 +89,21 @@ function onClickAreaSizes(){
 	//console.log('_____________window is',width,height);
 	//console.log('>>>>>>bodyZoom',bodyZoom);
 	let zoomlevel=calcScreenSizeNeeded();
+
+	//just take top level div width
+	let toplevelDiv = document.body.getRootNode();
+	let body = document.body;
+	let d=document.getElementById('a_d_header'); //'R_d_root');
+	console.log('d',getBounds(d),d)
+	console.log('width',d.style.offsetWidth);
+	console.log('client',window.clientInformation)
+	console.log(toplevelDiv,body)
+	console.log(getBounds(body))
+	console.log('d rect',d.getBoundingClientRect());
+	console.log(toplevelDiv.scrollWidth)
+	
 	//console.log('zoomlevel',zoomlevel)
-	zoom(zoomlevel);
+	zoom(zoomlevel/100);
 }
 function calcScreenSizeNeeded(){
 	if (nundef(bodyZoom)) bodyZoom=1.0;

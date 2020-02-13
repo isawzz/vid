@@ -142,22 +142,12 @@ function initDom() {
 	measureMSTree(ROOT); //each div is measured: x,y,w,h
 	// timit.showTime('...measure tree');
 
-	// let zoomlevel = calcScreenSizeNeeded();
-	// zoom(zoomlevel);
-	// console.log('window.onresize', window.onresize)
-	if (!window.onresize) {
-		window.onresize = () => {
-			let newBrowserZoom = Math.round(window.devicePixelRatio * 100);
-			//let newBrowserZoom=window.outerWidth / window.document.documentElement.clientWidth; //doesn't work!!!
-			//console.log('new zoom:',newBrowserZoom, 'browserZoom',browserZoom);
-			if (browserZoom != newBrowserZoom) { browserZoom = newBrowserZoom; return; }
-			//console.log('RESIZE WINDOW!!!!!!!!!!!!');
-			//only if browser has not been zoomed!
-			if (nundef(browserZoom) || browserZoom == newBrowserZoom) onClickAreaSizes();
-			browserZoom = newBrowserZoom;
-		};
+	if (!domLoaded) {
+		initZoom();
+		zoom_on_resize('a_d_header');
+		zoom_on_wheel_alt();
+		domLoaded = true;
 	}
-	zoom_on_wheel_alt();
 }
 function createMSTree(ms) {
 	let areas = ms.elem.children;

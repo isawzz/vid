@@ -142,11 +142,11 @@ function initDom() {
 	measureMSTree(ROOT); //each div is measured: x,y,w,h
 	// timit.showTime('...measure tree');
 
-	if (!domLoaded) {
+	if (!firstDomLoad) {
 		initZoom();
 		zoom_on_resize('a_d_header');
 		zoom_on_wheel_alt();
-		domLoaded = true;
+		firstDomLoad = true;
 	}
 }
 function createMSTree(ms) {

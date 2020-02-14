@@ -23,9 +23,15 @@ class RSG {
 		//sollte eigentlich fuer beide gehen!
 		//zuerst als g
 		let ch = iconChars[key];
+		return _pictoFromChar(ch,x,y,w,h,fg,bg);
+	}
+	_pictoFromChar(ch,x,y,w,h,fg,bg){
 		//if (nundef(ch)) ch = chooseRandom(Object.values(iconChars));
 		let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
 		let text = String.fromCharCode('0x' + ch);
+		return this._pictoFromHexString(text,family,x,y,w,h,fg,bg);
+	}
+	_pictoFromHexString(text,family,x,y,w,h,fg,bg){
 		//key="skiing-nordic";
 		if (this.cat == 'g') {
 			if (isdef(bg)) this.rect({ w: w, h: h, fill: bg, x: x, y: y });

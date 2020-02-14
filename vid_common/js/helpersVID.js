@@ -1,6 +1,7 @@
 //#region loading caching saving data
 class VidCache {
-	constructor(resetStorage = false) {
+	constructor(primaryKey,resetStorage = false) {
+		this.primaryKey = primaryKey;
 		this.live = {};
 		if (resetStorage) this.resetAll();
 	}
@@ -47,12 +48,20 @@ async function loadAllGames() {
 }
 
 //#region routes
+async function load_rsg_asset(filename,ext='yml'){
+	let url = '/vid0/static/rsg/assets/'+filename+'.'+ext;
+	timit.showTime('*** vor ***')
+	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
+	timit.showTime('*** loaded from server ***');
+	return response;
+}
+
 async function loadGameInfo() {
 
-	let gameNames = await routeJS('/game/available');
+	let gameNames = await route_server_js('/game/available');
 	let res = {};
 	for (const name of gameNames) {
-		res[name] = await routeJS('/game/info/' + name);
+		res[name] = await route_server_js('/game/info/' + name);
 	}
 	// console.log('game names',gameNames);
 	// console.log('allGames',allGames);
@@ -60,9 +69,15 @@ async function loadGameInfo() {
 }
 
 //#region server (low level)
-async function routeJS(url) {
+async function route_server_js(url) {
 	let data = await fetch(SERVER + url);
 	return await data.json();
+}
+async function route_path_yaml_dict(url) {
+	let data = await fetch(url);
+	let text = await data.text();
+	let dict = jsyaml.load(text);
+	return dict;
 }
 
 //#region stubs

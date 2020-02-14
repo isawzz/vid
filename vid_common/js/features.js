@@ -1,4 +1,61 @@
-//#region zoom_on_wheel_alt()
+//#region CacheDict
+//holds a dictionary with key-value pairs,
+//dictionary is saved each time accessing a key that has not been found
+//three tier access to entries: 
+//1. looks in live data, if entry is not found,
+//2. looks in localStorage, if entry not found
+//3. loads data from server
+//usage example: 
+//var iconChars = new CacheDict({primaryKey = 'iconChars', accessFunc = })
+class CacheDict {
+	constructor({primaryKey = null, resetStorage = false, accessFunc}={}) {
+		this.primaryKey = primaryKey;
+		this.live = {};
+		this.accessFunc = accessFunc;
+		if (resetStorage) this.resetAll();
+	}
+	get(key){
+		let res = this.live[key];
+		if (res) return res;
+
+
+		//res = this.primaryKey?this.localStorage
+	}
+	load(key) {
+		//console.log(key);
+		let keys = null; let sKey = key;
+		if (isList(key)) { skey = key.shift(); keys = key; }
+		let res = this.live[sKey];
+		if (res && keys) res = lookup(res, keys);
+		if (res) return res;
+
+		// console.log(sKey)
+		let sData = localStorage.getItem(sKey);
+		// console.log(sData);
+		if (sData) {
+			//console.log('found',sKey,'in local storage:',sData)
+			let data = sData[0] == '{' || sData[0] == '[' ? JSON.parse(sData) : isNumber(sData) ? Number(sData) : sData;
+			if (keys) { this.live[sKey] = data; return lookup(data, keys); }
+			return data;
+		} else {
+			return null;
+		}
+	}
+	reset() { this.live = {}; }
+	resetAll() { localStorage.clear(); this.reset(); }
+	saveComplexObject(keys,o){
+		//for this to work, have to retrieve dict(keys[0]) from localstorage,transform to json,setKeys to o,then store again
+	}
+	save(key, data) {
+		//key MUST be string!
+		console.log('saving',key, data)
+		this.live[key] = data;
+		localStorage.setItem(key, JSON.stringify(data));
+	}
+}
+
+
+//#region zoom_on_wheel_alt(), zoom_on_resize(), initZoom(), zoom(factor), zoomBy(factor)
 var bodyZoom = 1.0;
 var browserZoom = Math.round(window.devicePixelRatio * 100);
 // function initBodyZoom() {

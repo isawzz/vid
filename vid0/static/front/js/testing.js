@@ -1,3 +1,70 @@
+//#region test pictos w/ icons that are same in gameIcons and faIcons, new load_rsg_asset async function
+function addPictoFromChar(IdBoard, ch, sz, x, y) {
+	let ms = makeDrawingElement(getUID(), 'board');
+	ms._pictoFromChar(ch, x, y, sz, sz, randomColor());
+	ms.attach();
+}
+async function testCommonKeys() {
+	initRSGData(); showGame(); initDom();
+	let gaIcons = await load_rsg_asset('gameIconCodes');
+	let faIcons = await load_rsg_asset('faIconCodes');
+	let smallIcons = await load_rsg_asset('iconTest');
+	commonKeys = [];
+	for (const k in gaIcons) {
+		if (isdef(faIcons[k])) commonKeys.push(k);
+	}
+	console.log('common keys:',commonKeys);
+	let board = makeDrawingArea('board', 'a_d_game', true);
+	setAreaWidth('a_d_game',1400);
+	setAreaHeight('a_d_game',1000);
+
+	// let ms = makeDrawingElement('el1', 'board');
+
+	let keys = commonKeys; //.slice(0,100);//['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
+	let xStart=-600;
+	let yStart=-400;
+	let y = yStart;//-300;
+	let x = xStart;//-300;
+	for (const k of keys) {
+		addPictoFromChar('board', gaIcons[k], 50, x, y);
+		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
+	}
+	y=yStart;x+=60;
+	for (const k of keys) {
+		addPictoFromChar('board', faIcons[k], 50, x, y);
+		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
+	}
+	// let key = chooseRandom(Object.keys(faChars));//'clock';
+	// ms._picto('crow', -100, -100, 100, 100, randomColor());
+
+	//ms.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
+	//ms._picto('knight',0,0,50,100,'white','blue');
+	//_makeGroundShape(ms, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
+	//ms.setScaleX(1);
+	//ms.text({txt:'hallo',fill:'white'})
+
+	// ms.attach();
+	// console.log(ms)
+}
+async function atestLoadIcons(){
+
+	timit.showTime('_______start gameIconCode');
+	let gaIcons = await load_rsg_asset('gameIconCodes');
+	timit.showTime('_______start faIconCodes');
+	let faIcons = await load_rsg_asset('faIconCodes');
+	timit.showTime('_______start iconTest');
+	let smallIcons = await load_rsg_asset('iconTest');
+	timit.showTime('nach atestLoadIconst');
+	commonKeys = [];
+	for (const k in gaIcons) {
+		if (isdef(faIcons[k])) commonKeys.push(k);
+	}
+	console.log('common keys:',commonKeys);
+
+}
+
+
+
 //#region test async await
 async function loadAsset() {
 	let response = await fetch('/vid0/static/rsg/assets/gameIconCodes.yml');
@@ -9,11 +76,15 @@ async function atest01() {
 
 	if (response.ok) { // if HTTP-status is 200-299
 		// get the response body (the method explained below)
+		//console.log(response);
+		// let asjs=await response.json(); //GEHT NICHT!!!!!
+		// console.log(asjs)
 		let t = await response.text();
-		console.log(t);
-		let ty = jsyaml.load(t);
-		console.log(ty);
-		console.log(jsyaml.dump(ty));
+		//console.log(t);
+		let iconDict = jsyaml.load(t);
+		timit.showTime('nach atest01')
+		console.log(iconDict);
+		//console.log(jsyaml.dump(iconDict));
 	} else {
 		alert("HTTP-Error: " + response.status);
 	}

@@ -1,7 +1,7 @@
 var commandChain = [];
 var maxZIndex = 110;
 var iconChars = null;
-var domLoaded = null;
+var firstDomLoad = null;
 
 //#region testing
 function _test01_load_game_info() {
@@ -15,7 +15,13 @@ function _test01_load_game_info() {
 function _start() {
 	//#region testing
 	// _test01_load_game_info();
-	// return;
+	_initServer([loadIconChars,()=>{
+		//testPicto();
+		testCommonKeys();
+
+	}]);
+	return;
+	//atestLoadIcons();
 	//#endregion
 
 	_initServer([loadIconChars, ensureAllGames, () => {
@@ -196,8 +202,8 @@ function isFrontAIPlayer(id) {
 	let playerType = pl.playerType;
 	return playerType == 'AI';
 }
+var faChars, gaChars, commonKeys;
 function loadIconChars(callbacks = []) {
-	let faChars, gaChars;
 	loadYML('/vid0/static/rsg/assets/gameIconCodes.yml', dga => {
 		//console.log(dga);
 		gaChars = dga;
@@ -205,12 +211,15 @@ function loadIconChars(callbacks = []) {
 			//console.log(dfa);
 			faChars = dfa;
 			iconChars = {};
+			commonKeys = [];
 			for (const k in faChars) {
 				iconChars[k] = faChars[k];
 			}
 			for (const k in gaChars) {
+				if (isdef(faChars[k])) commonKeys.push(k);
 				iconChars[k] = gaChars[k];
 			}
+			// console.log('common keys:',commonKeys);
 			timit.showTime('loaded icons codes')
 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
 		});

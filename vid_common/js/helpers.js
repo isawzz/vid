@@ -1109,12 +1109,13 @@ function show(elem) {
 //#region file IO
 function loadScript(path, callback) {
 	var script = document.createElement('script');
-	script.onload = function () {
+	script.onload = ev => {
 		if (callback) callback(path);
 	};
 	script.src = path;
 	document.head.appendChild(script);
 }
+
 function loadStyle(href, callback) {
 	let style = document.createElement('link');
 	style.rel = href == 'favicon' ? 'shortcut icon' : 'stylesheet';

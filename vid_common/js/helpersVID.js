@@ -1,43 +1,10 @@
-//#region loading caching saving data
-class VidCache {
-	constructor(primaryKey,resetStorage = false) {
-		this.primaryKey = primaryKey;
-		this.live = {};
-		if (resetStorage) this.resetAll();
-	}
-	load(key) {
-		//console.log(key);
-		let keys = null; let sKey = key;
-		if (isList(key)) { skey = key.shift(); keys = key; }
-		let res = this.live[sKey];
-		if (res && keys) res = lookup(res, keys);
-		if (res) return res;
 
-		// console.log(sKey)
-		let sData = localStorage.getItem(sKey);
-		// console.log(sData);
-		if (sData) {
-			//console.log('found',sKey,'in local storage:',sData)
-			let data = sData[0] == '{' || sData[0] == '[' ? JSON.parse(sData) : isNumber(sData) ? Number(sData) : sData;
-			if (keys) { this.live[sKey] = data; return lookup(data, keys); }
-			return data;
-		} else {
-			return null;
-		}
-	}
-	reset() { this.live = {}; }
-	resetAll() { localStorage.clear(); this.reset(); }
-	saveComplexObject(keys,o){
-		//for this to work, have to retrieve dict(keys[0]) from localstorage,transform to json,setKeys to o,then store again
-	}
-	save(key, data) {
-		//key MUST be string!
-		console.log('saving',key, data)
-		this.live[key] = data;
-		localStorage.setItem(key, JSON.stringify(data));
-	}
-}
+var allGames = null; //allGames1;
 async function loadAllGames() {
+	console.log('neue art using lazyCache!!!');
+	return await vidCache.init('allGames',{func:loadGameInfo},{load:true});
+
+	//nachher sollte ich allGames.get('catan') machen koennen!
 	if (allGames) return;
 	allGames = vidCache.load('allGames');
 	if (!allGames) { 
@@ -46,9 +13,18 @@ async function loadAllGames() {
 		vidCache.save('allGames',allGames); 
 	}
 }
+var iconChars=null;
+async function loadIcon(key){
+	if (!iconChars) iconChars=new CacheDict({primaryKey:'icons'});
+}
 
 //#region routes
-async function load_rsg_asset(filename,ext='yml'){
+async function route_icons(){
+	let gaIcons = await route_rsg_asset('gameIconCodes');
+	let faIcons = await route_rsg_asset('faIconCodes');
+
+}
+async function route_rsg_asset(filename,ext='yml'){
 	let url = '/vid0/static/rsg/assets/'+filename+'.'+ext;
 	timit.showTime('*** vor ***')
 	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
@@ -68,7 +44,7 @@ async function loadGameInfo() {
 	return res;
 }
 
-//#region server (low level)
+//#region server routes (low level)
 async function route_server_js(url) {
 	let data = await fetch(SERVER + url);
 	return await data.json();
@@ -100,4 +76,5 @@ function stubPlayerConfig(gameInfo) {
 	return gcs;
 	//console.log('-------------------',gcs);
 }
+
 

@@ -23,7 +23,7 @@ class RSG {
 		//sollte eigentlich fuer beide gehen!
 		//zuerst als g
 		let ch = iconChars[key];
-		return _pictoFromChar(ch,x,y,w,h,fg,bg);
+		return this._pictoFromChar(ch,x,y,w,h,fg,bg);
 	}
 	_pictoFromChar(ch,x,y,w,h,fg,bg){
 		//if (nundef(ch)) ch = chooseRandom(Object.values(iconChars));

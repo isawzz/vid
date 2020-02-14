@@ -42,7 +42,6 @@ var allGames1 = {
 };
 //#endregion
 
-var allGames = null; //allGames1;
 var numPlayersMin = 0;
 var numPlayersMax = 8;
 var currentSeed;

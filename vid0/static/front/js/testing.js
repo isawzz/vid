@@ -1,4 +1,4 @@
-//#region test pictos w/ icons that are same in gameIcons and faIcons, new load_rsg_asset async function
+//#region test pictos w/ icons that are same in gameIcons and faIcons, new route_rsg_asset async function
 function addPictoFromChar(IdBoard, ch, sz, x, y) {
 	let ms = makeDrawingElement(getUID(), 'board');
 	ms._pictoFromChar(ch, x, y, sz, sz, randomColor());
@@ -6,9 +6,9 @@ function addPictoFromChar(IdBoard, ch, sz, x, y) {
 }
 async function testCommonKeys() {
 	initRSGData(); showGame(); initDom();
-	let gaIcons = await load_rsg_asset('gameIconCodes');
-	let faIcons = await load_rsg_asset('faIconCodes');
-	let smallIcons = await load_rsg_asset('iconTest');
+	let gaIcons = await route_rsg_asset('gameIconCodes');
+	let faIcons = await route_rsg_asset('faIconCodes');
+	let smallIcons = await route_rsg_asset('iconTest');
 	commonKeys = [];
 	for (const k in gaIcons) {
 		if (isdef(faIcons[k])) commonKeys.push(k);
@@ -49,11 +49,11 @@ async function testCommonKeys() {
 async function atestLoadIcons(){
 
 	timit.showTime('_______start gameIconCode');
-	let gaIcons = await load_rsg_asset('gameIconCodes');
+	let gaIcons = await route_rsg_asset('gameIconCodes');
 	timit.showTime('_______start faIconCodes');
-	let faIcons = await load_rsg_asset('faIconCodes');
+	let faIcons = await route_rsg_asset('faIconCodes');
 	timit.showTime('_______start iconTest');
-	let smallIcons = await load_rsg_asset('iconTest');
+	let smallIcons = await route_rsg_asset('iconTest');
 	timit.showTime('nach atestLoadIconst');
 	commonKeys = [];
 	for (const k in gaIcons) {
@@ -63,6 +63,12 @@ async function atestLoadIcons(){
 
 }
 
+function _test01_load_game_info() {
+	timit = new TimeIt('*');
+	timit.showTime('hallo');
+	ensureAllGames([() => timit.showTime('done')]);
+
+}
 
 
 //#region test async await

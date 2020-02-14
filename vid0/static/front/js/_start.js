@@ -2,31 +2,33 @@ var commandChain = [];
 var maxZIndex = 110;
 var iconChars = null;
 var firstDomLoad = null;
+var vidCache = new LazyCache();
+
 
 //#region testing
-function _test01_load_game_info() {
-	timit = new TimeIt('*');
-	timit.showTime('hallo');
-	ensureAllGames([() => timit.showTime('done')]);
-
-}
 //#endregion
 
-function _start() {
-	//#region testing
-	// _test01_load_game_info();
-	_initServer([loadIconChars,()=>{
-		//testPicto();
-		testCommonKeys();
+async function _start() {
+	timit = new TimeIt(getFunctionCallerName());
+	//timit.tacit();
 
-	}]);
-	return;
+	//#region testing
+	//_test01_load_game_info();
+	// _initServer([loadIconChars,()=>{
+	// 	//testPicto();
+	// 	testCommonKeys();
+
+	// }]);
+	//return;
 	//atestLoadIcons();
 	//#endregion
 
+	timit.showTime('vor loadAllGames+loadIcons')
+	await loadAllGames();
 	_initServer([loadIconChars, ensureAllGames, () => {
 
 		//START HERE!!!! have iconChars,allGames,gcs
+		timit.showTime('nach loadAllGames+loadIcons')
 		gcsAuto();
 		S.gameConfig = gcs[GAME];
 		_startNewGame('starter');
@@ -180,8 +182,6 @@ function _initPlayers() {
 function _initServer(callbacks = []) {
 	//init host and get gameInfo for all games
 	//for now just cheat since I have that info anyway!
-	timit = new TimeIt(getFunctionCallerName());
-	//timit.tacit();
 
 	S = { path: {}, user: {}, settings: {}, vars: {} };
 	counters = { msg: 0, click: 0, mouseenter: 0, mouseleave: 0, events: 0 };

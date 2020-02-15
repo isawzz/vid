@@ -10,13 +10,9 @@ class LazyCache {
 		await cd.load();
 		return cd;
 	}
-	async init(primKey, dictOptions, { load = false, k } = {}) {
-		let cd = new CacheDict(primKey, dictOptions);
-		this.caches[primKey] = cd;
-		if (load) await cd.aget(isdef(k) ? k : primKey);
-		return cd;
-	}
 }
+//#endregion
+
 //#region CacheDict
 class CacheDict {
 	constructor(primKey, { func = null } = {}) {
@@ -41,60 +37,23 @@ class CacheDict {
 	//async access: lazy load
 	async aget(k) { if (this.live || this._local() || await this._server()) return this.live[k]; }
 
-	_local() { let res = localStorage.getItem(this.primKey); if (res) this.live = JSON.parse(res); return res; }
+	_local() { 
+		console.log('....from local',this.primKey);
+		let res = localStorage.getItem(this.primKey); 
+		if (res) this.live = JSON.parse(res); 
+		return res; }
 
 	async _server() {
+		console.log('....from server',this.primKey);
 		if (this.func) {
 			this.live = await this.func();
+			//console.log('after call: live',this.live)
 			localStorage.setItem(this.primKey, JSON.stringify(this.live));
 		}
 		return this.func;
 	}
 }
 //#endregion
-
-//#region VidCache (renamed to LazyCache)
-class VidCache_dep {
-	constructor(resetStorage = false) {
-		this.live = {};
-		if (resetStorage) this.resetAll();
-	}
-	load(key) {
-		////console.log(key);
-		let keys = null; let sKey = key;
-		if (isList(key)) { skey = key.shift(); keys = key; }
-		let res = this.live[sKey];
-		if (res && keys) res = lookup(res, keys);
-		if (res) return res;
-
-		// //console.log(sKey)
-		let sData = localStorage.getItem(sKey);
-		// //console.log(sData);
-		if (sData) {
-			////console.log('found',sKey,'in local storage:',sData)
-			let data = sData[0] == '{' || sData[0] == '[' ? JSON.parse(sData) : isNumber(sData) ? Number(sData) : sData;
-			if (keys) { this.live[sKey] = data; return lookup(data, keys); }
-			return data;
-		} else {
-			return null;
-		}
-	}
-	reset() { this.live = {}; }
-	resetAll() { localStorage.clear(); this.reset(); }
-	saveComplexObject(keys, o) {
-		//for this to work, have to retrieve dict(keys[0]) from localstorage,transform to json,setKeys to o,then store again
-	}
-	save(key, data) {
-		//key MUST be string!
-		//console.log('saving', key, data)
-		this.live[key] = data;
-		localStorage.setItem(key, JSON.stringify(data));
-	}
-}
-//#endregion
-
-
-
 
 //#region zoom_on_wheel_alt(), zoom_on_resize(), initZoom(), zoom(factor), zoomBy(factor)
 var bodyZoom = 1.0;

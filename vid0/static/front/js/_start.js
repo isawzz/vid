@@ -13,20 +13,20 @@ async function _start() {
 	vidCache = new LazyCache(true);
 
 	//#region testing
-	timit.showTime('vor');
-	_initServer();
-	testPicto(10);
-	//testPicto_dep(10);
-	timit.showTime('testPicto');
-	return;
-	//_test01_load_game_info();
-	// _initServer([loadIconChars,()=>{
-	// 	//testPicto();
-	// 	//testCommonKeys();
-	// 	//testFaKeysNotInGa();
+	// timit.showTime('vor');
+	// _initServer();
+	// testPicto(10);
+	// //testPicto_dep(10);
+	// timit.showTime('testPicto');
+	// return;
+	// //_test01_load_game_info();
+	// // _initServer([loadIconChars,()=>{
+	// // 	//testPicto();
+	// // 	//testCommonKeys();
+	// // 	//testFaKeysNotInGa();
 
-	// }]);
-	//atestLoadIcons();
+	// // }]);
+	// //atestLoadIcons();
 	//#endregion
 
 	timit.showTime('vor loadAllGames_dep+loadIcons')

@@ -34,6 +34,7 @@ PLAYER_UPDATE = {
 };
 
 FUNCS = {
+	test: ()=>{console.log('catan code loaded correctly................');},
 	setup_field: (oid, o, field) => {
 		if (nundef(o.res)) { field.setBg(V.colors.desert); }
 		else {
@@ -81,3 +82,4 @@ FUNCS = {
 
 
 
+FUNCS.test();

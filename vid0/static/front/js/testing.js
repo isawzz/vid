@@ -44,8 +44,7 @@ async function testPicto(n) {
 	let x = -300;
 	let i = 0;
 	timit.showTime('************server');
-	iconChars = await vidCache.load('iconChars', route_icons);
-	//iconChars = await vidCache.init('iconChars',{func:route_icons},{load:true});
+	iconChars = await vidCache.load('iconChars', route_iconChars);
 	timit.showTime('iconChars');
 	console.log(iconChars);
 	for (const k of keys) {

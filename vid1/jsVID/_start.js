@@ -1,18 +1,24 @@
 window.onload = ()=>_start();
 var timit = new TimeIt('*');
-var vidCache = new LazyCache();
+var vidCache = new LazyCache(true);
+var vidCache_dep = new VidCache_dep(); 
 
 async function _start(){
 	//resetAllGames();
 	timit.showTime('*timer');
 
-	allGames = await loadAllGames();
-	//stub to get player info
-	//playerConfig = stubPlayerConfig(allGames);
+	// allGames =  await vidCache.init('allGames',{func:loadGameInfo},{load:true});
+	// //allGames = await loadAllGames_dep(); //old way to do that
+	// playerConfig = stubPlayerConfig(allGames); //stub to get player info
+
+	iconChars =  await vidCache.init('iconChars',{func:route_icons},{load:true,k:'settlement'}); //,{k:'crow',load:true});
+
+	
 
 	timit.showTime('done');
-	console.log('allGames',allGames);//,playerConfig);
-	//console.log(allGames);
+	console.log(iconChars, typeof iconChars);
+	// console.log('allGames',allGames,playerConfig);
+	// console.log(allGames.catan);
 
 	//dauert fast 1 sekunde!!!! kann ich das nicht irgendwie cachen???
 

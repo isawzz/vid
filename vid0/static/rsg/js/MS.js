@@ -22,11 +22,11 @@ class RSG {
 		//soll das ein g oder ein d sein?
 		//sollte eigentlich fuer beide gehen!
 		//zuerst als g
-		let ch = iconChars[key];
+		let ch = iconChars.get(key);
+		if (!ch) ch=iconChars.get('crow');
 		return this._pictoFromChar(ch,x,y,w,h,fg,bg);
 	}
 	_pictoFromChar(ch,x,y,w,h,fg,bg){
-		//if (nundef(ch)) ch = chooseRandom(Object.values(iconChars));
 		let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
 		let text = String.fromCharCode('0x' + ch);
 		return this._pictoFromHexString(text,family,x,y,w,h,fg,bg);

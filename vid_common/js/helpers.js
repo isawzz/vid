@@ -1552,6 +1552,11 @@ function firstCondDict(dict, func) {
 	for (const k in dict) { if (func(dict[k])) return k; }
 	return null;
 }
+function firstCondDictKeys(dict, func) {
+	//return first elem that fulfills condition
+	for (const k in dict) { if (func(k)) return k; }
+	return null;
+}
 function getItemWithMaxValue(d) {
 	let k = Object.keys(d).reduce((a, b) => (d[a] >= d[b] ? a : b));
 	return [k, d[k]];

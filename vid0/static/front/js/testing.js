@@ -1,35 +1,92 @@
+//#region test iconChars after changing it to cacheDict
+function addPicto(IdBoard, key, sz, x, y) {
+	let ms = makeDrawingElement(getUID(), 'board');
+	let ch;
+	try {
+		ch = iconChars.get(key);
+		if (!ch) {
+			key = iconChars.getRandomKey(); 
+			//console.log(iconChars.live)
+			//key = firstCondDictKeys(iconChars.live,x=>x.includes('s')); 
+			//key = iconChars.getFirstKey(x=>x.includes('box'));
+			console.log(key)
+			ch = iconChars.get(key);
+		}
+	} catch{
+		ch = iconChars[key];
+	}
+	console.log('in addPicto got key', key, ch);
+	ms._pictoFromChar(ch, x, y, sz, sz, randomColor());
+	ms.attach();
+}
+function testPicto_dep(n) {
+	initRSGData(); showGame(); initDom();
+	let board = makeDrawingArea('board', 'a_d_game', true);
+	let keys = ['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
+	let y = -300;
+	let x = -300;
+	let i = 0;
+	loadIconChars([() => {
+		console.log(iconChars);
+		for (const k of keys) {
+			addPicto('board', k, 50, x, y);
+			if (y > 250) { y = -300; x += 60; } else y += 60;
+			i += 1; if (i >= n) break;
+		}
+	}]);
+}
+
+async function testPicto(n) {
+	initRSGData(); showGame(); initDom();
+	let board = makeDrawingArea('board', 'a_d_game', true);
+	let keys = ['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
+	let y = -300;
+	let x = -300;
+	let i = 0;
+	timit.showTime('************server');
+	iconChars = await vidCache.load('iconChars', route_icons);
+	//iconChars = await vidCache.init('iconChars',{func:route_icons},{load:true});
+	timit.showTime('iconChars');
+	console.log(iconChars);
+	for (const k of keys) {
+		addPicto('board', k, 50, x, y);
+		if (y > 250) { y = -300; x += 60; } else y += 60;
+		i += 1; if (i >= n) break;
+	}
+}
+
 //#region test pictos w/ icons that are same in gameIcons and faIcons, new route_rsg_asset async function
 function addPictoFromChar(IdBoard, ch, sz, x, y) {
 	let ms = makeDrawingElement(getUID(), 'board');
 	ms._pictoFromChar(ch, x, y, sz, sz, randomColor());
 	ms.attach();
 }
-async function testCommonKeys() {
+async function testFaKeysNotInGa() {
 	initRSGData(); showGame(); initDom();
 	let gaIcons = await route_rsg_asset('gameIconCodes');
 	let faIcons = await route_rsg_asset('faIconCodes');
 	let smallIcons = await route_rsg_asset('iconTest');
-	commonKeys = [];
-	for (const k in gaIcons) {
-		if (isdef(faIcons[k])) commonKeys.push(k);
+	faKeys = [];
+	for (const k in faIcons) {
+		if (nundef(gaIcons[k])) faKeys.push(k);
 	}
-	console.log('common keys:',commonKeys);
+	console.log('common keys:', faKeys);
 	let board = makeDrawingArea('board', 'a_d_game', true);
-	setAreaWidth('a_d_game',1400);
-	setAreaHeight('a_d_game',1000);
+	setAreaWidth('a_d_game', 2400);
+	setAreaHeight('a_d_game', 1500);
 
 	// let ms = makeDrawingElement('el1', 'board');
 
-	let keys = commonKeys; //.slice(0,100);//['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
-	let xStart=-600;
-	let yStart=-400;
+	let keys = faKeys; //.slice(0,100);//['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
+	let xStart = -1100;
+	let yStart = -670;
 	let y = yStart;//-300;
 	let x = xStart;//-300;
-	for (const k of keys) {
-		addPictoFromChar('board', gaIcons[k], 50, x, y);
-		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
-	}
-	y=yStart;x+=60;
+	// for (const k of keys) {
+	// 	addPictoFromChar('board', gaIcons[k], 50, x, y);
+	// 	if (y > -yStart) { y = yStart; x += 60; } else y += 60;
+	// }
+	// y=yStart;x+=60;
 	for (const k of keys) {
 		addPictoFromChar('board', faIcons[k], 50, x, y);
 		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
@@ -46,7 +103,49 @@ async function testCommonKeys() {
 	// ms.attach();
 	// console.log(ms)
 }
-async function atestLoadIcons(){
+async function testCommonKeys() {
+	initRSGData(); showGame(); initDom();
+	let gaIcons = await route_rsg_asset('gameIconCodes');
+	let faIcons = await route_rsg_asset('faIconCodes');
+	let smallIcons = await route_rsg_asset('iconTest');
+	faKeys = [];
+	for (const k in gaIcons) {
+		if (isdef(faIcons[k])) faKeys.push(k);
+	}
+	console.log('common keys:', faKeys);
+	let board = makeDrawingArea('board', 'a_d_game', true);
+	setAreaWidth('a_d_game', 1400);
+	setAreaHeight('a_d_game', 1000);
+
+	// let ms = makeDrawingElement('el1', 'board');
+
+	let keys = faKeys; //.slice(0,100);//['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
+	let xStart = -600;
+	let yStart = -400;
+	let y = yStart;//-300;
+	let x = xStart;//-300;
+	for (const k of keys) {
+		addPictoFromChar('board', gaIcons[k], 50, x, y);
+		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
+	}
+	y = yStart; x += 60;
+	for (const k of keys) {
+		addPictoFromChar('board', faIcons[k], 50, x, y);
+		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
+	}
+	// let key = chooseRandom(Object.keys(faChars));//'clock';
+	// ms._picto('crow', -100, -100, 100, 100, randomColor());
+
+	//ms.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
+	//ms._picto('knight',0,0,50,100,'white','blue');
+	//_makeGroundShape(ms, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
+	//ms.setScaleX(1);
+	//ms.text({txt:'hallo',fill:'white'})
+
+	// ms.attach();
+	// console.log(ms)
+}
+async function atestLoadIcons() {
 
 	timit.showTime('_______start gameIconCode');
 	let gaIcons = await route_rsg_asset('gameIconCodes');
@@ -55,11 +154,11 @@ async function atestLoadIcons(){
 	timit.showTime('_______start iconTest');
 	let smallIcons = await route_rsg_asset('iconTest');
 	timit.showTime('nach atestLoadIconst');
-	commonKeys = [];
+	faKeys = [];
 	for (const k in gaIcons) {
-		if (isdef(faIcons[k])) commonKeys.push(k);
+		if (isdef(faIcons[k])) faKeys.push(k);
 	}
-	console.log('common keys:',commonKeys);
+	console.log('common keys:', faKeys);
 
 }
 
@@ -95,10 +194,6 @@ async function atest01() {
 		alert("HTTP-Error: " + response.status);
 	}
 }
-async function atest02(){
-	//
-}
-
 function _startTest01() {
 	//muss irgendeine function schreiben die ein file laded!
 	//lets take loadYML
@@ -160,38 +255,13 @@ function testAndSave() {
 	})
 
 }
-function addPicto(IdBoard, key, sz, x, y) {
+function addPicto_dep(IdBoard, key, sz, x, y) {
 	if (!(key in iconChars)) key = 'crow';
 
 	console.log('found key:', key);
 	let ms = makeDrawingElement(getUID(), 'board');
 	ms._picto(key, x, y, sz, sz, randomColor());
 	ms.attach();
-}
-function testPicto() {
-	initRSGData(); showGame(); initDom();
-	let board = makeDrawingArea('board', 'a_d_game', true);
-
-	// let ms = makeDrawingElement('el1', 'board');
-
-	let keys = ['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
-	let y = -300;
-	let x = -300;
-	for (const k of keys) {
-		addPicto('board', k, 50, x, y);
-		if (y > 250) { y = -300; x += 60; } else y += 60;
-	}
-	// let key = chooseRandom(Object.keys(faChars));//'clock';
-	// ms._picto('crow', -100, -100, 100, 100, randomColor());
-
-	//ms.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
-	//ms._picto('knight',0,0,50,100,'white','blue');
-	//_makeGroundShape(ms, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
-	//ms.setScaleX(1);
-	//ms.text({txt:'hallo',fill:'white'})
-
-	// ms.attach();
-	// console.log(ms)
 }
 
 

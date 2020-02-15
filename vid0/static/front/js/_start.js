@@ -2,7 +2,7 @@ var commandChain = [];
 var maxZIndex = 110;
 var iconChars = null;
 var firstDomLoad = null;
-var vidCache = new LazyCache();
+var vidCache = null;
 
 
 //#region testing
@@ -10,25 +10,31 @@ var vidCache = new LazyCache();
 
 async function _start() {
 	timit = new TimeIt(getFunctionCallerName());
-	//timit.tacit();
+	vidCache = new LazyCache(true);
 
 	//#region testing
+	timit.showTime('vor');
+	_initServer();
+	testPicto(10);
+	//testPicto_dep(10);
+	timit.showTime('testPicto');
+	return;
 	//_test01_load_game_info();
 	// _initServer([loadIconChars,()=>{
 	// 	//testPicto();
-	// 	testCommonKeys();
+	// 	//testCommonKeys();
+	// 	//testFaKeysNotInGa();
 
 	// }]);
-	//return;
 	//atestLoadIcons();
 	//#endregion
 
-	timit.showTime('vor loadAllGames+loadIcons')
-	await loadAllGames();
+	timit.showTime('vor loadAllGames_dep+loadIcons')
+	await loadAllGames_dep();
 	_initServer([loadIconChars, ensureAllGames, () => {
 
 		//START HERE!!!! have iconChars,allGames,gcs
-		timit.showTime('nach loadAllGames+loadIcons')
+		timit.showTime('nach loadAllGames_dep+loadIcons')
 		gcsAuto();
 		S.gameConfig = gcs[GAME];
 		_startNewGame('starter');
@@ -202,7 +208,7 @@ function isFrontAIPlayer(id) {
 	let playerType = pl.playerType;
 	return playerType == 'AI';
 }
-var faChars, gaChars, commonKeys;
+var faChars, gaChars, faKeys;
 function loadIconChars(callbacks = []) {
 	loadYML('/vid0/static/rsg/assets/gameIconCodes.yml', dga => {
 		//console.log(dga);
@@ -211,12 +217,12 @@ function loadIconChars(callbacks = []) {
 			//console.log(dfa);
 			faChars = dfa;
 			iconChars = {};
-			commonKeys = [];
+			faKeys = [];
 			for (const k in faChars) {
 				iconChars[k] = faChars[k];
 			}
 			for (const k in gaChars) {
-				if (isdef(faChars[k])) commonKeys.push(k);
+				if (isdef(faChars[k])) faKeys.push(k);
 				iconChars[k] = gaChars[k];
 			}
 			// console.log('common keys:',commonKeys);

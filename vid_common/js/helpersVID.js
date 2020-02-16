@@ -87,13 +87,8 @@ async function route_path_yaml_dict(url) {
 	let dict = jsyaml.load(text);
 	return dict;
 }
-// Example POST method implementation:
 async function postData(url = '', data = {}) {
-	//usage:
-	// postData('https://example.com/answer', { answer: 42 })
-	// .then((data) => {
-	//   console.log(data); // JSON data parsed by `response.json()` call
-	// });
+	//usage: postData('https://example.com/answer', { answer: 42 })
 
 	// Default options are marked with *
 	const response = await fetch(url, {

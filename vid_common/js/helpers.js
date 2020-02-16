@@ -1107,69 +1107,54 @@ function show(elem) {
 //#endregion
 
 //#region file IO
-function loadScript(path, callback) {
-	var script = document.createElement('script');
-	script.onload = ev => {
-		if (callback) callback(path);
-	};
-	script.src = path;
-	document.head.appendChild(script);
+function fireClick(node) {
+	if (document.createEvent) {
+		var evt = document.createEvent('MouseEvents');
+		evt.initEvent('click', true, false);
+		node.dispatchEvent(evt);
+	} else if (document.createEventObject) {
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		node.onclick();
+	}
 }
+function downloadFile(jsonObject,filenameNoExt){
+	json_str = JSON.stringify(jsonObject);
+	saveFileAtClient(filenameNoExt+".json", "data:application/json", new Blob([json_str], {type: ""}));
 
-function loadStyle(href, callback) {
-	let style = document.createElement('link');
-	style.rel = href == 'favicon' ? 'shortcut icon' : 'stylesheet';
-	style.onload = function () {
-		if (callback) callback(href);
-	};
-	style.href = href;
-	document.head.appendChild(style);
 }
-function loadText(path, callback) {
-	$.ajax({
-		url: path,
-		type: 'GET',
-		success: response => {
-			//console.log(response);
-			if (callback) {
-				callback(response);
-			}
-		},
-		error: err => {
-			error(err);
-		}
-	});
-	return 'ok';
-}
-function loadYML(path, callback) {
-	res = undefined;
-	$.get(path) // eg. '/common/resources/LessonContentsLv01Ln01.yml'
-		.done(function (data) {
-			var yml = jsyaml.load(data);
-			var jsonString = JSON.stringify(data);
-			var json = $.parseJSON(jsonString);
-			callback(yml);
-		});
-}
-function saveFile(name, type, data) {
+function saveFileAtClient(name, type, data) {
 	// Function to download data to a file
 	//usage:
 	// json_str = JSON.stringify(G);
-	// saveFile("yourfilename.json", "data:application/json", new Blob([json_str], {type: ""}));
+	// saveFileAtClient("yourfilename.json", "data:application/json", new Blob([json_str], {type: ""}));
 
+	console.log(navigator.msSaveBlob);
 	if (data != null && navigator.msSaveBlob) return navigator.msSaveBlob(new Blob([data], { type: type }), name);
-
-	var a = $("<a style='display: none;'/>");
-	var url = window.URL.createObjectURL(new Blob([data], { type: type }));
-	a.attr('href', url);
-	a.attr('download', name);
-	$('body').append(a);
-	a[0].click();
+	console.log('still here!')
+	let a = document.createElement('a');
+	a.style.display = 'none';
+	let url = window.URL.createObjectURL(new Blob([data], { type: type }));
+	a.href = url;
+	a.download = name;
+	document.body.appendChild(a);
+	fireClick(a);
 	setTimeout(function () {
 		// fixes firefox html removal bug
 		window.URL.revokeObjectURL(url);
 		a.remove();
 	}, 500);
+
+	// var a = $("<a style='display: none;'/>");
+	// a.attr('href', url);
+	// a.attr('download', name);
+	// $('body').append(a);
+	// a[0].click();
+	// setTimeout(function () {
+	// 	// fixes firefox html removal bug
+	// 	window.URL.revokeObjectURL(url);
+	// 	a.remove();
+	// }, 500);
 }
 //#endregion
 
@@ -1575,7 +1560,7 @@ function getItemWithMax(d, propName) {
 	return [kmax, d[kmax], max];
 }
 function getKeys(dict) { return Object.keys(dict); }
-function getValueArray(o,elKey='obj',arrKey='_set'){
+function getValueArray(o, elKey = 'obj', arrKey = '_set') {
 	//for {_set:[{_obj:111},{_obj:222}]} returns [111,222]
 	let raw = jsCopy(o);
 	if (isdef(o[arrKey])) {

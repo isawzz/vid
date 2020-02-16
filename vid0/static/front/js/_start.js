@@ -3,14 +3,16 @@ var maxZIndex = 110;
 var iconChars = null;
 var firstDomLoad = null;
 var vidCache = null;
-
+var vidCache_dep = null; 
 
 //#region testing
 //#endregion
 
 async function _start() {
+
 	timit = new TimeIt(getFunctionCallerName());
 	vidCache = new LazyCache(true);
+	vidCache_dep = new VidCache_dep();
 
 	//#region testing
 	// timit.showTime('vor');

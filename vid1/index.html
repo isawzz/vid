@@ -6,11 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/facebook/65/game-die_1f3b2.png">
-	<link href="/vid1/css/main.css" rel="stylesheet">
+	<script src="/vid_common/lib/js-yaml.min.js"></script>
+	<script src="/vid_common/lib/d3.js"></script>
+	<link href="/vid/css/main.css" rel="stylesheet">
 	<script src="/vid_common/js/helpers.js"></script>
-	<script src="/vid1/jsVID/helpersMore.js"></script>
 	<script src="/vid_common/js/features.js"></script>
-	<script src="/vid1/jsVID/libs/js-yaml.min.js"></script>
 
 </head>
 
@@ -25,10 +25,10 @@
 		<div id='actions' class='side'>
 			actions
 		</div>
-		<div id='table'>
-			table
+		<div id='table' style='background-color:green;'>
+			<div id='t1' style='background-color:rgba(255,255,255,.5);width:800px;height:100%;'></div>
 		</div>
-		<div id='log' class='side'>
+		<div id='log'>
 			log
 		</div>
 	</div>
@@ -46,10 +46,11 @@
 	</div>
 
 	<!-- #region loading -->
-	<script src="/vid1/jsVID/_config.js"></script>
+	<script src="/vid1/vid/js/_config.js"></script>
 	<script src="/vid_common/js/helpersVID.js"></script>
 	<script src="/vid_common/js/helpersRSG.js"></script>
-	<script src="/vid1/jsVID/_start.js"></script>
+	<script src="/vid1/jsRSG/_rsg.js"></script>
+	<script src="/vid1/vid/js/_start.js"></script>
 	<!-- #endregion loading -->
 </body>
 

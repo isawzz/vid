@@ -4,8 +4,8 @@ class LazyCache {
 		this.caches = {};
 		if (resetStorage) localStorage.clear();
 	}
-	async load(primKey, loaderFunc) {
-		let cd = new CacheDict(primKey, { func: loaderFunc });
+	async load(primKey, loaderFunc, useLocal = true) {
+		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
 		this.caches[primKey] = cd;
 		await cd.load();
 		return cd;
@@ -15,10 +15,11 @@ class LazyCache {
 
 //#region CacheDict
 class CacheDict {
-	constructor(primKey, { func = null } = {}) {
+	constructor(primKey, { func = null } = {}, useLocal = true) {
 		this.primKey = primKey; //this is key under which object is stored in localStorage
 		this.func = func;
 		this.live = null;
+		this.useLocal = useLocal;
 	}
 	async load() {
 		if (this.live) return this;
@@ -28,8 +29,8 @@ class CacheDict {
 	get(k) { return this.live[k]; }
 	getRandom() { return this.live[getRandomKey(this.live)]; }
 	getRandomKey() { return getRandomKey(this.live); }
-	getFirstKey(cond){return firstCondDictKeys(this.live,cond);}
-	getDictUnsafe(){return this.live;}
+	getFirstKey(cond) { return firstCondDictKeys(this.live, cond); }
+	getDictUnsafe() { return this.live; }
 
 	//lazy load for objects only saved at client
 	getLocal(k) { return this.live[k] || this._local() && this.get(k); }
@@ -37,18 +38,20 @@ class CacheDict {
 	//async access: lazy load
 	async aget(k) { if (this.live || this._local() || await this._server()) return this.live[k]; }
 
-	_local() { 
-		console.log('....from local',this.primKey);
-		let res = localStorage.getItem(this.primKey); 
-		if (res) this.live = JSON.parse(res); 
-		return res; }
+	_local() {
+		if (!this.useLocal) return null;
+		//console.log('....from local', this.primKey);
+		let res = localStorage.getItem(this.primKey);
+		if (res) this.live = JSON.parse(res);
+		return res;
+	}
 
 	async _server() {
-		console.log('....from server',this.primKey);
+		//console.log('....from server', this.primKey);
 		if (this.func) {
 			this.live = await this.func();
 			//console.log('after call: live',this.live)
-			localStorage.setItem(this.primKey, JSON.stringify(this.live));
+			if (this.useLocal) localStorage.setItem(this.primKey, JSON.stringify(this.live));
 		}
 		return this.func;
 	}

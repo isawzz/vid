@@ -51,7 +51,7 @@ async function route_initGame(game, gc) {
 	await fetch(SERVER + '/restart');
 	await fetch(SERVER + '/game/select/' + game);
 	let nPlayers = gc.numPlayers;
-	console.log(gc)
+	//console.log(gc)
 	for (let i = 0; i < nPlayers; i++) {
 		let plInfo = gc.players[i];
 		let isAI = plInfo.agentType !== null;
@@ -76,7 +76,7 @@ async function route_server_js(url) {
 	return await data.json();
 }
 async function route_server_text(url) {
-	console.log(url, SERVER + url)
+	//console.log(url, SERVER + url)
 	let data = await fetch(SERVER + url);
 	let text = await data.text();
 	return text;

@@ -1118,9 +1118,9 @@ function fireClick(node) {
 		node.onclick();
 	}
 }
-function downloadFile(jsonObject,filenameNoExt){
+function downloadFile(jsonObject, filenameNoExt) {
 	json_str = JSON.stringify(jsonObject);
-	saveFileAtClient(filenameNoExt+".json", "data:application/json", new Blob([json_str], {type: ""}));
+	saveFileAtClient(filenameNoExt + ".json", "data:application/json", new Blob([json_str], { type: "" }));
 
 }
 function saveFileAtClient(name, type, data) {
@@ -1431,6 +1431,8 @@ function any(arr, cond) {
 function anyStartsWith(arr, prefix) {
 	return any(arr, el => startsWith(el, prefix));
 }
+function arrChildren(elem) { return [...elem.children]; }
+
 function arrFromIndex(arr, i) { return arr.slice(i); }
 function arrMinus(a, b) {
 	let res = a.filter(x => !b.includes(x));

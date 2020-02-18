@@ -826,8 +826,6 @@ function addFlexGridDiv(dParent) { return addDivU({ dParent: dParent, className:
 //#endregion
 
 //#region DOM: creating g elements
-function addGFill(id, divParent) { return addSvgg(divParent, id, { originInCenter: true }); }
-
 function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter = false } = {}) {
 	//div dParent gets an svg and inside a g, returns g
 	let svg1 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -839,7 +837,7 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 	dParent.appendChild(svg1);
 
 	let g1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	g1.id = gid;
+	if (gid) g1.id = gid;
 	svg1.appendChild(g1);
 	// if (originInCenter) { g1.style='transform:translate(50%, 50%)'; } //works!
 	// if (originInCenter) { g1.setAttribute('class', 'gCentered'); } //works! but: relies on class gCentered
@@ -1562,22 +1560,6 @@ function getItemWithMax(d, propName) {
 	return [kmax, d[kmax], max];
 }
 function getKeys(dict) { return Object.keys(dict); }
-function getValueArray(o, elKey = 'obj', arrKey = '_set') {
-	//for {_set:[{_obj:111},{_obj:222}]} returns [111,222]
-	let raw = jsCopy(o);
-	if (isdef(o[arrKey])) {
-		raw = raw[arrKey];
-	}
-	if (isDict(raw)) {
-		raw = dict2list(raw);
-	}
-	if (!isList(raw)) return [];
-	if (raw.length > 0 && raw[0][elKey]) {
-		raw = raw.map(x => x[elKey]);
-	}
-	return raw;
-}
-
 function intersection(arr1, arr2) {
 	//each el in result will be unique
 	let res = [];
@@ -1741,7 +1723,6 @@ function sortByFunc(arr, func) {
 function sortByFuncDescending(arr, func) {
 	arr.sort((a, b) => (func(a) > func(b) ? -1 : 1));
 }
-function _setToList(oval) { if (typeof oval == 'object' && '_set' in oval) return oval._set; else return oval; }
 function simpleRep(val) {
 	if (nundef(val) || val === '') {
 		return '_';
@@ -1933,7 +1914,8 @@ function trim(str) {
 //#endregion
 
 //#region types, conversions
-function evToId(ev) {
+function evToClosestId(ev) {
+	//returns first ancestor that has an id
 	let elem = findParentWithId(ev.target);
 	return elem.id;
 }
@@ -1980,6 +1962,30 @@ function isSimple(x) { return isString(x) || isNumeric(x); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
 function nundef(x) { return x === null || x === undefined; }
+
+//#region faster version of getValueArray
+function getElements(o, elKey = '_obj', arrKey = '_set') {
+	// {_set:[{_obj:1},{_obj:2},...]} ==> [1,2,..]
+	let res=o[arrKey]?o[arrKey]:o;
+	if (isList(res) && res.length>0) return res[0][elKey]?res.map(x=>x[elKey]):res;
+	else return [];
+}
+function getValueArray(o, elKey = 'obj', arrKey = '_set') {
+	//for {_set:[{_obj:111},{_obj:222}]} returns [111,222]
+	let raw = jsCopy(o);
+	if (isdef(o[arrKey])) {
+		raw = raw[arrKey];
+	}
+	if (isDict(raw)) {
+		raw = dict2list(raw);
+	}
+	if (!isList(raw)) return [];
+	if (raw.length > 0 && raw[0][elKey]) {
+		raw = raw.map(x => x[elKey]);
+	}
+	return raw;
+}
+function _setToList(oval) { if (typeof oval == 'object' && '_set' in oval) return oval._set; else return oval; }
 
 //#endregion
 

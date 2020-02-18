@@ -32,17 +32,19 @@ async function route_userSpec(game, fname) {
 		return { asText: '' }; //empty spec!
 	}
 }
+function loadCode(game,text){
+	var scriptTag = document.createElement("script");
+	scriptTag.onload = () => console.log('code for', game, 'loaded');
+	scriptTag.setAttribute("type", "text/javascript");
+	scriptTag.innerHTML = text; // "console.log('HALLOOOOOOOOOO DU!!!!!!!');";
+	document.getElementsByTagName("body")[0].appendChild(scriptTag);
+}
 async function route_userCode(game, fname) {
 	try {
 		//let codePath = '/games/' + game + '/_rsg/' + fname + '.js';
 		let url = '/code/' + game + (isdef(fname) ? '/' + fname : '');
 		let text = await route_server_text(url);
 
-		var scriptTag = document.createElement("script");
-		scriptTag.onload = () => console.log('code for', game, 'loaded');
-		scriptTag.setAttribute("type", "text/javascript");
-		scriptTag.innerHTML = text; // "console.log('HALLOOOOOOOOOO DU!!!!!!!');";
-		document.getElementsByTagName("body")[0].appendChild(scriptTag);
 		return { asText: text };
 	} catch{ return {}; }
 

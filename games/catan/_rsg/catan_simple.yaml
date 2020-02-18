@@ -1,4 +1,4 @@
-tableSize: [1000, 800]
+tableSize: [600, 500]
 layout: [
   " m m m m m o ",
   " m m m m m o ",
@@ -10,3 +10,5 @@ areas:
   m: board
   o: others
   p: player
+
+CODE: test

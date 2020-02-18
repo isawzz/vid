@@ -319,8 +319,8 @@ def _makePath(game,file=None,ext='yaml'):
 
 def userSpecPath(game, ext, file):
 	rootPath = os.path.dirname(os.path.abspath(__file__))  #path of this file app_interface.py
-	fname = file if file else game
-	path = os.path.join(rootPath, 'games/' + game + '/_rsg/' + fname + '_ui.' + ext)
+	fname = file if file else game+'_ui'
+	path = os.path.join(rootPath, 'games/' + game + '/_rsg/' + fname + '.' + ext)
 	print(path)
 	return path
 
@@ -408,7 +408,7 @@ def vid0_save_UI_code(game,code,v=None):
 @app.route('/')
 def rootsim():
 	# return app.send_static_file('vid1/index.html')
-	return send_from_directory('vid1', 'index.html')
+	return send_from_directory('vid_common', 'index.html')
 
 @app.route('/text/<path:path>')
 def rootsimTextPath(path):

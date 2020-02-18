@@ -6,16 +6,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
 	<link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/facebook/65/game-die_1f3b2.png">
-	<script src="/vid_common/lib/js-yaml.min.js"></script>
-	<script src="/vid_common/lib/d3.js"></script>
-	<link href="/vid/css/main.css" rel="stylesheet">
-	<script src="/vid_common/js/helpers.js"></script>
-	<script src="/vid_common/js/features.js"></script>
+	<!-- <script src="/vid1/lib/jQuery-3.4.1.min.js"></script> -->
+	<script src="/vid1/lib/js-yaml.min.js"></script>
+	<script src="/vid1/lib/d3.js"></script>
+	<link href="/vid1/css/main.css" rel="stylesheet">
+	<script src="/vid1/js/helpers.js"></script>
+	<script src="/vid1/js/features.js"></script>
 
 </head>
 
 <body>
-	<div id='header' class='flex'>
+	<div id='header'  class='flex'>
 		<div id='info'>
 			info
 		</div>
@@ -46,11 +47,28 @@
 	</div>
 
 	<!-- #region loading -->
-	<script src="/vid1/vid/js/_config.js"></script>
-	<script src="/vid_common/js/helpersVID.js"></script>
-	<script src="/vid_common/js/helpersRSG.js"></script>
-	<script src="/vid1/jsRSG/_rsg.js"></script>
-	<script src="/vid1/vid/js/_start.js"></script>
+	<script src="/vid1/js/__config.js"></script>
+	<script src="/vid1/js/vidHelpers.js"></script>
+	<script src="/vid1/js/_rsgHelpers.js"></script>
+	<script src="/vid1/js/_area.js"></script>
+	<script src="/vid1/js/_behavior.js"></script>
+	<script src="/vid1/js/_board.js"></script>
+	<script src="/vid1/js/_oManager.js"></script>
+	<script src="/vid1/js/_spec.js"></script>
+
+	<!-- alles fuer board detection noetige: hopfully <= 5 modules!!!! -->
+	<!-- versuche das ALLES zu eliminieren !!!! -->
+	<!-- <script src="/vid0/static/rsg/js/structures.js"></script>
+	<script src="/vid0/static/rsg/js/MS.js"></script>
+	<script src="/vid0/static/rsg/js/go.js"></script>
+	<script src="/vid0/static/rsg/js/presentation_util.js"></script>
+
+	<script src="/vid0/static/rsg/js/linkHelpers.js"></script> -->
+	<!-- <script src="/vid0/rsg/js/interact.js"></script>
+	<script src="/vid0/rsg/js/infobox.js"></script> -->
+
+	<script src="/vid1/js/__startRsg.js"></script>
+	<script src="/vid1/js/__start.js"></script>
 	<!-- #endregion loading -->
 </body>
 

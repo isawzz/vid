@@ -229,9 +229,6 @@ function stopBlinking(id) {
 	let area = UIS[id];
 	if (area) area.elem.classList.remove('blink');
 }
-function evToO(ev) {
-	return getVisual(evToId(ev));
-}
 //#endregion
 
 //#region try commenting out!!!

@@ -1,40 +1,26 @@
+var COND = {};
+var FUNCS = {};
+var oManager = null;
+var RUI = {};
+
 function rStart() {
+	timit.showTime('*timer');
+	oManager = new ObjectManager();
+
 	rMergeSpec();
 	rAreas();
-	
-}
-function rMergeSpec() {
-	let defaultSpec = {
-		table: { areas: [{ main: [800, 600] }] }
-	};
-	delete userSpec.live.asText; //TODO deal with this before?!?
-	SPEC = deepmerge(defaultSpec, userSpec.live, { arrayMerge: overwriteMerge });
-
-	//SPEC is merged userSpec!
-	console.log(SPEC);
+	gameStep();
 
 }
-function rAreas() {
-	let d = document.getElementById('t1');
-	d.style.width = SPEC.tableSize[0] + 'px';
-	d.style.height = SPEC.tableSize[1] + 'px';
-	d.style.display = 'grid';
-	let s='';
-	for(const line of SPEC.layout){
-		s+='"'+line+'" ';
-	}
-	d.style.gridTemplateAreas = s; //style.gridTemplateAreas = '"z z z" "a b c" "d e f"';
-	for (const k in SPEC.areas) {
-		let areaName = SPEC.areas[k];
-		console.log(k, areaName)
-		let d1 = document.createElement('div');
-		d1.id = areaName;
-		d1.style.gridArea = k;
-		d1.style.backgroundColor = randomColor();
-		d1.innerHTML = areaName;
-		d.appendChild(d1);
-	}
+function gameStep(){
+
+	rBehaviors();
+
+	timit.showTime('*timer');
+
 }
+
+//#region tests
 function test12_flexbox() {
 	let div1 = document.getElementById('table');
 	clearElement('table')
@@ -135,14 +121,12 @@ function test15() {
 		})
 }
 function test16() {
-	let data = SPEC.table.areas;// [4, 1, 6, 2, 8, 9];
-	// data = [data[0],data[1],{name:'dummy'},data[2]];
+	let data = SPEC.table.areas;
 	console.log('data', data.map(x => x.name));
 	console.log('data[0]', data[0]);
-	let d = d3.select('#table'); //.style('width','1000px');
+	let d = d3.select('#table'); 
 	clearElement('table');
 	let t = 'div';
-	// let row = 0;
 	let extra = d.selectAll(t)
 		.data(data)
 		.enter()
@@ -151,17 +135,10 @@ function test16() {
 			console.log('d', d, 'this', this);
 			for (const k in d) {
 				let val = d[k];
-				// if (val == 'dummy'){
-				// 	//insert a line break in parent div!!!
-				// 	this.class='break';
-				// 	// this.style.flex='0 1 auto';
-				// 	// this.style.width = '800px';
-				// 	// this.style.display = 'box';
-				// 	continue;
-				// }
 				if (isNumber(val)) val = val + 'px';
-				this.style[k] = val; //attr(k, val)
+				this.style[k] = val; 
 			}
 		})
 }
 
+//#endregion

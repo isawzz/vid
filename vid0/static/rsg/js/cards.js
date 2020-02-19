@@ -69,11 +69,11 @@ function _showHand(oids, idArea) {
 	for (const oid of oids) {
 		//let id = getMainId(oid);
 		//console.log('getMainId for',oid,':',id)
-		let ms = getVisual(oid);//UIS[id];
-		if (nundef(ms)) {
+		let mobj = getVisual(oid);//UIS[id];
+		if (nundef(mobj)) {
 			//console.log('making card for:',oid,idHand);
-			ms = makeCard(oid, G.table[oid], idHand);
-			//console.log('created card:',oid,ms.id,areaName);
+			mobj = makeCard(oid, G.table[oid], idHand);
+			//console.log('created card:',oid,mobj.id,areaName);
 
 		}
 		if (!_isInHand(oid, idHand)) {
@@ -128,10 +128,10 @@ function lineupDecks(msDecks, deckArea) {
 	let areaCenter = { x: deckArea.w / 2, y: deckArea.h / 2 };
 	let topLeftOffset = { x: areaCenter.x - 78 / 2, y: areaCenter.y - 110 / 2 };
 	//topLeftOffset = areaCenter;
-	for (const ms of msDecks) {
+	for (const mobj of msDecks) {
 		//position decks relative to center of deck area
-		ms.attach();
-		ms.setPos(x + topLeftOffset.x, y + topLeftOffset.y);
+		mobj.attach();
+		mobj.setPos(x + topLeftOffset.x, y + topLeftOffset.y);
 		if (ysign > 0) { yfactor += 1; }
 		ysign = -ysign;
 		y = yfactor * yheight * ysign;
@@ -141,37 +141,37 @@ function makeDeckSuccess(oid, o, areaName) {
 	let id = 'm_t_' + oid; //oid;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
 
-	let ms = new RSG();
-	ms.id = id;
-	ms.oid = oid;
-	ms.o = o;
-	ms.isa.deck = true;
+	let mobj = new MOBJ();
+	mobj.id = id;
+	mobj.oid = oid;
+	mobj.o = o;
+	mobj.isa.deck = true;
 
-	ms.elem = document.createElement('div');
-	ms.elem.id = id;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(ms.elem);
-	ms.cat = DOMCATS[ms.domType];
-	ms.idParent = areaName;
+	mobj.elem = document.createElement('div');
+	mobj.elem.id = id;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(mobj.elem);
+	mobj.cat = DOMCATS[mobj.domType];
+	mobj.idParent = areaName;
 	UIS[areaName].children.push(id);
 	//console.log('******** vor link', id, oid)
 	listKey(IdOwner, id[2], id);
 	linkObjects(id, oid);
-	UIS[id] = ms;
+	UIS[id] = mobj;
 
-	ms.elem.classList.add('deckBase');
-	//ms.elem.style.backgroundColor = 'yellow';
+	mobj.elem.classList.add('deckBase');
+	//mobj.elem.style.backgroundColor = 'yellow';
 
 	// timit.showTime('vor makeStapel!');
 	let num = o.deck_count == 0 ? 0 : o.deck_count / 2 + 1;
-	let topmost = makeStapel(ms.elem, num); //o.deck_count/4+1); //Math.min(25,o.deck_count)); //300);
-	ms.topmost = topmost;
-	if (topmost != ms.elem) ms.parts['topmost'] = topmost;
+	let topmost = makeStapel(mobj.elem, num); //o.deck_count/4+1); //Math.min(25,o.deck_count)); //300);
+	mobj.topmost = topmost;
+	if (topmost != mobj.elem) mobj.parts['topmost'] = topmost;
 	//console.log('topmost', topmost);
-	//console.log(ms);
+	//console.log(mobj);
 	// timit.showTime('nach makeStapel!')
 
-	return ms;
+	return mobj;
 
 }
 function makeStapel(elem, n) {
@@ -198,10 +198,10 @@ function makeDeckArea(areaName, numDecks) {
 	//leave for now
 
 	let deckAreaName = 'deckArea';
-	let ms = makeArea(deckAreaName, areaName);
-	ms.setBg('seagreen');
-	ms.setBounds(0, 0, 200, deckHeightNeeded, 'px');
-	return ms;
+	let mobj = makeArea(deckAreaName, areaName);
+	mobj.setBg('seagreen');
+	mobj.setBounds(0, 0, 200, deckHeightNeeded, 'px');
+	return mobj;
 }
 //TODO: present a deck found in table
 //TODO: remove cards from a deck
@@ -215,9 +215,9 @@ function addCardToHand(oid, areaName) {
 	let idHandMS = getIdArea(areaName);
 	let idCardMS = getMainId(oid);
 	//console.log('....addCardToHand','oid',oid,'id',id,'areaName',areaName,'idHand',idHand);
-	let ms = UIS[idCardMS];
+	let mobj = UIS[idCardMS];
 	let msHand = UIS[idHandMS];
-	ms.hand = idHandMS;
+	mobj.hand = idHandMS;
 	if (nundef(msHand.numCards)) {
 		msHand.numCards = 1;
 		msHand.dx = 0;
@@ -227,14 +227,14 @@ function addCardToHand(oid, areaName) {
 		msHand.cards.push(oid);
 	}
 	let n = msHand.numCards;
-	ms.zIndex = n;
-	//console.log('addCardToHand: isAttached=',ms.isAttached, 'hand.numCards',n);
-	ms.attach('hand');
-	//console.log('...isAttached=',ms.isAttached)
+	mobj.zIndex = n;
+	//console.log('addCardToHand: isAttached=',mobj.isAttached, 'hand.numCards',n);
+	mobj.attach('hand');
+	//console.log('...isAttached=',mobj.isAttached)
 
 	//calc card height
-	let hCard = ms.elem.offsetHeight;
-	let bounds = getBounds(ms.elem);
+	let hCard = mobj.elem.offsetHeight;
+	let bounds = getBounds(mobj.elem);
 	let hCard1 = bounds.height;
 	//console.log(hCard);
 	//console.log('height of card: offsetHeight:',hCard,'bounds.height',hCard1)
@@ -249,17 +249,17 @@ function addCardToHand(oid, areaName) {
 	//let hHand = bounds.height;// !!!!!
 	//let hHand = hand.elem.offsetHeight;
 	//console.log(hHand);
-	let wCard = ms.elem.offsetWidth;
+	let wCard = mobj.elem.offsetWidth;
 	//console.log('w1',wCard);
 	let scale = 1;
 	if (hCard >= hHand) {
 		scale = hHand / hCard;
-		ms.elem.style.transform = `scale(${scale})`;
-		ms.elem.style.transformOrigin = '0% 0%';
+		mobj.elem.style.transform = `scale(${scale})`;
+		mobj.elem.style.transformOrigin = '0% 0%';
 	}
 	msHand.scale = scale;
 
-	wCard = ms.elem.offsetWidth;
+	wCard = mobj.elem.offsetWidth;
 	//console.log('w2',wCard);
 	let wReal = wCard * scale;
 	let hReal = hCard * scale;
@@ -275,10 +275,10 @@ function removeCardFromHand(oid, hand, subArea) {
 	if (isdef(id)) {
 		//id could be null if card has already been deleted, in that case, no need to detach!
 		//console.log(id);
-		let ms = UIS[id];
-		//console.log(ms);
-		ms.detach();
-		ms.hand = null; //idParent is still same!
+		let mobj = UIS[id];
+		//console.log(mobj);
+		mobj.detach();
+		mobj.hand = null; //idParent is still same!
 	}
 	if (nundef(hand)) return;
 	//console.log('hand before removing', hand.cards.toString());
@@ -389,12 +389,12 @@ function _makeTabletopCardsArea(areaName){
 		let y = 0;
 		let w = parentArea.w - deckArea.w;
 		let id = 'tabletopCardsArea';
-		let ms = makeArea(id, areaName);
-		ms.setBg('seagreen');
-		ms.setBounds(x, y, w, h, 'px');
-		ms.nextCoords = { x: 0, y: 0 };
-		ms.elem.classList.add('flexWrap');
-		return ms;
+		let mobj = makeArea(id, areaName);
+		mobj.setBg('seagreen');
+		mobj.setBounds(x, y, w, h, 'px');
+		mobj.nextCoords = { x: 0, y: 0 };
+		mobj.elem.classList.add('flexWrap');
+		return mobj;
 
 	}
 
@@ -409,12 +409,12 @@ function _makeGameplayerArea(plAreaName,areaName) {
 		let h = parentArea.h / 2;
 		let y = h;
 		let w = parentArea.w - deckArea.w;
-		let ms = makeArea(plAreaName, areaName);
-		ms.setBg('seagreen');
-		ms.setBounds(x, y, w, h, 'px');
-		ms.nextCoords = { x: 0, y: 0 };
-		ms.elem.classList.add('flexWrap');
-		return ms;
+		let mobj = makeArea(plAreaName, areaName);
+		mobj.setBg('seagreen');
+		mobj.setBounds(x, y, w, h, 'px');
+		mobj.nextCoords = { x: 0, y: 0 };
+		mobj.elem.classList.add('flexWrap');
+		return mobj;
 
 	}
 
@@ -432,25 +432,25 @@ function _makeHandArea(key, handAreaName, parentAreaId) {
 	if (isdef(parentArea)) {
 		//let h = 300;
 		//let w=parentArea.w;
-		let ms = makeArea(handAreaName, parentAreaId);
-		ms.setBg(randomColor());
-		//ms.setHeight(h);
-		ms.title(stringAfter(key,'.'));
-		let bTitle = getBounds(ms.parts.title);
-		//console.log('---------title bounds:',bTitle); //getBounds(ms.parts.title));
-		//ms.cardOffsetXY = { x: 0, y: 35 };
-		ms.parts['title'].fontSize = '12px';
-		ms.elem.style.minWidth = bTitle.width + 'px'; //'90px';
-		ms.elem.style.minHeight = '160px';
-		ms.body('hand');//,'red');
-		let div = ms.parts['hand'];
+		let mobj = makeArea(handAreaName, parentAreaId);
+		mobj.setBg(randomColor());
+		//mobj.setHeight(h);
+		mobj.title(stringAfter(key,'.'));
+		let bTitle = getBounds(mobj.parts.title);
+		//console.log('---------title bounds:',bTitle); //getBounds(mobj.parts.title));
+		//mobj.cardOffsetXY = { x: 0, y: 35 };
+		mobj.parts['title'].fontSize = '12px';
+		mobj.elem.style.minWidth = bTitle.width + 'px'; //'90px';
+		mobj.elem.style.minHeight = '160px';
+		mobj.body('hand');//,'red');
+		let div = mobj.parts['hand'];
 		div.style.position = 'relative';
 		div.style.left = '10px';
 		div.style.top = '10px';
 		div.style.width = 'auto';
 		div.style.height = 'auto';
 
-		return ms;
+		return mobj;
 
 	}
 
@@ -506,8 +506,8 @@ function _repositionCards(msHand) {
 	}
 	dx = n > 1 ? (W - w) / (n - 1) : 0;
 	if (dx > w) dx = w;
-	// let ms=UIS[idHand];
-	// ms.setSize(300,140);
+	// let mobj=UIS[idHand];
+	// mobj.setSize(300,140);
 
 	// if (nundef(W)||nundef(H)){
 	// 	dx=w/4;
@@ -767,11 +767,11 @@ function _showHand(oids, idArea) {
 	for (const oid of oids) {
 		//let id = getMainId(oid);
 		//console.log('getMainId for',oid,':',id)
-		let ms = getVisual(oid);//UIS[id];
-		if (nundef(ms)) {
+		let mobj = getVisual(oid);//UIS[id];
+		if (nundef(mobj)) {
 			//console.log('making card for:',oid,idHand);
-			ms = makeCard(oid, G.table[oid], idHand);
-			//console.log('created card:',oid,ms.id,areaName);
+			mobj = makeCard(oid, G.table[oid], idHand);
+			//console.log('created card:',oid,mobj.id,areaName);
 
 		}
 		if (!_isInHand(oid, idHand)) {

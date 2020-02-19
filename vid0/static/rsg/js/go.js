@@ -19,7 +19,7 @@ function mainVisualExists(oid) {
 	return firstCond(oid2ids[oid], x => x[0] == 'm');
 }
 function isBoardElementObject(o){ return o.edges || o.corners; }
-function isBoardElement(oid) { let ms = getVisual(oid); return ms && ms.idParent[2] == 's'; }
+function isBoardElement(oid) { let mobj = getVisual(oid); return mobj && mobj.idParent[2] == 's'; }
 function isBoardObject(o) { return o.map && o.fields; }
 function isDeckObject(o) { 
 	if (nundef(o)) console.log(getFunctionsNameThatCalledThisFunction(),'undefined object checked for is deck!!!')
@@ -144,145 +144,145 @@ function getAuxVisuals(id) { return getVisuals(id, 'aux') }
 */
 //************** TODO **************************/
 //general shortcut to create g shapes sollte fuer beide systeme gehen!!!
-function createVisual(id, areaName, { rings = 3, bg = 'darkslategray', fg = 'lime', label, shape = 'circle', iPalette, ipal, fill, x = 0, y = 0, w = 25, h = 25, sPoints, border = 'green', thickness = 1, rounding, path, txt, fz = 12, sz, overlay = true, draw = true } = {}) {
-	let parent = getVisual(areaName);
-	if (parent.cat == 'd') {
-		if (parent.ids.length != 1) {
-			error('DIV cannot have more than 1 G child!!!');
-		} else {
-			parent = getVisual(parent.ids[0]);
-			areaName = parent.id;
-			////console.log('switched areaName/parent:',areaName,parent)
-		}
-	}
-	let ms = new __O(id, areaName, 'G');//, G.table);
-	// ms.circle({sz:25,fill:'red'});//.draw();
-	// ms.attach();
-	// return ms;
+// function createVisual(id, areaName, { rings = 3, bg = 'darkslategray', fg = 'lime', label, shape = 'circle', iPalette, ipal, fill, x = 0, y = 0, w = 25, h = 25, sPoints, border = 'green', thickness = 1, rounding, path, txt, fz = 12, sz, overlay = true, draw = true } = {}) {
+// 	let parent = getVisual(areaName);
+// 	if (parent.cat == 'd') {
+// 		if (parent.ids.length != 1) {
+// 			error('DIV cannot have more than 1 G child!!!');
+// 		} else {
+// 			parent = getVisual(parent.ids[0]);
+// 			areaName = parent.id;
+// 			////console.log('switched areaName/parent:',areaName,parent)
+// 		}
+// 	}
+// 	let mobj = new __O(id, areaName, 'G');//, G.table);
+// 	// mobj.circle({sz:25,fill:'red'});//.draw();
+// 	// mobj.attach();
+// 	// return mobj;
 
-	let options = {};
-	let labelOptions = {};
-	if (iPalette && ipal) fill = S.pals[iPalette][ipal];
-	if (bg) ms.setBg(bg);
-	if (fg) { ms.setFg(fg); }
-	if (fill) options.fill = fill;
-	if (x) options.x = x;
-	if (y) options.y = y;
-	if (h) { options.h = h; options.sz = h; }
-	if (w) { options.w = w; options.sz = w; }
-	if (sz) options.sz = sz;
-	if (txt) { options.txt = txt; labelOptions.txt = txt; }
-	if (label) { labelOptions.txt = label; }
-	if (fz) { options.fz = fz; labelOptions.fz = fz; }
-	if (sPoints) options.sPoints = sPoints;
-	if (border) options.border = border;
-	if (thickness) options.thickness = thickness;
-	if (rounding) options.rounding = rounding;
-	if (path) options.path = './assets/images/transpng/' + path + '.png';
-	if (rings) {
-		////console.log('rings',rings);
-	} else rings = 1;
-	dSize = Math.max(w / 6, 5);
-	for (let i = 0; i < rings; i++) {
-		switch (shape) {
-			case 'circle':
-				ms.circle(options);
-				break;
-			case 'hex':
-				ms.hex(options);
-				break;
-			case 'rect':
-				ms.rect(options);
-				break;
-			case 'poly':
-				ms.poly(options);
-				break;
-			case 'image':
-				ms.image(options);
-				break;
-			case 'text':
-				ms.text(options);
-				break;
-			default:
-				return null;
-		}
-		options.w -= dSize;
-		options.sz -= dSize;
-		options.h -= dSize;
-		////console.log(options);
-		//options.fill=colorLighter(options.fill);
-	}
-	if (label) {
-		ms.text(labelOptions);
-	}
-	if (h) { options.h = h; options.sz = h; }
-	if (w) { options.w = w; options.sz = w; }
-	if (sz) options.sz = sz;
-	if (overlay) {
-		overlayOptions = jsCopy(options);
-		overlayOptions.className = 'overlay';
-		delete overlayOptions.fill;
-		delete overlayOptions.path;
-		switch (shape) {
-			case 'circle':
-				ms.circle(overlayOptions);
-				break;
-			case 'hex':
-				ms.hex(overlayOptions);
-				break;
-			case 'rect':
-				ms.rect(overlayOptions);
-				break;
-			case 'poly':
-				ms.poly(overlayOptions);
-				break;
-			case 'image':
-				ms.rect(overlayOptions);
-				break;
-			case 'text':
-				ms.text(overlayOptions);
-				break;
-			default:
-				return null;
-		}
-	}
-	if (draw) ms.attach();
-	return ms;
-}
+// 	let options = {};
+// 	let labelOptions = {};
+// 	if (iPalette && ipal) fill = S.pals[iPalette][ipal];
+// 	if (bg) mobj.setBg(bg);
+// 	if (fg) { mobj.setFg(fg); }
+// 	if (fill) options.fill = fill;
+// 	if (x) options.x = x;
+// 	if (y) options.y = y;
+// 	if (h) { options.h = h; options.sz = h; }
+// 	if (w) { options.w = w; options.sz = w; }
+// 	if (sz) options.sz = sz;
+// 	if (txt) { options.txt = txt; labelOptions.txt = txt; }
+// 	if (label) { labelOptions.txt = label; }
+// 	if (fz) { options.fz = fz; labelOptions.fz = fz; }
+// 	if (sPoints) options.sPoints = sPoints;
+// 	if (border) options.border = border;
+// 	if (thickness) options.thickness = thickness;
+// 	if (rounding) options.rounding = rounding;
+// 	if (path) options.path = './assets/images/transpng/' + path + '.png';
+// 	if (rings) {
+// 		////console.log('rings',rings);
+// 	} else rings = 1;
+// 	dSize = Math.max(w / 6, 5);
+// 	for (let i = 0; i < rings; i++) {
+// 		switch (shape) {
+// 			case 'circle':
+// 				mobj.circle(options);
+// 				break;
+// 			case 'hex':
+// 				mobj.hex(options);
+// 				break;
+// 			case 'rect':
+// 				mobj.rect(options);
+// 				break;
+// 			case 'poly':
+// 				mobj.poly(options);
+// 				break;
+// 			case 'image':
+// 				mobj.image(options);
+// 				break;
+// 			case 'text':
+// 				mobj.text(options);
+// 				break;
+// 			default:
+// 				return null;
+// 		}
+// 		options.w -= dSize;
+// 		options.sz -= dSize;
+// 		options.h -= dSize;
+// 		////console.log(options);
+// 		//options.fill=colorLighter(options.fill);
+// 	}
+// 	if (label) {
+// 		mobj.text(labelOptions);
+// 	}
+// 	if (h) { options.h = h; options.sz = h; }
+// 	if (w) { options.w = w; options.sz = w; }
+// 	if (sz) options.sz = sz;
+// 	if (overlay) {
+// 		overlayOptions = jsCopy(options);
+// 		overlayOptions.className = 'overlay';
+// 		delete overlayOptions.fill;
+// 		delete overlayOptions.path;
+// 		switch (shape) {
+// 			case 'circle':
+// 				mobj.circle(overlayOptions);
+// 				break;
+// 			case 'hex':
+// 				mobj.hex(overlayOptions);
+// 				break;
+// 			case 'rect':
+// 				mobj.rect(overlayOptions);
+// 				break;
+// 			case 'poly':
+// 				mobj.poly(overlayOptions);
+// 				break;
+// 			case 'image':
+// 				mobj.rect(overlayOptions);
+// 				break;
+// 			case 'text':
+// 				mobj.text(overlayOptions);
+// 				break;
+// 			default:
+// 				return null;
+// 		}
+// 	}
+// 	if (draw) mobj.attach();
+// 	return mobj;
+// }
 
 
 //*********************** BACK END ************************* */
 //access to backend objects
 function getPlayer(id) { return G.playersAugmented[id]; }
-function getObject(id) { return G.table[id]; }
-function getFields(board) {
-	let fids = board.strInfo.fields;
-	return fids.map(x => G.table[x]);
-}
-function getCorners(board, func) {
-	let fids = board.strInfo.corners;
-	let res = [];
-	for (const id of board.strInfo.corners) {
-		if (func(G.table[id]) || func(getVisual(id))) {
-			let o = getVisual(id);
-			for (const prop in G.table[id]) {
-				o[prop] = G.table[id][prop];
-			}
-			res.push(o);
-		}
-	}
-	return res;
+// function getObject(id) { return G.table[id]; }
+// function getFields(board) {
+// 	let fids = board.strInfo.fields;
+// 	return fids.map(x => G.table[x]);
+// }
+// function getCorners(board, func) {
+// 	let fids = board.strInfo.corners;
+// 	let res = [];
+// 	for (const id of board.strInfo.corners) {
+// 		if (func(G.table[id]) || func(getVisual(id))) {
+// 			let o = getVisual(id);
+// 			for (const prop in G.table[id]) {
+// 				o[prop] = G.table[id][prop];
+// 			}
+// 			res.push(o);
+// 		}
+// 	}
+// 	return res;
 
-}
-function getFieldEdges(o) {
-	//let o=G.table[f.id];
-	let edgeIds = o.edges.map(x => x._obj);
-	return edgeIds.map(x => isdef(x) ? G.table[x] : x);
-}
-function getEdgeCorners(o) {
-	//let o=G.table[e.id];
-	let cornerIds = o.corners.map(x => x._obj);
-	return cornerIds.map(x => isdef(x) ? G.table[x] : x);
-}
+// }
+// function getFieldEdges(o) {
+// 	//let o=G.table[f.id];
+// 	let edgeIds = o.edges.map(x => x._obj);
+// 	return edgeIds.map(x => isdef(x) ? G.table[x] : x);
+// }
+// function getEdgeCorners(o) {
+// 	//let o=G.table[e.id];
+// 	let cornerIds = o.corners.map(x => x._obj);
+// 	return cornerIds.map(x => isdef(x) ? G.table[x] : x);
+// }
 
 

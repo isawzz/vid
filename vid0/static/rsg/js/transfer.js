@@ -1,7 +1,7 @@
 var elements = {}; //global element collection for resize event
-function registerElement(ms) {
-	//console.log(ms);
-	elements[ms.id] = ms;
+function registerElement(mobj) {
+	//console.log(mobj);
+	elements[mobj.id] = mobj;
 }
 class DeckMS {
 	constructor(oid, o) {
@@ -51,11 +51,11 @@ class DeckMS {
 function addDeckTo(deck, domel, id, flip = false, drag = false) {
 	if (nundef(id)) id = getUID();
 	clearElement(domel);
-	let ms = new DeckMS(id, deck);
-	ms.attachTo(domel);
-	if (flip) enableFlipForDeck(ms.o);
-	if (drag) enableDragForDeck(ms.o);
-	return ms;
+	let mobj = new DeckMS(id, deck);
+	mobj.attachTo(domel);
+	if (flip) enableFlipForDeck(mobj.o);
+	if (drag) enableDragForDeck(mobj.o);
+	return mobj;
 }
 function addGridTo(d, rows, cols, gap = '2px') {
 	console.log(d, rows, cols, gap);
@@ -208,10 +208,10 @@ function test09() {
 		for (let j = 0; j < cols1; j++) {
 			let cell = cells[i][j];
 			clearElement(cell);
-			let ms = new DeckMS('d' + rows1 + '_' + cols1, makeDeck({ kind: 'deck52', N: 30, nJokers: 5 }));
-			ms.attachTo(cell);
-			enableFlipForDeck(ms.o);
-			enableDragForDeck(ms.o);
+			let mobj = new DeckMS('d' + rows1 + '_' + cols1, makeDeck({ kind: 'deck52', N: 30, nJokers: 5 }));
+			mobj.attachTo(cell);
+			enableFlipForDeck(mobj.o);
+			enableDragForDeck(mobj.o);
 
 		}
 	}
@@ -228,10 +228,10 @@ function test10() {
 		for (let j = 0; j < cols1; j++) {
 			let cell = cells[i][j];
 			clearElement(cell);
-			let ms = new DeckMS('d' + rows1 + '_' + cols1, makeDeck({ kind: 'deck52', N: 30, nJokers: 5 }));
-			ms.attachTo(cell);
-			enableFlipForDeck(ms.o);
-			enableDragForDeck(ms.o);
+			let mobj = new DeckMS('d' + rows1 + '_' + cols1, makeDeck({ kind: 'deck52', N: 30, nJokers: 5 }));
+			mobj.attachTo(cell);
+			enableFlipForDeck(mobj.o);
+			enableDragForDeck(mobj.o);
 
 		}
 	}
@@ -240,8 +240,8 @@ function test11() {
 	document.body.style.height = '100vh';
 
 	//add deck to body!
-	let ms = addDeckTo(makeDeck({ kind: 'deck52', N: 30, nJokers: 5 }), document.body, 'discardPile', true, true);
-	ms.setPos(0, -300);
+	let mobj = addDeckTo(makeDeck({ kind: 'deck52', N: 30, nJokers: 5 }), document.body, 'discardPile', true, true);
+	mobj.setPos(0, -300);
 }
 function test12() {
 	// let deck = Deck.DeckB('deck52');//,deck52DrawFace,deck52DrawFace,deck52DrawBack,deck52DrawBack);

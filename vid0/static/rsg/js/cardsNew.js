@@ -103,11 +103,11 @@ function showCollection(coll, idCollection) {
 				//let id = getMainId(oid);
 				//console.log('getMainId for',oid,':',id)
 				//let elContent = coll.type == '_obj' ? coll.arr.map(x => x._obj) : coll.arr;
-				let ms = getVisual(oid);//UIS[id];
-				if (nundef(ms)) {
+				let mobj = getVisual(oid);//UIS[id];
+				if (nundef(mobj)) {
 					//console.log('making card for:',oid,idHand);
-					ms = makeCard(oid, G.table[oid], idCollection);
-					//console.log('created card:', oid, ms.id, collectionAreaName);
+					mobj = makeCard(oid, G.table[oid], idCollection);
+					//console.log('created card:', oid, mobj.id, collectionAreaName);
 
 				}
 				if (!_isInHand(oid, idCollection)) {
@@ -141,9 +141,9 @@ function addCardToCollectionArea(oid, collectionAreaName) {
 	}
 	let n = msCollection.numCards;
 	msCard.zIndex = n;
-	//console.log('addCardToHand: isAttached=',ms.isAttached, 'hand.numCards',n);
+	//console.log('addCardToHand: isAttached=',mobj.isAttached, 'hand.numCards',n);
 	msCard.attach('hand');
-	//console.log('...isAttached=',ms.isAttached)
+	//console.log('...isAttached=',mobj.isAttached)
 
 	//calc card height
 	let hCard = msCard.elem.offsetHeight;
@@ -233,8 +233,8 @@ function repositionCards(msCollection) {
 	}
 	dx = n > 1 ? (W - w) / (n - 1) : 0;
 	if (dx > w) dx = w;
-	// let ms=UIS[idHand];
-	// ms.setSize(300,140);
+	// let mobj=UIS[idHand];
+	// mobj.setSize(300,140);
 
 	// if (nundef(W)||nundef(H)){
 	// 	dx=w/4;

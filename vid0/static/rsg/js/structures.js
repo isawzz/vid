@@ -19,40 +19,40 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 
 	//console.log('---------------',w,h,fieldColor,fw,fh)
 
-	for (const id of board.strInfo.fields) {
+	for (const id of board.structInfo.fields) {
 		let o = getVisual(id);
 		//console.log(o)
-		makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.strInfo.wdef * fw - gap, board.strInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
+		makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.structInfo.wdef * fw - gap, board.structInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
 		o.memInfo.isPal = isPalField;
 		o.attach();
 	}
-	if (isdef(board.strInfo.corners)) {
-		for (const id of board.strInfo.corners) {
-			let ms = getVisual(id);
-			ms.memInfo.isPal = isPalCorner;
-			makeVisual(ms, ms.memInfo.x * fw, ms.memInfo.y * fh, Math.max(board.strInfo.wdef * nw, ew), Math.max(board.strInfo.hdef * nh, ew), nodeColor, nodeShape);
+	if (isdef(board.structInfo.corners)) {
+		for (const id of board.structInfo.corners) {
+			let mobj = getVisual(id);
+			mobj.memInfo.isPal = isPalCorner;
+			makeVisual(mobj, mobj.memInfo.x * fw, mobj.memInfo.y * fh, Math.max(board.structInfo.wdef * nw, ew), Math.max(board.structInfo.hdef * nh, ew), nodeColor, nodeShape);
 			
 		}
 	}
-	if (isdef(board.strInfo.edges)) {
+	if (isdef(board.structInfo.edges)) {
 
 		//get reference val for nodesize to compute edge length
 		//TODO: what if irregular node shape? 
-		let nodeSize = getVisual(board.strInfo.corners[0]).w;
+		let nodeSize = getVisual(board.structInfo.corners[0]).w;
 
-		for (const id of board.strInfo.edges) {
-			let ms = getVisual(id);
-			ms.memInfo.isPal = isPalEdge;
+		for (const id of board.structInfo.edges) {
+			let mobj = getVisual(id);
+			mobj.memInfo.isPal = isPalEdge;
 			//edgeColor = 'green'
 			//console.log('edge thickness',o.memInfo.thickness * ew)
-			makeVisual(ms, ms.memInfo.x * fw, ms.memInfo.y * fh, ms.memInfo.thickness * ew, 0, edgeColor, 'line', { x1: ms.memInfo.x1 * fw, y1: ms.memInfo.y1 * fh, x2: ms.memInfo.x2 * fw, y2: ms.memInfo.y2 * fh });
+			makeVisual(mobj, mobj.memInfo.x * fw, mobj.memInfo.y * fh, mobj.memInfo.thickness * ew, 0, edgeColor, 'line', { x1: mobj.memInfo.x1 * fw, y1: mobj.memInfo.y1 * fh, x2: mobj.memInfo.x2 * fw, y2: mobj.memInfo.y2 * fh });
 			//set length of line!
-			ms.length = ms.h = ms.distance-nodeSize;
-			ms.attach();
+			mobj.length = mobj.h = mobj.distance-nodeSize;
+			mobj.attach();
 		}
 	}
-	if (isdef(board.strInfo.corners)) {
-		for (const id of board.strInfo.corners) getVisual(id).attach();
+	if (isdef(board.structInfo.corners)) {
+		for (const id of board.structInfo.corners) getVisual(id).attach();
 	}
 }
 /**
@@ -65,7 +65,7 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
  */
 function createGrid(areaName, idBoard, sBoard, sMemberPool, shape) {
 	let board = makeBoard(idBoard, sBoard, areaName);
-	board.strInfo = shape == 'hex' ? getHexGridInfo(sBoard.rows, sBoard.cols) : getQuadGridInfo(sBoard.rows, sBoard.cols);
+	board.structInfo = shape == 'hex' ? getHexGridInfo(sBoard.rows, sBoard.cols) : getQuadGridInfo(sBoard.rows, sBoard.cols);
 
 	//ausser fuer board object, sind neighborhood infos (fields.corners,...) NUR im G.table object
 	makeFields(sMemberPool, board, sBoard, shape);
@@ -111,6 +111,7 @@ function hexGrid(soDict, loc, condList) {
 	return _hexGrid(loc, idBoard, sBoard, soDict);
 }
 function detectBoard(soDict, loc) {
+	timit.showTime('*** board start ***')
 	let idBoard = firstCondDict(soDict, x => isBoardObject(x)); // isdef(x.map) && isdef(x.fields));
 	if (isdef(idBoard)) {
 		let sBoard = soDict[idBoard];
@@ -222,13 +223,13 @@ function getHexFieldInfo(boardInfo, row, col) {
 }
 function getBoardMemberColors(board, fieldColor, nodeColor, edgeColor, iPalette, ipals = [3, 4, 5]) {
 	let isPalField = nundef(fieldColor) || isNumber(fieldColor) && fieldColor >= 0 && fieldColor <= 8;
-	let isPalCorner = isdef(board.strInfo.corners) && (nundef(nodeColor) || isNumber(nodeColor) && nodeColor >= 0 && nodeColor <= 8);
-	let isPalEdge = isdef(board.strInfo.edges) && (nundef(edgeColor) || isNumber(edgeColor) && edgeColor >= 0 && edgeColor <= 8);
+	let isPalCorner = isdef(board.structInfo.corners) && (nundef(nodeColor) || isNumber(nodeColor) && nodeColor >= 0 && nodeColor <= 8);
+	let isPalEdge = isdef(board.structInfo.edges) && (nundef(edgeColor) || isNumber(edgeColor) && edgeColor >= 0 && edgeColor <= 8);
 	if (!iPalette && (isPalField || isPalCorner || isPalEdge)) iPalette = board.getIPalette();
 	if (iPalette) {
 		board.iPalette = iPalette;
 		board.ipal = 2;
-		board.strInfo.ipals = ipals;
+		board.structInfo.ipals = ipals;
 		let pal = S.pals[iPalette];
 		if (isPalField) fieldColor = pal[ipals[0]];
 		if (isPalCorner) nodeColor = pal[ipals[1]];
@@ -249,8 +250,8 @@ function getBoardScaleFactors(board, { factors, opt, f2nRatio, w, h, margin } = 
 			h = transinfo.translateY * 2;
 		}
 		let divBy = 2 * (f2nRatio - 2);
-		fw = Math.floor((w - margin) / (board.strInfo.w + board.strInfo.wdef / divBy));
-		fh = Math.floor((h - margin) / (board.strInfo.h + board.strInfo.hdef / divBy));
+		fw = Math.floor((w - margin) / (board.structInfo.w + board.structInfo.wdef / divBy));
+		fh = Math.floor((h - margin) / (board.structInfo.h + board.structInfo.hdef / divBy));
 
 		let maintainRatio = (opt[3] == 'R');
 		if (maintainRatio) {
@@ -266,22 +267,22 @@ function getBoardScaleFactors(board, { factors, opt, f2nRatio, w, h, margin } = 
 function makeFields(pool, board, serverBoard, shape) {
 	//console.log(board, serverBoard)
 	let serverFieldIds = _setToList(serverBoard.fields).map(x => x._obj);
-	board.strInfo.fields = serverFieldIds;
+	board.structInfo.fields = serverFieldIds;
 	for (const fid of serverFieldIds) {
 		let sField = pool[fid];
 		let r = sField.row;
 		let c = sField.col;
 		let field = makeBoardElement(fid, sField, board.id, 'field');
-		field.memInfo = shape == 'hex' ? getHexFieldInfo(board.strInfo, r, c) : getQuadFieldInfo(board.strInfo, r, c);
+		field.memInfo = shape == 'hex' ? getHexFieldInfo(board.structInfo, r, c) : getQuadFieldInfo(board.structInfo, r, c);
 	}
-	//console.log(board,board.strInfo,board.strInfo.fields);
-	//for(const oid of board.strInfo.fields) //console.log(oid2ids[oid],getMainId(oid));
-	board.strInfo.vertices = correctPolys(board.strInfo.fields.map(x => getVisual(x).memInfo.poly), 1);
-	//console.log(board.strInfo.vertices)
+	//console.log(board,board.structInfo,board.structInfo.fields);
+	//for(const oid of board.structInfo.fields) //console.log(oid2ids[oid],getMainId(oid));
+	board.structInfo.vertices = correctPolys(board.structInfo.fields.map(x => getVisual(x).memInfo.poly), 1);
+	//console.log(board.structInfo.vertices)
 }
 function makeCorners(pool, board, serverBoard) {
 	let serverFieldIds = _setToList(serverBoard.fields).map(x => x._obj);
-	board.strInfo.corners = _setToList(serverBoard.corners).map(x => x._obj);
+	board.structInfo.corners = _setToList(serverBoard.corners).map(x => x._obj);
 	let dhelp = {}; //remember nodes that have already been created!!!
 	for (const fid of serverFieldIds) {
 		let sfield = pool[fid];
@@ -309,7 +310,7 @@ function makeCorners(pool, board, serverBoard) {
 }
 function makeEdges(pool, board, serverBoard) {
 	let serverFieldIds = _setToList(serverBoard.fields).map(x => x._obj);
-	board.strInfo.edges = _setToList(serverBoard.edges).map(x => x._obj);
+	board.structInfo.edges = _setToList(serverBoard.edges).map(x => x._obj);
 	dhelp = {}; //remember nodes that have already been created!!!
 	for (const fid of serverFieldIds) {
 		let sfield = pool[fid];
@@ -347,40 +348,6 @@ function makeEdges(pool, board, serverBoard) {
 			}
 		}
 	}
-}
-function makeVisual(ms, x, y, w, h, color, shape, { x1, y1, x2, y2 } = {}) {
-	//console.log('makeVisual', x, y, w, h, color, shape, x1, y1, x2, y2);
-	if (shape == 'circle') {
-		ms.ellipse({ w: w, h: h }).ellipse({ className: 'overlay', w: w, h: h });
-		ms.setPos(x, y);
-	} else if (shape == 'hex') {
-		ms.hex({ w: w, h: h }).hex({ className: 'overlay', w: w, h: h });
-		ms.setPos(x, y);
-	} else if (shape == 'quad' || shape == 'rect') {
-		ms.rect({ w: w, h: h }).rect({ className: 'overlay', w: w, h: h });
-		ms.setPos(x, y);
-	} else if (shape == 'triangle') {
-		//TODO!!!!
-		ms.triangle({ w: w, h: h }).triangle({ className: 'overlay', w: w, h: h });
-		ms.setPos(x, y);
-	} else if (shape == 'line') {
-		let thickness = w;
-		let fill = color;
-		ms.line({ className: 'ground', x1: x1, y1: y1, x2: x2, y2: y2, fill: fill, thickness: thickness })
-			.line({ className: 'overlay', x1: x1, y1: y1, x2: x2, y2: y2, thickness: thickness, });
-	} else {
-		ms[shape]({ className:'ground',w: w, h: h});//,fill:color });
-		ms[shape]({ className: 'overlay', w: w, h: h });
-		ms.setPos(x, y);
-	}
-	ms.setBg(color, shape != 'line');
-	ms.orig.bg = color;
-	ms.originalBg = color;
-	ms.orig.shape = shape;
-	ms.originalSize = {w:w,h:h};
-	ms.orig.w=w;
-	ms.orig.h=h;
-	return ms;
 }
 //#endregion
 

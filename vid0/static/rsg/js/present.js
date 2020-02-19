@@ -34,19 +34,19 @@ function _tableCreateNew() {
 		}
 
 		let updatedVisuals;
-		let ms;
+		let mobj;
 		if (S.settings.userBehaviors) {
 			updatedVisuals = runBehaviors(oid, G.table, TABLE_CREATE);
 		}
 		//console.log('updatedVisuals',updatedVisuals)
 		if (nundef(updatedVisuals) || !updatedVisuals.includes(oid)) {
 			//console.log('trying to make main visual for',oid,o.obj_type )
-			if ('loc' in o && isBoardElement(o.loc._obj)) ms = makeMainBoardElementVisual(oid, G.table[oid]);
+			if ('loc' in o && isBoardElement(o.loc._obj)) mobj = makeMainBoardElementVisual(oid, G.table[oid]);
 
 
 
 			// if there is no way to create a main Visual for an object create a default object anyway!
-			if (ms === null && !defaultVisualExists(oid) && S.settings.table.createDefault != false) {
+			if (mobj === null && !defaultVisualExists(oid) && S.settings.table.createDefault != false) {
 				makeDefaultObject(oid, G.table[oid], S.settings.table.defaultArea);
 			}
 		}
@@ -69,10 +69,10 @@ function _tableUpdate() {
 		//console.log('changed properties for',oid,changedProps);
 
 		//update main visual unless deck 
-		let ms = getVisual(oid); //visual must be created in table_create!!!
-		//console.log('main visual for',oid,ms)
+		let mobj = getVisual(oid); //visual must be created in table_create!!!
+		//console.log('main visual for',oid,mobj)
 		let updatedVisuals;
-		if (!isDeckObject(o) && ms) { // (isDeckObject checks for deck_count property)
+		if (!isDeckObject(o) && mobj) { // (isDeckObject checks for deck_count property)
 
 			if (S.settings.userBehaviors) {
 				updatedVisuals = runBehaviors(oid, G.table, TABLE_UPDATE);
@@ -80,9 +80,9 @@ function _tableUpdate() {
 
 			if (nundef(updatedVisuals) || !updatedVisuals.includes(oid)) {
 				//console.log('oid',oid,'has NOT been updated!!!!!')
-				if (changedProps.includes('loc')) _presentLocationChange(oid, ms);
+				if (changedProps.includes('loc')) _presentLocationChange(oid, mobj);
 				//console.log('presenting main!',oid)
-				presentMain(oid, ms, G.table);
+				presentMain(oid, mobj, G.table);
 				// } else {
 				// 	//console.log('oid',oid,'has been updated!!!!!')
 			}
@@ -91,7 +91,7 @@ function _tableUpdate() {
 
 
 		//update default visual
-		if (!S.settings.table.createDefault || ms && S.settings.table.createDefault == 'miss') continue;
+		if (!S.settings.table.createDefault || mobj && S.settings.table.createDefault == 'miss') continue;
 
 		presentDefault(oid, G.table[oid]);
 	}
@@ -127,8 +127,8 @@ function _playersCreateNew() {
 		//console.log('updatedVisuals',updatedVisuals)
 		if (nundef(updatedVisuals) || !updatedVisuals.includes(pid)) {
 			if (isPlain()) {
-				let ms = makeMainPlayer(pid, G.playersAugmented[pid], S.settings.player.defaultMainArea);
-				if (ms === null && !defaultVisualExists(pid) && S.settings.table.createDefault != false) {
+				let mobj = makeMainPlayer(pid, G.playersAugmented[pid], S.settings.player.defaultMainArea);
+				if (mobj === null && !defaultVisualExists(pid) && S.settings.table.createDefault != false) {
 					makeDefaultObject(pid, G.playersAugmented[pid], S.settings.table.defaultArea);
 				}
 			}
@@ -148,11 +148,11 @@ function _playersUpdate() {
 			runBindings(pid, G.playersAugmented)
 		}
 
-		let ms = getVisual(pid);
-		//ms nur def bei plain mode!
-		//console.log('player update:',pid,ms)
-		if (!updatedVisuals[pid] && isdef(ms)) {
-			presentMainPlayer(pid, ms, G.playersAugmented, false);
+		let mobj = getVisual(pid);
+		//mobj nur def bei plain mode!
+		//console.log('player update:',pid,mobj)
+		if (!updatedVisuals[pid] && isdef(mobj)) {
+			presentMainPlayer(pid, mobj, G.playersAugmented, false);
 		}
 
 		if (!isPlain() && !updatedVisuals[pid] && S.settings.hasCards) {
@@ -170,7 +170,7 @@ function _playersUpdate() {
 		}
 
 		//update default visual
-		if (!S.settings.player.createDefault || ms && S.settings.player.createDefault != true) continue;
+		if (!S.settings.player.createDefault || mobj && S.settings.player.createDefault != true) continue;
 		let plms = presentDefault(pid, pl, false);
 		_onPlayerChange(pid);
 	}
@@ -185,8 +185,8 @@ function presentStatus() {
 
 		let areaName = isPlain() ? 'c_d_statusInHeaderText' : 'c_d_statusText';
 		let d = document.getElementById(areaName);
-		let ms = UIS[areaName];
-		ms.clear(); clearElement(d);
+		let mobj = UIS[areaName];
+		mobj.clear(); clearElement(d);
 
 		//make aux for current player (TODO: could reuse these but maybe not necessary)
 		let pl = G.player;
@@ -208,10 +208,10 @@ function presentStatus() {
 				//console.log(item);
 				if (item.type == 'obj') {
 					let oid = item.ID;
-					let ms = makeAux(item.val, oid, areaName);
+					let mobj = makeAux(item.val, oid, areaName);
 				} else if (item.type == 'player') {
 					let oid = item.val;
-					let ms = makeAux(item.val, oid, areaName);
+					let mobj = makeAux(item.val, oid, areaName);
 				}
 			}
 		}
@@ -220,8 +220,8 @@ function presentStatus() {
 function setStatus(s) {
 	let areaName = isPlain() ? 'c_d_statusInHeaderText' : 'c_d_statusText';
 	let d = document.getElementById(areaName);
-	let ms = UIS[areaName];
-	ms.clear(); clearElement(d);
+	let mobj = UIS[areaName];
+	mobj.clear(); clearElement(d);
 	d.innerHTML = s;
 }
 function presentLog() {
@@ -252,10 +252,10 @@ function presentLog() {
 				//console.log(item);
 				if (item.type == 'obj') {
 					let oid = item.ID;
-					let ms = makeAux(item.val, oid, 'a_d_log', lineDiv);
+					let mobj = makeAux(item.val, oid, 'a_d_log', lineDiv);
 				} else if (item.type == 'player') {
 					let oid = item.val;
-					let ms = makeAux(item.val, oid, 'a_d_log', lineDiv);
+					let mobj = makeAux(item.val, oid, 'a_d_log', lineDiv);
 				} else {
 					//console.log('unknown item in log:', item)
 				}
@@ -298,7 +298,7 @@ function presentActions() {
 	for (const tg of G.tupleGroups) {
 		for (const t of tg.tuples) {
 			let boatInfo = { obj_type: 'boat', oids: [], desc: tg.desc, tuple: t, iGroup: iGroup, iTuple: iTuple, text: t.map(x => x.val), weg: false };
-			let ms = makeDefaultAction(boatInfo, areaName);
+			let mobj = makeDefaultAction(boatInfo, areaName);
 			iTuple += 1;
 		}
 		iGroup += 1;
@@ -333,7 +333,7 @@ function presentWaitingFor() {
 
 
 //#region local helpers
-function _presentLocationChange(oid, ms) {
+function _presentLocationChange(oid, mobj) {
 	//TODO: cleanup code!
 	if (G.table[oid].obj_type == 'robber') {
 		let o = G.table[oid];
@@ -341,10 +341,10 @@ function _presentLocationChange(oid, ms) {
 		//		//console.log(changedProps)
 		if (changedProps.summary.includes('loc')) {
 			//alert('hallo! robber loc change!');
-			//			//console.log(ms);
+			//			//console.log(mobj);
 			let oidLoc = o.loc._obj;
 			let visLoc = getVisual(oidLoc);
-			ms.setPos(visLoc.x, visLoc.y);
+			mobj.setPos(visLoc.x, visLoc.y);
 		}
 	}
 }
@@ -373,9 +373,9 @@ function _onPlayerChange(pid) {
 	//console.log('presenting player change', pid, o);
 	_updatePageHeader(pid);
 	if (G.previousPlayer) _updateLogArea(G.previousPlayer, pid);
-	let ms = getVisual(pid);
-	if (ms) {
-		//console.log(ms.id);
+	let mobj = getVisual(pid);
+	if (mobj) {
+		//console.log(mobj.id);
 	}
 	let msDef = getDefVisual(pid);
 	if (msDef) {
@@ -391,14 +391,14 @@ function _onPlayerChange(pid) {
 }
 function _updatePageHeader(pid) {
 	//console.log('Turn:',pid)
-	let ms;
+	let mobj;
 	for (const pl of S.gameConfig.players) {
-		ms = getPageHeaderDivForPlayer(pl.id);
-		ms.classList.remove('gamePlayer');
+		mobj = getPageHeaderDivForPlayer(pl.id);
+		mobj.classList.remove('gamePlayer');
 	}
 	//console.log('oid', pid)
-	ms = getPageHeaderDivForPlayer(pid);
-	ms.classList.add('gamePlayer');
+	mobj = getPageHeaderDivForPlayer(pid);
+	mobj.classList.add('gamePlayer');
 }
 function _updateLogArea(prevPlid, plid) {
 	//console.log(prevPlid)
@@ -455,10 +455,10 @@ function computePresentedKeys(o, isTableObject) {
 	return keys;
 
 }
-function presentMain(oid, ms, pool, isTableObject = true) {
-	if (ms.isa.card) {
-		//console.log('presentMain for card!!!!', oid, ms.collectionKey);//,ms,pool[oid])
-		let collKey = ms.collectionKey;
+function presentMain(oid, mobj, pool, isTableObject = true) {
+	if (mobj.isa.card) {
+		//console.log('presentMain for card!!!!', oid, mobj.collectionKey);//,mobj,pool[oid])
+		let collKey = mobj.collectionKey;
 		if (isdef(collKey)) {
 			//this card is part of a collection!
 			//stelle fest ob diese collection gerade visible ist!
@@ -466,7 +466,7 @@ function presentMain(oid, ms, pool, isTableObject = true) {
 	}
 	//let optin = isTableObject?S.settings.table.optin:S.settings.player.optin; //game == 'catan' ? ['res', 'num', 'building', 'port'] : ['symbol']; //cheat! keywords fuer catan vs ttt
 	//console.log(optin)
-	// if (ms.isLine){
+	// if (mobj.isLine){
 	// 	//console.log('not presenting edge:',oid)
 	// 	return;
 	// }
@@ -475,7 +475,7 @@ function presentMain(oid, ms, pool, isTableObject = true) {
 	let validKeys = computePresentedKeys(o, isTableObject);
 	//console.log(validKeys);
 
-	let color = S.settings.useColorHintForProperties ? getColorHint(o) : ms.fg;
+	let color = S.settings.useColorHintForProperties ? getColorHint(o) : mobj.fg;
 	// //console.log(o,color)
 	let akku = [];//isField(o)?[''+oid]:[];
 	// let bg, fg;
@@ -483,14 +483,14 @@ function presentMain(oid, ms, pool, isTableObject = true) {
 		let val = o[k];
 		if (isSimple(val)) akku.push(val.toString());
 	}
-	if (!isEmpty(akku)) { ms.multitext({ txt: akku, fill: color }); } else ms.clearText();
+	if (!isEmpty(akku)) { mobj.multitext({ txt: akku, fill: color }); } else mobj.clearText();
 }
-function presentMainPlayer(oid, ms, pool, isTableObject) {
+function presentMainPlayer(oid, mobj, pool, isTableObject) {
 	let o = pool[oid];
 	//console.log(oid,o,G.player)
-	//let ms = getVisual(oid);
-	if (!ms) return;
-	if (oid != G.player) { ms.hide(); return; } else ms.show();
+	//let mobj = getVisual(oid);
+	if (!mobj) return;
+	if (oid != G.player) { mobj.hide(); return; } else mobj.show();
 
 	//filter keys using optin and optout lists
 	let optin = S.settings.player.optin;
@@ -499,17 +499,17 @@ function presentMainPlayer(oid, ms, pool, isTableObject) {
 	//console.log('optin',optin,'optout',optout)
 	keys = optout ? arrMinus(getKeys(o), optout) : optin ? optin : getKeys(o);
 
-	let x = ms.tableX(o, keys); //adds or replaces table w/ prop values
+	let x = mobj.tableX(o, keys); //adds or replaces table w/ prop values
 
-	growIfDefaultMainAreaWidth(ms);
+	growIfDefaultMainAreaWidth(mobj);
 
 	return x;
 }
 function presentDefault(oid, o, isTableObject = true) {
-	let ms = getDefVisual(oid);
-	if (!ms) return;
-	if (isPlain() && !isTableObject && G.player == oid) { ms.hide(); return null; }
-	if (isPlain() && !isTableObject) ms.show();
+	let mobj = getDefVisual(oid);
+	if (!mobj) return;
+	if (isPlain() && !isTableObject && G.player == oid) { mobj.hide(); return null; }
+	if (isPlain() && !isTableObject) mobj.show();
 
 	//filter keys using optin and optout lists
 	let optin = isTableObject ? S.settings.table.optin : S.settings.player.optin;
@@ -517,10 +517,10 @@ function presentDefault(oid, o, isTableObject = true) {
 
 	keys = optout ? arrMinus(getKeys(o), optout) : optin ? optin : getKeys(o);
 
-	let x = ms.tableX(o, keys); //adds or replaces table w/ prop values
+	let x = mobj.tableX(o, keys); //adds or replaces table w/ prop values
 
 	if (!isPlain() && !isTableObject) {
-		growIfDefaultMainAreaWidth(ms);
+		growIfDefaultMainAreaWidth(mobj);
 	}
 
 	return x;

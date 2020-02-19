@@ -113,11 +113,11 @@ function calcScreenSizeNeeded(){
 	let wTotal2=0;
 	
 	for(const a of wAreas){
-		let ms = UIS[a];
-		// let wSoll = ms.w;
+		let mobj = UIS[a];
+		// let wSoll = mobj.w;
 		// wTotal += wSoll;
-		//console.log('ms.w',wSoll);
-		let b=getBounds(ms.elem);
+		//console.log('mobj.w',wSoll);
+		let b=getBounds(mobj.elem);
 		let wIst = Math.round(b.width/bodyZoom);
 		wTotal2 += wIst;
 		//console.log('w of',a,'is',wIst);
@@ -129,11 +129,11 @@ function calcScreenSizeNeeded(){
 	let hTotal2=0;
 	
 	for(const a of hAreas){
-		let ms = UIS[a];
-		let hSoll = ms.h;
+		let mobj = UIS[a];
+		let hSoll = mobj.h;
 		hTotal += hSoll;
-		//console.log('ms.h',hSoll);
-		let b=getBounds(ms.elem);
+		//console.log('mobj.h',hSoll);
+		let b=getBounds(mobj.elem);
 		let hIst = Math.round(b.height);
 		hTotal2 += hIst;
 		//console.log('w ist',hIst);

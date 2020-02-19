@@ -83,8 +83,8 @@ function _startNewGame(role = 'starter') {
 	UIS = {}; // holds MS objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
-	oid2ids = {}; // { oid : list of ms ids (called ids or uids) }
-	id2uids = {}; // { uid : list of ms ids related to same oid }
+	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
+	id2uids = {}; // { uid : list of mobj ids related to same oid }
 
 	let sendCommandChain = role == 'starter' ? sendInitNewGame : sendStatusNewGame;
 	loadUserSpec([loadUserCode, sendCommandChain]);
@@ -161,8 +161,8 @@ function initRSGData() {
 	UIS = {}; // holds MS objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
-	oid2ids = {}; // { oid : list of ms ids (called ids or uids) }
-	id2uids = {}; // { uid : list of ms ids related to same oid }
+	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
+	id2uids = {}; // { uid : list of mobj ids related to same oid }
 	DELETED_IDS = [];
 
 }

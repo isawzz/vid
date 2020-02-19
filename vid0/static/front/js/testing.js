@@ -1,6 +1,6 @@
 //#region test iconChars after changing it to cacheDict
 function addPicto(IdBoard, key, sz, x, y) {
-	let ms = makeDrawingElement(getUID(), 'board');
+	let mobj = makeDrawingElement(getUID(), 'board');
 	let ch;
 	try {
 		ch = iconChars.get(key);
@@ -16,8 +16,8 @@ function addPicto(IdBoard, key, sz, x, y) {
 		ch = iconChars[key];
 	}
 	console.log('in addPicto got key', key, ch);
-	ms._pictoFromChar(ch, x, y, sz, sz, randomColor());
-	ms.attach();
+	mobj._pictoFromChar(ch, x, y, sz, sz, randomColor());
+	mobj.attach();
 }
 function testPicto_dep(n) {
 	initRSGData(); showGame(); initDom();
@@ -56,9 +56,9 @@ async function testPicto(n) {
 
 //#region test pictos w/ icons that are same in gameIcons and faIcons, new route_rsg_asset async function
 function addPictoFromChar(IdBoard, ch, sz, x, y) {
-	let ms = makeDrawingElement(getUID(), 'board');
-	ms._pictoFromChar(ch, x, y, sz, sz, randomColor());
-	ms.attach();
+	let mobj = makeDrawingElement(getUID(), 'board');
+	mobj._pictoFromChar(ch, x, y, sz, sz, randomColor());
+	mobj.attach();
 }
 async function testFaKeysNotInGa() {
 	initRSGData(); showGame(); initDom();
@@ -74,7 +74,7 @@ async function testFaKeysNotInGa() {
 	setAreaWidth('a_d_game', 2400);
 	setAreaHeight('a_d_game', 1500);
 
-	// let ms = makeDrawingElement('el1', 'board');
+	// let mobj = makeDrawingElement('el1', 'board');
 
 	let keys = faKeys; //.slice(0,100);//['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
 	let xStart = -1100;
@@ -91,16 +91,16 @@ async function testFaKeysNotInGa() {
 		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
 	}
 	// let key = chooseRandom(Object.keys(faChars));//'clock';
-	// ms._picto('crow', -100, -100, 100, 100, randomColor());
+	// mobj._picto('crow', -100, -100, 100, 100, randomColor());
 
-	//ms.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
-	//ms._picto('knight',0,0,50,100,'white','blue');
-	//_makeGroundShape(ms, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
-	//ms.setScaleX(1);
-	//ms.text({txt:'hallo',fill:'white'})
+	//mobj.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
+	//mobj._picto('knight',0,0,50,100,'white','blue');
+	//_makeGroundShape(mobj, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
+	//mobj.setScaleX(1);
+	//mobj.text({txt:'hallo',fill:'white'})
 
-	// ms.attach();
-	// console.log(ms)
+	// mobj.attach();
+	// console.log(mobj)
 }
 async function testCommonKeys() {
 	initRSGData(); showGame(); initDom();
@@ -116,7 +116,7 @@ async function testCommonKeys() {
 	setAreaWidth('a_d_game', 1400);
 	setAreaHeight('a_d_game', 1000);
 
-	// let ms = makeDrawingElement('el1', 'board');
+	// let mobj = makeDrawingElement('el1', 'board');
 
 	let keys = faKeys; //.slice(0,100);//['achievement', 'wheat', 'criminal', 'police', 'cop', 'trophy', 'victory', 'plenty', 'fruit', 'bounty', 'house', 'castle', 'building', 'settlement', 'city', 'robber', 'thief', 'street', 'road'];
 	let xStart = -600;
@@ -133,16 +133,16 @@ async function testCommonKeys() {
 		if (y > -yStart) { y = yStart; x += 60; } else y += 60;
 	}
 	// let key = chooseRandom(Object.keys(faChars));//'clock';
-	// ms._picto('crow', -100, -100, 100, 100, randomColor());
+	// mobj._picto('crow', -100, -100, 100, 100, randomColor());
 
-	//ms.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
-	//ms._picto('knight',0,0,50,100,'white','blue');
-	//_makeGroundShape(ms, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
-	//ms.setScaleX(1);
-	//ms.text({txt:'hallo',fill:'white'})
+	//mobj.text({txt:fasym(key),family:'FontAwesome',fill:'white',fz:100});
+	//mobj._picto('knight',0,0,50,100,'white','blue');
+	//_makeGroundShape(mobj, 0, 0, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
+	//mobj.setScaleX(1);
+	//mobj.text({txt:'hallo',fill:'white'})
 
-	// ms.attach();
-	// console.log(ms)
+	// mobj.attach();
+	// console.log(mobj)
 }
 async function atestLoadIcons() {
 
@@ -206,17 +206,17 @@ function testLines() {
 	initRSGData(); showGame(); initDom();
 	let board = makeDrawingArea('board', 'a_d_game', true);
 
-	let ms = makeDrawingElement('el1', 'board');
-	ms.line({ thickness: 10, cap: 'round' }).setBg('red').attach();
+	let mobj = makeDrawingElement('el1', 'board');
+	mobj.line({ thickness: 10, cap: 'round' }).setBg('red').attach();
 
-	console.log(ms)
-	console.log(ms.elem)
+	console.log(mobj)
+	console.log(mobj.elem)
 
-	let [x1, y1, x2, y2] = ms.getEndPointsOfLineSegmentOfLength(40);
+	let [x1, y1, x2, y2] = mobj.getEndPointsOfLineSegmentOfLength(40);
 	let ms2 = makeDrawingElement('el2', 'board');
 	ms2.line({ thickness: 15, x1: x1, y1: y1, x2: x2, y2: y2 }).setBg('blue').attach();
 
-	[x1, y1, x2, y2] = ms.getEndPointsOfLineSegmentOfLength(120);
+	[x1, y1, x2, y2] = mobj.getEndPointsOfLineSegmentOfLength(120);
 	let ms3 = makeDrawingElement('el3', 'board');
 	ms3.line({ thickness: 5, x1: x1, y1: y1, x2: x2, y2: y2 }).setBg('green').attach();
 }
@@ -258,9 +258,9 @@ function addPicto_dep(IdBoard, key, sz, x, y) {
 	if (!(key in iconChars)) key = 'crow';
 
 	console.log('found key:', key);
-	let ms = makeDrawingElement(getUID(), 'board');
-	ms._picto(key, x, y, sz, sz, randomColor());
-	ms.attach();
+	let mobj = makeDrawingElement(getUID(), 'board');
+	mobj._picto(key, x, y, sz, sz, randomColor());
+	mobj.attach();
 }
 
 
@@ -271,13 +271,13 @@ function testingMS() {
 	if (isdef(IdOwner.t)) IdOwner.t.map(x => addTestInteraction1(x));
 }
 function addTestInteraction1(id) {
-	let ms = UIS[id];
-	ms.addClickHandler('', onClick1);
+	let mobj = UIS[id];
+	mobj.addClickHandler('', onClick1);
 }
-function onClick1(ev, ms, part) {
-	console.log(ms)
-	if (ms.scaleValue == 2) { ms.setScale(1); delete ms.scaleValue; }
-	else { ms.setScale(2); ms.scaleValue = 2; }
+function onClick1(ev, mobj, part) {
+	console.log(mobj)
+	if (mobj.scaleValue == 2) { mobj.setScale(1); delete mobj.scaleValue; }
+	else { mobj.setScale(2); mobj.scaleValue = 2; }
 }
 //#endregion
 
@@ -290,9 +290,9 @@ function drawTest(board, num) {
 		for (let col = 0; col < board.w; col += d) {
 			let y = row - board.h / 2 + d / 2;
 			let x = col - board.w / 2 + d / 2;
-			let ms = makeDrawingElement('el1', 'board');
-			ms.x = x; ms.y = y;
-			coll.push(ms);
+			let mobj = makeDrawingElement('el1', 'board');
+			mobj.x = x; mobj.y = y;
+			coll.push(mobj);
 		}
 	}
 	timit.showTime('nach compute: number of elements=' + coll.length);
@@ -301,24 +301,24 @@ function drawTest(board, num) {
 	//console.log(keys)
 	let numPictos = Math.min(coll.length, keys.length);
 	for (let i = 0; i < numPictos; i++) {
-		let ms = coll[i];
+		let mobj = coll[i];
 		let c = chooseRandom(colors); //colors[i%4];
 		let key = keys[i];
-		ms._picto(key, ms.x, ms.y, d, d, c);
+		mobj._picto(key, mobj.x, mobj.y, d, d, c);
 
 		//version 2:
-		// if (i>=keys.length) _makeGroundShape(ms, ms.x, ms.y, d, d, c, 'quad',{rounding:'4'});
+		// if (i>=keys.length) _makeGroundShape(mobj, mobj.x, mobj.y, d, d, c, 'quad',{rounding:'4'});
 		// else {
 		// 	let key = keys[i];//chooseRandom(Object.keys(faIcons));//'clock';
-		// 	ms._picto(key,ms.x,ms.y,d,d,c);		
+		// 	mobj._picto(key,mobj.x,mobj.y,d,d,c);		
 		// 	}
 
 		//version 1:
-		// _makeGroundShape(ms, ms.x, ms.y, d, d, c, 'quad',{rounding:'4'});
+		// _makeGroundShape(mobj, mobj.x, mobj.y, d, d, c, 'quad',{rounding:'4'});
 	}
 	timit.showTime('nach shape');
-	for (const ms of coll) {
-		ms.attach();
+	for (const mobj of coll) {
+		mobj.attach();
 	}
 	timit.showTime('nach attach');
 	if (num > 0) setTimeout(() => drawTest(board, num - 1), 0);
@@ -327,7 +327,7 @@ function drawTest(board, num) {
 function change(arr, n) {
 	//randomly change n elements
 	for (let i = 0; i < n; i++) {
-		let ms = chooseRandom(arr);
+		let mobj = chooseRandom(arr);
 		//destr
 	}
 }
@@ -347,21 +347,21 @@ function testNewMSAPI() {
 	let board = makeDrawingArea('board', 'a_d_game', true);
 
 
-	let ms = makeDrawingElement('el1', 'board');
+	let mobj = makeDrawingElement('el1', 'board');
 
-	_makeGroundShape(ms, 0, 25, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
-	//ms.setScaleX(1);
-	//ms.text({txt:'hallo',fill:'white'})
-	ms.attach();
-	console.log(ms)
+	_makeGroundShape(mobj, 0, 25, 100, 100, 'blue', 'quad', { scaleY: 2, rot: 45 });
+	//mobj.setScaleX(1);
+	//mobj.text({txt:'hallo',fill:'white'})
+	mobj.attach();
+	console.log(mobj)
 }
 function testShapes() {
 	initRSGData(); showGame(); initDom();
 
 	let board = makeDrawingArea('board', 'a_d_game', true);
 	//console.log('board:',board)
-	let ms = makeDrawingElement('el1', 'board');
-	//console.log('shape:',ms)
+	let mobj = makeDrawingElement('el1', 'board');
+	//console.log('shape:',mobj)
 	let sz = 200;
 	let c = 'blue';
 	let c1 = anyColorToStandardString('green', .1);
@@ -369,22 +369,22 @@ function testShapes() {
 
 
 
-	makeVisual(ms, 0, 0, sz, sz, c1, 'quad');
-	ms.text({ txt: 'hallo', fill: colorDarker(c), fz: 30, y: -sz / 3 });
-	//ms.rect({w:sz/2,h:sz/2,fill:'red'});
+	makeVisual(mobj, 0, 0, sz, sz, c1, 'quad');
+	mobj.text({ txt: 'hallo', fill: colorDarker(c), fz: 30, y: -sz / 3 });
+	//mobj.rect({w:sz/2,h:sz/2,fill:'red'});
 
 
 
-	ms.ellipse({ w: sz / 2, h: sz / 2, fill: 'green', alpha: .5 })
-	ms.attach();
+	mobj.ellipse({ w: sz / 2, h: sz / 2, fill: 'green', alpha: .5 })
+	mobj.attach();
 
-	//ms.setBg('transparent')
-	//console.log(ms.elem);
-	//console.log(ms.ground,ms.overlay)
+	//mobj.setBg('transparent')
+	//console.log(mobj.elem);
+	//console.log(mobj.ground,mobj.overlay)
 
-	ms.addClickHandler('', () => {
-		ms.setShape('star');
-		//console.log(ms.ground,ms.overlay);
+	mobj.addClickHandler('', () => {
+		mobj.setShape('star');
+		//console.log(mobj.ground,mobj.overlay);
 	});
 
 	let ms1 = makeDrawingElement('el2', 'board');
@@ -730,8 +730,8 @@ function _test() {
 
 
 //#region older code?!?!?
-function onClickGetUIS(ms, part) {
-	let id = ms.id;
+function onClickGetUIS(mobj, part) {
+	let id = mobj.id;
 	//console.log('',counters.click,' ______ visuals for', id, id2uids[id])
 }
 function onClickAddInteraction() { for (const id in UIS) { addTestInteraction(UIS[id]); } }
@@ -765,9 +765,9 @@ function onClickAddDefaultObjects() {
 	timit.showTime('start ' + getFunctionCallerName());
 
 	for (const oid in G.table) {
-		let ms = makeDefaultObject(oid, G.table[oid], S.settings.table.defaultArea);
+		let mobj = makeDefaultObject(oid, G.table[oid], S.settings.table.defaultArea);
 		presentDefault(oid, G.table[oid]);
-		//addTestInteraction(ms);
+		//addTestInteraction(mobj);
 	}
 	timit.showTime('...end ' + getFunctionCallerName());
 }
@@ -780,9 +780,9 @@ function onClickAddDefaultPlayers() {
 	timit.showTime('start ' + getFunctionCallerName());
 
 	for (const oid in G.players) {
-		let ms = makeDefaultPlayer(oid, G.playersAugmented[oid], S.settings.player.defaultArea);
+		let mobj = makeDefaultPlayer(oid, G.playersAugmented[oid], S.settings.player.defaultArea);
 		presentDefault(oid, G.playersAugmented[oid], false);
-		//addTestInteraction(ms);
+		//addTestInteraction(mobj);
 	}
 	timit.showTime('...end ' + getFunctionCallerName());
 }

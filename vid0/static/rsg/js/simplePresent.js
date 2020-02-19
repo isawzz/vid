@@ -39,7 +39,7 @@ function _tableUpdateSimple() {
 		let o = G.table[oid];
 		if (nundef(o)) continue;
 
-		let ms = getVisual(oid);
+		let mobj = getVisual(oid);
 
 		let updatedVisuals = runBehaviors(oid, G.table, TABLE_UPDATE);
 

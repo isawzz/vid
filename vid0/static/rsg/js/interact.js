@@ -82,11 +82,11 @@ function onClickCatan() {
 }
 function onClickCheat(code) { sendRoute('/cheat/' + code, null); }
 
-function onClickFilterTuples(ev, ms, part) {
+function onClickFilterTuples(ev, mobj, part) {
 	//hat auf irgendein object or player geclickt
-	let id = ms.id;
+	let id = mobj.id;
 	if (boatFilters.includes(id)) {
-		_removeFilterHighlight(ms);
+		_removeFilterHighlight(mobj);
 		removeInPlace(boatFilters, id);
 		let relids = getList(id2uids[id]);
 		let boats = relids.filter(x => x[2] == 'a');
@@ -104,17 +104,17 @@ function onClickFilterTuples(ev, ms, part) {
 			onClickSelectTuple(null, UIS[boats[0]]);
 		} else {
 			boatFilters.push(id);
-			_addFilterHighlight(ms);
+			_addFilterHighlight(mobj);
 			for (const bid of IdOwner.a) { if (!boats.includes(bid)) { _hideBoat(bid) } } //soll von tuple liste nur die tuples anzeigen, wo diese id vorkommt
 			//TODO!!! soll von objects nur die anzeigen, die in einem der visible tuples vorkommen
 		}
 	}
 }
-function onClickFilterOrInfobox(ev, ms, part) { if (!ev.ctrlKey) onClickFilterTuples(ev, ms, part); else openInfobox(ev, ms, part); }
+function onClickFilterOrInfobox(ev, mobj, part) { if (!ev.ctrlKey) onClickFilterTuples(ev, mobj, part); else openInfobox(ev, mobj, part); }
 
-function onClickFilterAndInfobox(ev, ms, part) { onClickFilterTuples(ev, ms, part); onClickPlusControlInfobox(ev, ms, part); }
+function onClickFilterAndInfobox(ev, mobj, part) { onClickFilterTuples(ev, mobj, part); onClickPlusControlInfobox(ev, mobj, part); }
 
-function onClickPlusControlInfobox(ev, ms, part) { if (ev.ctrlKey) { openInfobox(ev, ms, part); } }
+function onClickPlusControlInfobox(ev, mobj, part) { if (ev.ctrlKey) { openInfobox(ev, mobj, part); } }
 function onClickPollStatus() {
 	//poll status for USERNAME, and if does not work, poll for waiting for if it belongs to me!
 
@@ -162,8 +162,8 @@ function onClickRunToAction(keyword) {
 		//run to action available that contains keyword
 		//should return true unless one of the boats.tuple has an element with val.includes(keyword)
 		//console.log(getBoats());
-		for (const ms of getBoats()) {
-			for (const ti of ms.o.tuple) {
+		for (const mobj of getBoats()) {
+			for (const ti of mobj.o.tuple) {
 				if (ti.val.toString().includes(keyword)) {
 					//console.log('STOP!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 					setAutoplayFunctionForMode();
@@ -185,21 +185,21 @@ function onClickStop() {
 	//setTimeout(showStep,100);
 }
 
-function onClickSelectTuple(ev, ms, part) {
-	//console.log(ev,ms,part)
+function onClickSelectTuple(ev, mobj, part) {
+	//console.log(ev,mobj,part)
 	if (choiceCompleted) return;
 	choiceCompleted = true;
-	//let id = ms.id;
-	iTuple = ms.o.iTuple;
-	//console.log(counters.msg + ': ' + G.player + ' :', iTuple, ms.o.desc, ms.o.text, ms.id);
+	//let id = mobj.id;
+	iTuple = mobj.o.iTuple;
+	//console.log(counters.msg + ': ' + G.player + ' :', iTuple, mobj.o.desc, mobj.o.text, mobj.id);
 	freezeUI();
 	stopAllHighlighting();
-	sendAction(ms.o, [gameStep]);
+	sendAction(mobj.o, [gameStep]);
 }
 var startBoats = ['93', '99', '109', '121', '124', '116', '106', '111', '116', '129'];
 function getNextStartBoat() {
 	//console.log('phase', G.phase)
-	let ms = null;
+	let mobj = null;
 	let sb = startBoats[0];
 	if (G.phase == 'setup') {
 		let boats = getBoats();
@@ -211,28 +211,28 @@ function getNextStartBoat() {
 					if (t.includes(id)) {
 						//console.log('choosing', id)
 						sb = id;
-						ms = b;
+						mobj = b;
 						removeInPlace(startBoats, sb);
-						return ms;
+						return mobj;
 					}
 				}
 			}
 		}
 	}
 	//console.log(startBoats)
-	return ms;
+	return mobj;
 }
 function onClickStep() {
 	if (!this.choiceCompleted) {
-		//let ms = getRandomBoat();
-		//let ms = getBoatWith(['demand', 'offer'], false);
-		let ms = getNextStartBoat();
-		if (nundef(ms)) ms = getBoatWith(['demand', 'offer'], false);
-		if (nundef(ms)) ms = getBoatWith(['buy'], true);
-		if (nundef(ms)) ms = getBoatWith(['pass'], true);
-		if (nundef(ms)) ms = getBoatWith(['demand', 'offer'], false);
-		if (nundef(ms)) ms = getRandomBoat();
-		onClickSelectTuple(null, ms);
+		//let mobj = getRandomBoat();
+		//let mobj = getBoatWith(['demand', 'offer'], false);
+		let mobj = getNextStartBoat();
+		if (nundef(mobj)) mobj = getBoatWith(['demand', 'offer'], false);
+		if (nundef(mobj)) mobj = getBoatWith(['buy'], true);
+		if (nundef(mobj)) mobj = getBoatWith(['pass'], true);
+		if (nundef(mobj)) mobj = getBoatWith(['demand', 'offer'], false);
+		if (nundef(mobj)) mobj = getRandomBoat();
+		onClickSelectTuple(null, mobj);
 	}
 }
 function onClickToggleButton(button, handlerList) {
@@ -260,12 +260,12 @@ function onClickTTT() {
 }
 
 //#region utilities
-function highlightMsAndRelatives(ev, ms, partName) {
-	//console.log(ms.id,partName)
-	let id = ms.id;
+function highlightMsAndRelatives(ev, mobj, partName) {
+	//console.log(mobj.id,partName)
+	let id = mobj.id;
 	//console.log('------------>id',id)
-	ms.high(partName);
-	if (ms.isa.infobox) bringInfoboxToFront(ms);
+	mobj.high(partName);
+	if (mobj.isa.infobox) bringInfoboxToFront(mobj);
 	let relativeIds = id2uids[id];
 	if (nundef(relativeIds)) return;
 	for (const idRel of relativeIds) {
@@ -274,9 +274,9 @@ function highlightMsAndRelatives(ev, ms, partName) {
 	}
 
 }
-function unhighlightMsAndRelatives(ev, ms, partName) {
-	let id = ms.id;
-	ms.unhigh(partName);
+function unhighlightMsAndRelatives(ev, mobj, partName) {
+	let id = mobj.id;
+	mobj.unhigh(partName);
 	let relativeIds = id2uids[id];
 	if (nundef(relativeIds)) return;
 	for (const idRel of relativeIds) {
@@ -300,55 +300,55 @@ function unfreezeUI() {
 function hideTooltip() { $('div#tooltip').css({ display: 'none' }); }
 
 //#region local helpers
-function _addFilterHighlight(ms) { ms.highC('green'); }
+function _addFilterHighlight(mobj) { mobj.highC('green'); }
 function _addStandardInteraction(id) {
 	//console.log(id)
-	let ms = UIS[id];
+	let mobj = UIS[id];
 	switch (id[2]) {
 
 		case 'a':
-			ms.addClickHandler('elem', onClickSelectTuple);
-			ms.addMouseEnterHandler('title', highlightMsAndRelatives);
-			ms.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+			mobj.addClickHandler('elem', onClickSelectTuple);
+			mobj.addMouseEnterHandler('title', highlightMsAndRelatives);
+			mobj.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 			break;
 
 		case 'l':
 		case 'r':
-			ms.addMouseEnterHandler('title', highlightMsAndRelatives);
-			ms.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+			mobj.addMouseEnterHandler('title', highlightMsAndRelatives);
+			mobj.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 			break;
 
 		case 't':
 			if (id[0] == 'm') { //main table objects!!!!!
-				ms.addClickHandler('elem', onClickFilterOrInfobox);
+				mobj.addClickHandler('elem', onClickFilterOrInfobox);
 
-				// if (ms.isa.deck) {
+				// if (mobj.isa.deck) {
 				// 	//card should also be magnified or minified!
 				// 	//console.log('adding mouse handler to deck!!!')
-				// 	ms.addMouseEnterHandler('topmost', highlightMsAndRelatives);
-				// 	ms.addMouseLeaveHandler('topmost', unhighlightMsAndRelatives);
+				// 	mobj.addMouseEnterHandler('topmost', highlightMsAndRelatives);
+				// 	mobj.addMouseLeaveHandler('topmost', unhighlightMsAndRelatives);
 				// } else 
-				if (ms.isa.card) {
+				if (mobj.isa.card) {
 					//card should also be magnified or minified!
-					ms.addMouseEnterHandler('title', _highlightAndMagnify);
-					ms.addMouseLeaveHandler('title', _unhighlightAndMinify);
+					mobj.addMouseEnterHandler('title', _highlightAndMagnify);
+					mobj.addMouseLeaveHandler('title', _unhighlightAndMinify);
 				} else {
-					ms.addMouseEnterHandler('title', highlightMsAndRelatives);
-					ms.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+					mobj.addMouseEnterHandler('title', highlightMsAndRelatives);
+					mobj.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 				}
 
 
 			} else {
-				ms.addClickHandler('elem', onClickFilterTuples);
-				ms.addMouseEnterHandler('title', highlightMsAndRelatives);
-				ms.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+				mobj.addClickHandler('elem', onClickFilterTuples);
+				mobj.addMouseEnterHandler('title', highlightMsAndRelatives);
+				mobj.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 			}
 			break;
 
 		default:
-			ms.addClickHandler('elem', onClickFilterTuples);
-			ms.addMouseEnterHandler('title', highlightMsAndRelatives);
-			ms.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+			mobj.addClickHandler('elem', onClickFilterTuples);
+			mobj.addMouseEnterHandler('title', highlightMsAndRelatives);
+			mobj.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 			break;
 	}
 }
@@ -368,14 +368,14 @@ function _preselectFirstVisualsForBoats() {
 	//console.log('vislist',vislist);
 	vislist.map(id => UIS[id].highFrame());
 }
-function _removeFilterHighlight(ms) { ms.unhighC(); }
-function _removeAllHighlighting(id) { let ms = UIS[id]; ms.unhighAll(); }
-function _removeClickHandler(id) { let ms = UIS[id]; ms.removeClickHandler(); }
-function _removeHoverHandlers(id) { let ms = UIS[id]; ms.removeHoverHandlers(); }
-function _removeInteraction(id) { let ms = UIS[id]; ms.removeHandlers(); ms.unhighAll(); }
+function _removeFilterHighlight(mobj) { mobj.unhighC(); }
+function _removeAllHighlighting(id) { let mobj = UIS[id]; mobj.unhighAll(); }
+function _removeClickHandler(id) { let mobj = UIS[id]; mobj.removeClickHandler(); }
+function _removeHoverHandlers(id) { let mobj = UIS[id]; mobj.removeHoverHandlers(); }
+function _removeInteraction(id) { let mobj = UIS[id]; mobj.removeHandlers(); mobj.unhighAll(); }
 
-function _hideBoat(id) { let ms = UIS[id]; ms.hide(); ms.o.weg = true; }
-function _showBoat(id) { let ms = UIS[id]; ms.show(); ms.o.weg = false; }
+function _hideBoat(id) { let mobj = UIS[id]; mobj.hide(); mobj.o.weg = true; }
+function _showBoat(id) { let mobj = UIS[id]; mobj.show(); mobj.o.weg = false; }
 function _highlightNextBoat() {
 	if (!boatHighlighted) _highlightBoat(getFirstBoatId());
 	else {
@@ -406,8 +406,8 @@ function _openInfoboxesForBoatOids(boat) {
 	let oids = boat.o.oids;
 	let mainIds = oids.map(x => getMainId(x));
 	for (const id of mainIds) {
-		let ms = UIS[id];
-		openInfobox(null, ms);
+		let mobj = UIS[id];
+		openInfobox(null, mobj);
 	}
 }
 function _closeInfoboxesForBoatOids(boat) {
@@ -421,14 +421,14 @@ function _unhighlightBoat() {
 		boatHighlighted = null;
 	}
 }
-function _highlightAndMagnify(ev, ms, partName) {
+function _highlightAndMagnify(ev, mobj, partName) {
 	//this is typical behavior for cards in a hand
-	magnifyFront(ms.id);
-	highlightMsAndRelatives(ev, ms, partName);
+	magnifyFront(mobj.id);
+	highlightMsAndRelatives(ev, mobj, partName);
 }
-function _unhighlightAndMinify(ev, ms, partName) {
-	minifyBack(ms.id);
-	unhighlightMsAndRelatives(ev, ms, partName);
+function _unhighlightAndMinify(ev, mobj, partName) {
+	minifyBack(mobj.id);
+	unhighlightMsAndRelatives(ev, mobj, partName);
 }
 
 function robbedDescInBoats() {
@@ -460,16 +460,16 @@ function robbedDescInBoats() {
 
 //#region testing
 function addTestInteraction(id) {
-	let ms = UIS[id];
-	ms.addClickHandler('title', onClickGetUIS);
-	ms.addMouseEnterHandler('title', (x, pName) => x.high(pName));
-	ms.addMouseLeaveHandler('title', (x, pName) => x.unhigh(pName));
+	let mobj = UIS[id];
+	mobj.addClickHandler('title', onClickGetUIS);
+	mobj.addMouseEnterHandler('title', (x, pName) => x.high(pName));
+	mobj.addMouseLeaveHandler('title', (x, pName) => x.unhigh(pName));
 }
 function addBoatInteraction(id) {
 	//console.log(id)
-	let ms = UIS[id];
-	ms.addClickHandler('elem', onClickSelectTuple);
-	ms.addMouseEnterHandler('title', (x, pName) => x.high(pName));
-	ms.addMouseLeaveHandler('title', (x, pName) => x.unhigh(pName));
+	let mobj = UIS[id];
+	mobj.addClickHandler('elem', onClickSelectTuple);
+	mobj.addMouseEnterHandler('title', (x, pName) => x.high(pName));
+	mobj.addMouseLeaveHandler('title', (x, pName) => x.unhigh(pName));
 }
 function activateActions() { IdOwner.a.map(x => addBoatInteraction(x)) }

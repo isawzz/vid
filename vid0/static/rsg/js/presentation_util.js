@@ -1,4 +1,38 @@
 //#region create MS 
+function makeVisual(mobj, x, y, w, h, color, shape, { x1, y1, x2, y2 } = {}) {
+	//console.log('makeVisual', x, y, w, h, color, shape, x1, y1, x2, y2);
+	if (shape == 'circle') {
+		mobj.ellipse({ w: w, h: h }).ellipse({ className: 'overlay', w: w, h: h });
+		mobj.setPos(x, y);
+	} else if (shape == 'hex') {
+		mobj.hex({ w: w, h: h }).hex({ className: 'overlay', w: w, h: h });
+		mobj.setPos(x, y);
+	} else if (shape == 'quad' || shape == 'rect') {
+		mobj.rect({ w: w, h: h }).rect({ className: 'overlay', w: w, h: h });
+		mobj.setPos(x, y);
+	} else if (shape == 'triangle') {
+		//TODO!!!!
+		mobj.triangle({ w: w, h: h }).triangle({ className: 'overlay', w: w, h: h });
+		mobj.setPos(x, y);
+	} else if (shape == 'line') {
+		let thickness = w;
+		let fill = color;
+		mobj.line({ className: 'ground', x1: x1, y1: y1, x2: x2, y2: y2, fill: fill, thickness: thickness })
+			.line({ className: 'overlay', x1: x1, y1: y1, x2: x2, y2: y2, thickness: thickness, });
+	} else {
+		mobj[shape]({ className:'ground',w: w, h: h});//,fill:color });
+		mobj[shape]({ className: 'overlay', w: w, h: h });
+		mobj.setPos(x, y);
+	}
+	mobj.setBg(color, shape != 'line');
+	mobj.orig.bg = color;
+	mobj.originalBg = color;
+	mobj.orig.shape = shape;
+	mobj.originalSize = {w:w,h:h};
+	mobj.orig.w=w;
+	mobj.orig.h=h;
+	return mobj;
+}
 function makeDeckMS(oid, o, deck1, areaName, x, y) {
 	//oid = getUID();
 	let id = 'm_t_' + oid; //oid;
@@ -7,37 +41,37 @@ function makeDeckMS(oid, o, deck1, areaName, x, y) {
 
 	//let ms1 = new DeckMS(getUID(),deck1);
 	//replace by code:
-	let ms = new RSG();
-	ms.id = id;
-	ms.o = o;
+	let mobj = new MOBJ();
+	mobj.id = id;
+	mobj.o = o;
 	//console.log('o', o);
-	ms.deck = deck1;
-	//ms.deck.elem.id=getUID();
-	ms.oid = oid;
-	ms.elem = document.createElement('div');
-	ms.elem.id = id;// getUID(); // id+'hallo';
-	//console.log('elem', ms.elem);
+	mobj.deck = deck1;
+	//mobj.deck.elem.id=getUID();
+	mobj.oid = oid;
+	mobj.elem = document.createElement('div');
+	mobj.elem.id = id;// getUID(); // id+'hallo';
+	//console.log('elem', mobj.elem);
 
 	//ms1.attachTo(UIS[areaName].elem); //div1);
 	//replace by code:
 	// let div = UIS[areaName].elem;
-	// ms.parent = UIS[areaName];
-	// //console.log(ms.parent)
-	// ms.parentDiv = div;
-	// ms.idParent = areaName;
+	// mobj.parent = UIS[areaName];
+	// //console.log(mobj.parent)
+	// mobj.parentDiv = div;
+	// mobj.idParent = areaName;
 
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(ms.elem);
-	ms.cat = DOMCATS[ms.domType];
-	ms.idParent = areaName;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(mobj.elem);
+	mobj.cat = DOMCATS[mobj.domType];
+	mobj.idParent = areaName;
 	UIS[areaName].children.push(id);
-	ms.isa.deck = true;
+	mobj.isa.deck = true;
 	//console.log('******** vor link', id, oid)
 	listKey(IdOwner, id[2], id);
 	linkObjects(id, oid);
-	UIS[id] = ms;
+	UIS[id] = mobj;
 
-	return ms;
+	return mobj;
 }
 function makeInfobox(uid, oid, o) {
 	let id = makeIdInfobox(oid);
@@ -45,81 +79,81 @@ function makeInfobox(uid, oid, o) {
 		//console.log('CANNOT create ' + id + ' TWICE!!!!!!!!!'); 
 		return;
 	}
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = document.createElement('div');
 	domel.style.cursor = 'default';
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = 'a_d_game'; //wer soll parent von infobox sein? brauch div!
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
 	let sTitle = oid + ': ' + o.obj_type;
-	ms.title(sTitle);
+	mobj.title(sTitle);
 
-	//let pos = staticPos(ms);
-	//ms.setPos(pos.x, pos.y);
-	ms.setBg('sienna')
-	ms.elem.style.border = '2px solid dimgray';
+	//let pos = staticPos(mobj);
+	//mobj.setPos(pos.x, pos.y);
+	mobj.setBg('sienna')
+	mobj.elem.style.border = '2px solid dimgray';
 
-	ms.o = o;
-	ms.isa['infobox'] = true;
+	mobj.o = o;
+	mobj.isa['infobox'] = true;
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	ms.attach();
+	UIS[id] = mobj;
+	mobj.attach();
 
-	let x = ms.tableX(o);
-	//console.log(ms.id,ms.refs,ms.refs['table'])
-	ms.addMouseEnterHandler('title', highlightMsAndRelatives);
-	ms.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
-	ms.addMouseEnterHandler('', () => bringInfoboxToFront(ms));
-	ms.addClickHandler('', () => ms.hide())
-	ms.refs['table'].map(x => {
+	let x = mobj.tableX(o);
+	//console.log(mobj.id,mobj.refs,mobj.refs['table'])
+	mobj.addMouseEnterHandler('title', highlightMsAndRelatives);
+	mobj.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+	mobj.addMouseEnterHandler('', () => bringInfoboxToFront(mobj));
+	mobj.addClickHandler('', () => mobj.hide())
+	mobj.refs['table'].map(x => {
 		UIS[x].addMouseEnterHandler('title', highlightMsAndRelatives);
 		UIS[x].addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 	});
-	bringInfoboxToFront(ms);
-	return ms;
+	bringInfoboxToFront(mobj);
+	return mobj;
 }
 function makeRoot() {
-	let ms = new RSG();
+	let mobj = new MOBJ();
 	let id = 'R_d_root';
-	ms.id = id;
-	ms.elem = document.getElementById(id);
-	ms.domType = getTypeOf(ms.elem);
-	ms.IdParent = null;
-	ms.isAttached = true;
-	UIS[id] = ms;
-	return ms;
+	mobj.id = id;
+	mobj.elem = document.getElementById(id);
+	mobj.domType = getTypeOf(mobj.elem);
+	mobj.IdParent = null;
+	mobj.isAttached = true;
+	UIS[id] = mobj;
+	return mobj;
 }
 function makeDomArea(domel) {
 	if (nundef(domel.id)) return;
-	let ms = new RSG();
+	let mobj = new MOBJ();
 	let id = domel.id;
-	ms.id = id;
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.id = id;
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = domel.parentNode.id;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
-	ms.isAttached = true;
-	UIS[id] = ms;
+	mobj.isAttached = true;
+	UIS[id] = mobj;
 	listKey(IdOwner, id[2], id);
-	return ms;
+	return mobj;
 }
 function makeArea(areaName, idParent) {
-	let ms = new RSG();
+	let mobj = new MOBJ();
 	let id = 'm_A_' + areaName;
-	ms.id = id;
+	mobj.id = id;
 	let domel = document.createElement('div');
 	//el.innerHTML='hallo!';
 	// el.style.backgroundColor = randomColor();
@@ -128,26 +162,26 @@ function makeArea(areaName, idParent) {
 	// el.style.top=''+testPosY+'px'; testPosY+=100;
 	// el.style.width='100%';
 	// el.style.height='50%';
-	ms.elem = domel;
-	ms.elem.id = id;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(ms.elem);
-	ms.cat = DOMCATS[ms.domType];
-	ms.idParent = idParent;
+	mobj.elem = domel;
+	mobj.elem.id = id;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(mobj.elem);
+	mobj.cat = DOMCATS[mobj.domType];
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
-	ms.attach();
-	UIS[id] = ms;
+	mobj.attach();
+	UIS[id] = mobj;
 	linkObjects(id, areaName);
 	//console.log(oid2ids[areaName]);
 	listKey(IdOwner, id[2], id);
-	return ms;
+	return mobj;
 }
 function makeLogArea(plid) {
-	let ms = new RSG();
+	let mobj = new MOBJ();
 	let idParent = 'a_d_log';
 	let id = idParent + '_' + plid;
-	ms.id = id;
+	mobj.id = id;
 	let el = document.createElement('div');
 	el.style.position = 'absolute';
 	el.style.left = '0px';
@@ -155,49 +189,49 @@ function makeLogArea(plid) {
 	el.style.width = '100%';
 	el.style.height = '100%';
 	el.style.overflowY = 'auto';
-	ms.elem = el;
-	ms.elem.id = id;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(ms.elem);
-	ms.cat = DOMCATS[ms.domType];
-	ms.idParent = idParent;
+	mobj.elem = el;
+	mobj.elem.id = id;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(mobj.elem);
+	mobj.cat = DOMCATS[mobj.domType];
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
-	ms.attach();
-	UIS[id] = ms;
+	mobj.attach();
+	UIS[id] = mobj;
 	listKey(IdOwner, id[2], id);
-	return ms;
+	return mobj;
 }
 function makeDrawingArea(id, idArea, addToUIS = false) {
 
 	if (addToUIS && isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 
 	let idParent = idArea;
-	ms.idParent = idArea;
+	mobj.idParent = idArea;
 	let parent = UIS[idParent];
 	if (parent) parent.children.push(id);
 	let parentElem = parent ? parent.elem : document.getElementById(idArea);
 
 	let domel = addSvgg(parentElem, id, { originInCenter: true }); //attaches drawing area!
-	ms.w = parent.w;
-	ms.h = parent.h;
+	mobj.w = parent.w;
+	mobj.h = parent.h;
 	//console.log(domel.offsetWidth,domel.offsetHeight,parent.w,parent.h)
-	ms.isAttached = true;
+	mobj.isAttached = true;
 
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 
-	ms.isa.drawingArea = true;
+	mobj.isa.drawingArea = true;
 
 	if (addToUIS) {
 		listKey(IdOwner, id[2], id);
-		UIS[id] = ms;
+		UIS[id] = mobj;
 	}
-	return ms;
+	return mobj;
 
 
 }
@@ -207,24 +241,24 @@ function makeDrawingElement(id, idDrawingArea, addToUIS = false) {
 		error('CANNOT create ' + id + ' TWICE!!!!!!!!!');
 		return;
 	}
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 
 	let idParent = idDrawingArea;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	if (parent) parent.children.push(id);
 
 	if (addToUIS) {
 		listKey(IdOwner, id[2], id);
-		UIS[id] = ms;
+		UIS[id] = mobj;
 	}
-	return ms;
+	return mobj;
 }
 function makeBoardElement(oid, o, idBoard, elType) {
 	let id = 'm_t_' + oid;
@@ -232,52 +266,52 @@ function makeBoardElement(oid, o, idBoard, elType) {
 		error('CANNOT create ' + id + ' TWICE!!!!!!!!!');
 		return;
 	}
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	ms.elem = domel;
-	ms.elem.id = id;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.elem.id = id;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = idBoard;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
-	ms.o = o;
-	ms.isa[elType] = true;
+	mobj.o = o;
+	mobj.isa[elType] = true;
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	//ms.attach();
-	return ms;
+	UIS[id] = mobj;
+	//mobj.attach();
+	return mobj;
 
 }
 function makeBoard(idBoard, o, areaName) {
 	let id = 'm_s_' + idBoard;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = addSvgg(UIS[areaName].elem, id, { originInCenter: true });
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = areaName;
-	ms.idParent = areaName;
+	mobj.idParent = areaName;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
-	ms.o = o;
-	ms.isa.board = true;
+	mobj.o = o;
+	mobj.isa.board = true;
 
 	linkObjects(id, idBoard);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	ms.isAttached = true;
-	return ms;
+	UIS[id] = mobj;
+	mobj.isAttached = true;
+	return mobj;
 
 }
 function makeCard(oid, o, areaName) {
@@ -288,8 +322,8 @@ function makeCard(oid, o, areaName) {
 		error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); 
 		return; 
 	}
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	
 	let cardName = isdef(o.name)?o.name:'King';
 	//console.log('makeCard', oid, cardName);//, areaName);
@@ -300,23 +334,23 @@ function makeCard(oid, o, areaName) {
 	else if (GAME == 'aristocracy') domel = _makeCardDivAristocracy(oid,o);
 	else domel = _makeCardDivDefault(oid,o);
 	domel.id = id;
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let parent = UIS[idArea]; //hand area
 	let idParent = parent.id;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	parent.children.push(id);
 
-	ms.o = o;
-	ms.isa.card = true; //pieces have location! if location changes a piece must change its parent!!! 
+	mobj.o = o;
+	mobj.isa.card = true; //pieces have location! if location changes a piece must change its parent!!! 
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
+	UIS[id] = mobj;
 
-	return ms;
+	return mobj;
 
 }
 function makeRefs(idParent, refs) {
@@ -324,52 +358,52 @@ function makeRefs(idParent, refs) {
 		let id = ref.id;
 		let oids = ref.oids;
 		if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-		let ms = new RSG();
-		ms.id = id;
+		let mobj = new MOBJ();
+		mobj.id = id;
 		let domel = document.getElementById(id);
 		//console.log('ref elem:',domel)
-		ms.elem = domel;
-		ms.parts.elem = ms.elem;
-		ms.domType = getTypeOf(domel);
-		ms.cat = DOMCATS[ms.domType];
-		ms.idParent = idParent;
+		mobj.elem = domel;
+		mobj.parts.elem = mobj.elem;
+		mobj.domType = getTypeOf(domel);
+		mobj.cat = DOMCATS[mobj.domType];
+		mobj.idParent = idParent;
 		let parent = UIS[idParent];
 		parent.children.push(id);
-		ms.isAttached = true;
+		mobj.isAttached = true;
 
-		ms.isa.ref = true;
-		ms.o = ref.oids;
+		mobj.isa.ref = true;
+		mobj.o = ref.oids;
 
 		for (const oid of ref.oids) linkObjects(id, oid);
 		listKey(IdOwner, id[2], id);
-		UIS[id] = ms;
+		UIS[id] = mobj;
 	}
 }
 function makeAux(s, oid, areaName, directParent) {
 	let id = 'x_l_' + getUID() + '@' + oid;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = document.createElement('div');
 	domel.classList.add('hallo');
 	domel.innerHTML = s;
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = areaName;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
-	ms.isa.aux = true;
+	mobj.isa.aux = true;
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	//ms.attach();
-	if (isdef(directParent)) { ms.isAttached = true; directParent.appendChild(ms.elem) } else ms.attach();
-	return ms;
+	UIS[id] = mobj;
+	//mobj.attach();
+	if (isdef(directParent)) { mobj.isAttached = true; directParent.appendChild(mobj.elem) } else mobj.attach();
+	return mobj;
 
 }
 function makeDefaultObject(oid, o, areaName) { return _makeDefault(makeIdDefaultObject(oid), oid, o, areaName, oid + ': ' + o.obj_type); }
@@ -377,51 +411,51 @@ function makeDefaultPlayer(oid, o, areaName) { return _makeDefault(makeIdDefault
 function _makeDefault(id, oid, o, areaName, title) {
 	//if (oid == '0') //console.log(id, oid, o, areaName, title)
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = document.createElement('div');
 	domel.style.cursor = 'default';
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = areaName;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
 	let sTitle = title;
-	ms.title(sTitle);
+	mobj.title(sTitle);
 
-	ms.o = o;
-	ms.isa[o.obj_type] = true;
+	mobj.o = o;
+	mobj.isa[o.obj_type] = true;
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	ms.attach();
-	return ms;
+	UIS[id] = mobj;
+	mobj.attach();
+	return mobj;
 
 }
 function makeDefaultAction(boat, areaName) {
-	let ms = new RSG();
+	let mobj = new MOBJ();
 	let id = 'd_a_' + boat.iTuple;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return null; }
-	ms.id = id;
+	mobj.id = id;
 	let domel = document.createElement('div');
 	domel.textContent = boat.text;
 	domel.style.cursor = 'pointer';
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = areaName;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
-	ms.o = boat;
-	ms.isa.boat = true;
+	mobj.o = boat;
+	mobj.isa.boat = true;
 
 	for (const tupleEl of boat.tuple) {
 		if (tupleEl.type == 'obj' && isdef(tupleEl.ID)) {
@@ -432,14 +466,14 @@ function makeDefaultAction(boat, areaName) {
 	}
 
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	ms.attach();
-	return ms;
+	UIS[id] = mobj;
+	mobj.attach();
+	return mobj;
 
 }
 
-function getBoardElementStandardType(ms) {
-	return ms.isa.corner ? 'corner' : ms.isa.field ? 'field' : 'edge';
+function getBoardElementStandardType(mobj) {
+	return mobj.isa.corner ? 'corner' : mobj.isa.field ? 'field' : 'edge';
 }
 function makeMainBoardElementVisual(oid, o) {
 	//examples are: building(road,settlement), robber
@@ -452,28 +486,28 @@ function makeMainBoardElementVisual(oid, o) {
 
 	let id = 'm_t_' + oid;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let domel = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let locElem = getVisual(o.loc._obj);
 	let parent = UIS[locElem.idParent]; //board should be parent, not board element!!!
 	//console.log('parent', parent);
 	//console.log('locElem', locElem);
 
 	let idParent = parent.id;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	parent.children.push(id);
 
-	ms.o = o;
-	ms.isa.movable = 'loc'; //pieces have location! if location changes a piece must change its parent!!! 
+	mobj.o = o;
+	mobj.isa.movable = 'loc'; //pieces have location! if location changes a piece must change its parent!!! 
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
+	UIS[id] = mobj;
 
 	let color = S.settings.useColorHintForObjects ? getColorHint(o) : randomColor();
 	if (nundef(color)) color = 'black';// randomColor();
@@ -489,24 +523,24 @@ function makeMainBoardElementVisual(oid, o) {
 
 	//default piece for field,node is circle of size sz w/ symbol in middle
 	if (boardElemType != 'edge') {
-		makePictoPiece(ms, o, sz, color)
-		ms.setPos(locElem.x, locElem.y);
+		makePictoPiece(mobj, o, sz, color)
+		mobj.setPos(locElem.x, locElem.y);
 	} else {
 		//default piece for edge is lineSegment along edge of length sz (w/ symbol only if addSymbolToEdges==true)
-		makeLineSegment(ms, o, locElem, sz, color);
+		makeLineSegment(mobj, o, locElem, sz, color);
 	}
-	ms.attach();
-	return ms;
+	mobj.attach();
+	return mobj;
 }
-function makeLineSegment(ms, o, msLoc, sz, color) {
+function makeLineSegment(mobj, o, msLoc, sz, color) {
 	//TODO: S.settings.addSymbolsToEdges
 	let [x1, y1, x2, y2] = msLoc.getEndPointsOfLineSegmentOfLength(sz);
 	//let ms2=makeDrawingElement('el2', 'board');
-	ms.line({ cap: 'round', thickness: msLoc.thickness, x1: x1, y1: y1, x2: x2, y2: y2 }).setBg(color).attach();
-	ms.line({ className: 'overlay', cap: 'round', thickness: msLoc.thickness, x1: x1, y1: y1, x2: x2, y2: y2 });
+	mobj.line({ cap: 'round', thickness: msLoc.thickness, x1: x1, y1: y1, x2: x2, y2: y2 }).setBg(color).attach();
+	mobj.line({ className: 'overlay', cap: 'round', thickness: msLoc.thickness, x1: x1, y1: y1, x2: x2, y2: y2 });
 
 }
-function makePictoPiece(ms, o, sz, color) {
+function makePictoPiece(mobj, o, sz, color) {
 
 	//console.log('unit',unit,'percent',percent,'sz',sz);
 	let [w, h] = [sz, sz];
@@ -520,40 +554,40 @@ function makePictoPiece(ms, o, sz, color) {
 		S.settings.symbols[sym] = symNew;
 		sym = symNew;
 	}
-	ms.ellipse({ w: w, h: h, fill: color, alpha: .3 });
+	mobj.ellipse({ w: w, h: h, fill: color, alpha: .3 });
 	let pictoColor = color == 'black' ? randomColor() : color;
-	ms.pictoImage(sym, pictoColor, sz * 2 / 3); //colorDarker(color),sz*2/3);
+	mobj.pictoImage(sym, pictoColor, sz * 2 / 3); //colorDarker(color),sz*2/3);
 }
 function makeMainPlayer(oid, o, areaName) {
 	let id = 'm_p_' + oid;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
-	let ms = new RSG();
-	ms.id = id;
+	let mobj = new MOBJ();
+	mobj.id = id;
 	let title = 'player: ' + oid + '(' + getPlayerColorString(oid) + ', ' + getUser(oid) + ')';
 	// _makeDefault(makeIdDefaultPlayer(oid), oid, o, areaName, ); }
 	let domel = document.createElement('div');
 	domel.style.cursor = 'default';
-	ms.elem = domel;
-	ms.parts.elem = ms.elem;
-	ms.domType = getTypeOf(domel);
-	ms.cat = DOMCATS[ms.domType];
+	mobj.elem = domel;
+	mobj.parts.elem = mobj.elem;
+	mobj.domType = getTypeOf(domel);
+	mobj.cat = DOMCATS[mobj.domType];
 	let idParent = areaName;
-	ms.idParent = idParent;
+	mobj.idParent = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
 	let sTitle = title;
 	let color = G.playersAugmented[oid].color;
-	ms.title(sTitle, 'title', color);
+	mobj.title(sTitle, 'title', color);
 
-	ms.o = o;
-	ms.isa.player = true;
+	mobj.o = o;
+	mobj.isa.player = true;
 
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
-	UIS[id] = ms;
-	ms.attach();
-	return ms;
+	UIS[id] = mobj;
+	mobj.attach();
+	return mobj;
 
 }
 
@@ -652,17 +686,17 @@ function transformToString(k, val, refs) {
 function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
 function deleteRSG(id) {
 	//console.log('deleting',id)
-	let ms = UIS[id];
-	if (nundef(ms)) {
+	let mobj = UIS[id];
+	if (nundef(mobj)) {
 		error('object that should be deleted does NOT exist!!!! ' + id);
 		//console.log(DELETED_IDS);
 		//console.log(DELETED_THIS_ROUND);
 		//return;
 	}
-	unhighlightMsAndRelatives(null, ms)
+	unhighlightMsAndRelatives(null, mobj)
 	unlink(id);
 	_deleteFromOwnerList(id);
-	ms.destroy();
+	mobj.destroy();
 	DELETED_IDS.push(id);
 	DELETED_THIS_ROUND.push(id);
 	delete UIS[id];

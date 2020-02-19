@@ -189,29 +189,29 @@ function makeCollectionArea(key, parentAreaId) {
 	if (isdef(parentArea)) {
 		//let h = 300;
 		//let w=parentArea.w;
-		let ms = makeArea(handAreaName, parentAreaId);
-		ms.setBg(randomColor());
-		//ms.setHeight(h);
-		ms.title(stringAfter(key,'.'));
-		let bTitle = getBounds(ms.parts.title);
-		//console.log('---------title bounds:',bTitle); //getBounds(ms.parts.title));
-		//ms.cardOffsetXY = { x: 0, y: 35 };
-		ms.parts['title'].fontSize = '12px';
-		ms.elem.style.minWidth = bTitle.width + 'px'; //'90px';
-		ms.elem.style.minHeight = '146px';
-		ms.body('hand');//,'red');
-		let div = ms.parts['hand'];
+		let mobj = makeArea(handAreaName, parentAreaId);
+		mobj.setBg(randomColor());
+		//mobj.setHeight(h);
+		mobj.title(stringAfter(key,'.'));
+		let bTitle = getBounds(mobj.parts.title);
+		//console.log('---------title bounds:',bTitle); //getBounds(mobj.parts.title));
+		//mobj.cardOffsetXY = { x: 0, y: 35 };
+		mobj.parts['title'].fontSize = '12px';
+		mobj.elem.style.minWidth = bTitle.width + 'px'; //'90px';
+		mobj.elem.style.minHeight = '146px';
+		mobj.body('hand');//,'red');
+		let div = mobj.parts['hand'];
 		div.style.position = 'relative';
 		div.style.left = '10px';
 		div.style.top = '10px';
 		div.style.width = 'auto';
 		div.style.height = 'auto';
-		ms.collectionKey = key;
-		ms.adjustSize = true;
-		let divCollection = ms.elem;
+		mobj.collectionKey = key;
+		mobj.adjustSize = true;
+		let divCollection = mobj.elem;
 		divCollection.style.position = null;
 
-		return ms;
+		return mobj;
 
 	}
 

@@ -81,8 +81,8 @@ function showTT(ev) {
 		d.appendChild(t);
 		$('div#tooltip').css({
 			display: 'inline-block',
-			top: ev.pageY, //clientY-dy+ms.h,//e.pageY, //clientY,
-			left: ev.pageX, //clientX-dx+ms.w, //e.pageX, //clientX,
+			top: ev.pageY, //clientY-dy+mobj.h,//e.pageY, //clientY,
+			left: ev.pageX, //clientX-dx+mobj.w, //e.pageX, //clientX,
 			//width: '300px',
 			//height: '300px'
 		});

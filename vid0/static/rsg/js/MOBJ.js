@@ -1,4 +1,4 @@
-class RSG {
+class MOBJ {
 	constructor() {
 		this.children = [];
 		this.parts = {};
@@ -252,7 +252,7 @@ class RSG {
 		}
 
 
-		// ms.text({txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: 'white', fill: 'black'});
+		// mobj.text({txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: 'white', fill: 'black'});
 		//TODO: shrinkFont,wrap,ellipsis options implementieren
 		//if replaceFirst true ... if this elem already contains a text, that text child is replaced by new text
 		let isFirstChild = this.elem.childNodes.length == 0;
@@ -854,8 +854,8 @@ class RSG {
 		let pos = this.calcCenterPos(ev);
 		$('div#tooltip').css({
 			display: 'inline-block',
-			left: pos.x,//ev.pageX, //clientX-dx+ms.w, //e.pageX, //clientX,
-			top: pos.y,//ev.pageY, //clientY-dy+ms.h,//e.pageY, //clientY,
+			left: pos.x,//ev.pageX, //clientX-dx+mobj.w, //e.pageX, //clientX,
+			top: pos.y,//ev.pageY, //clientY-dy+mobj.h,//e.pageY, //clientY,
 			//width: '300px',
 			//height: '300px'
 		});
@@ -1459,7 +1459,7 @@ class RSG {
 	}
 	clear(startProps = {}) {
 		//all children are destroyed: only destroys UI and removes from parent.children,
-		//does destroy RSG objects of children or remove them from any lists/dictionaries such as UIS,IdOwner,id2uids....
+		//does destroy MOBJ objects of children or remove them from any lists/dictionaries such as UIS,IdOwner,id2uids....
 		let ids = this.children.map(x => x);
 		for (const id of ids) {
 			//console.log('delete',id)

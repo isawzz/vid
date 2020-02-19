@@ -1,5 +1,5 @@
-function bringInfoboxToFront(ms){
-	ms.elem.style.zIndex = maxZIndex;
+function bringInfoboxToFront(mobj){
+	mobj.elem.style.zIndex = maxZIndex;
 	maxZIndex += 1;
 }
 function checkControlKey(ev) {
@@ -9,10 +9,10 @@ function checkControlKey(ev) {
 		clearInfoboxes();
 	}
 }
-function openInfobox(ev, ms, part) {
-	//von ms hol ich mir oid
+function openInfobox(ev, mobj, part) {
+	//von mobj hol ich mir oid
 
-	let oid = getOidForMainId(ms.id);
+	let oid = getOidForMainId(mobj.id);
 	if (!oid) return;
 
 	let id = makeIdInfobox(oid);
@@ -27,49 +27,49 @@ function openInfobox(ev, ms, part) {
 			show(elem);
 		}
 	} else {
-		let msInfobox = makeInfobox(ms.id, oid, G.table[oid]);
+		let msInfobox = makeInfobox(mobj.id, oid, G.table[oid]);
 		//von ev hol ich mir pos
-		//console.log('pos von ms',ms.x,ms.y,ms.w,ms.h)
-		//let pos = ms.calcCenterPos(ev); //mach hier ein posAtCenterOf(msOther)???
+		//console.log('pos von mobj',mobj.x,mobj.y,mobj.w,mobj.h)
+		//let pos = mobj.calcCenterPos(ev); //mach hier ein posAtCenterOf(msOther)???
 		//msInfobox.setPos(pos.x, pos.y);
 		let area = UIS['a_d_game'];
 
-		//ms parent could be someuser area inside but not fully covering a_d_game!
+		//mobj parent could be someuser area inside but not fully covering a_d_game!
 		// //
 
-		// let parentOfMs = UIS[ms.idParent];
+		// let parentOfMs = UIS[mobj.idParent];
 		// let parentX=parentOfMs.x;
 		// let parentY = parentOfMs.y;
-		// let objX = ms.x;
-		// let objY = ms.y;
+		// let objX = mobj.x;
+		// let objY = mobj.y;
 		// let x=parentX+objX;
 		// let y=parentY+objY;
 
-		// console.log('idParent:',ms.idParent)
+		// console.log('idParent:',mobj.idParent)
 		// console.log('ccord in a_d_game:',parentX,parentY,objX,objY,x,y)
 
-		// let defX=ms.x+area.w/2;
-		// let defY=ms.y+area.h/2;
+		// let defX=mobj.x+area.w/2;
+		// let defY=mobj.y+area.h/2;
 		// console.log('...using:',defX,defY);
-		let pos = calcMainVisualPosCenterInGameArea(ms)
-		msInfobox.setPos(pos.x,pos.y); //ms.x+area.w/2, ms.y+area.h/2);
+		let pos = calcMainVisualPosCenterInGameArea(mobj)
+		msInfobox.setPos(pos.x,pos.y); //mobj.x+area.w/2, mobj.y+area.h/2);
 	}
 
 }
-function calcMainVisualPosCenterInGameArea(ms){
+function calcMainVisualPosCenterInGameArea(mobj){
 	let area = UIS['a_d_game'];
 
-	//ms parent could be someuser area inside but not fully covering a_d_game!
-	let parent = UIS[ms.idParent];
+	//mobj parent could be someuser area inside but not fully covering a_d_game!
+	let parent = UIS[mobj.idParent];
 	//if this parent does not have coords, look at his parent
 	if (nundef(parent.x)) parent = UIS[parent.idParent];
 
 	let offX=0;
 	let offY=0;
-	if (ms.cat == 'g'){offX=parent.w/2;offY=parent.h/2;}
+	if (mobj.cat == 'g'){offX=parent.w/2;offY=parent.h/2;}
 
-	let x=offX+parent.x+ms.x;
-	let y=offY+parent.y+ms.y;
+	let x=offX+parent.x+mobj.x;
+	let y=offY+parent.y+mobj.y;
 
 	return {x:x,y:y};
 
@@ -82,13 +82,13 @@ function clearInfoboxes() {
 	maxZIndex = 10;
 }
 
-// function staticPos(ms) {
+// function staticPos(mobj) {
 // 	let gameArea = UIS['a_d_game'];
 // 	let actionArea = UIS['a_d_actions'];
 // 	let pageHeaderArea = UIS['a_d_header'];
 // 	let statusArea = UIS['a_d_status'];
-// 	let x = actionArea.w + gameArea.w / 2 + ms.x;
-// 	let y = pageHeaderArea.h + statusArea.h + gameArea.h / 2 + ms.y;
+// 	let x = actionArea.w + gameArea.w / 2 + mobj.x;
+// 	let y = pageHeaderArea.h + statusArea.h + gameArea.h / 2 + mobj.y;
 // 	return { x: x, y: y };
 // }
 

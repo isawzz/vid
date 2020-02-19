@@ -13,6 +13,8 @@ function specAndDOM(callbacks = []) {
 	//console.log(hasStructure,S.settings)
 	if (!hasStructure && S.settings.boardDetection) {
 		detectBoard(G.table, 'a_d_game');
+		timit.showTime('*** board end ***')
+
 	}
 	if (!hasStructure && S.settings.deckDetection) {
 		detectDecks(G.table, 'a_d_game');
@@ -29,8 +31,8 @@ function initSTRUCTURES() {
 	let hasStructure = false;
 	for (const areaName in data) {
 		reqs = data[areaName];
-		let ms = makeArea(areaName, reqs.location);
-		let areaId = ms.id;
+		let mobj = makeArea(areaName, reqs.location);
+		let areaId = mobj.id;
 
 		for (const prop in reqs) {
 			let val = reqs[prop];
@@ -46,6 +48,7 @@ function initSTRUCTURES() {
 				let boardInfo = info.cond; //object in object_pool representing board, its id will be board main id!
 
 				let structObject = window[func](odict, areaId, boardInfo);
+				timit.showTime('*** board end ***')
 
 				// unused im moment
 			} else if (prop == 'binding') {
@@ -59,7 +62,7 @@ function initSTRUCTURES() {
 				let params = lst;
 				//console.log('*** calling',func+'('+params+')');
 				if (!Array.isArray(params)) params = params.split(',');
-				if (ms[func] !== null) ms[func](...params);
+				if (mobj[func] !== null) mobj[func](...params);
 			}
 		}
 	}
@@ -98,8 +101,8 @@ function proceedRedraw() {
 	UIS = {}; // holds MS objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
-	oid2ids = {}; // { oid : list of ms ids (called ids or uids) }
-	id2uids = {}; // { uid : list of ms ids related to same oid }
+	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
+	id2uids = {}; // { uid : list of mobj ids related to same oid }
 
 	//console.log(jsCopy(S), jsCopy(G));
 	//console.log('proceedRedraw nach daten loeschen')

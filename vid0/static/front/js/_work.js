@@ -18,14 +18,14 @@ function _setLineDims(r, x1, y1, x2, y2) {
 	r.setAttribute('x2', x2);
 	r.setAttribute('y2', y2);
 }
-function _addShape(ms, w, h, color, shape, { dx = 0, dy = 0, x1, y1, x2, y2, border, thickness, alpha, n = 6, path, idx, rounding } = {}) {
+function _addShape(mobj, w, h, color, shape, { dx = 0, dy = 0, x1, y1, x2, y2, border, thickness, alpha, n = 6, path, idx, rounding } = {}) {
 	//beide
-	let r = ms['_' + shape](); //did not add anything to elem yet!
-	//console.log('type of ms.ground:', getTypeOf(r));
-	ms.shape = shape;
+	let r = mobj['_' + shape](); //did not add anything to elem yet!
+	//console.log('type of mobj.ground:', getTypeOf(r));
+	mobj.shape = shape;
 	if (alpha) color = anyColorToStandardString(color, alpha);
 
-	ms.elem.setAttribute('fill', color);
+	mobj.elem.setAttribute('fill', color);
 
 	if (this.isLine) {
 		dx = isdef(dx) ? dx + this.x : this.x;
@@ -65,28 +65,28 @@ function _addShape(ms, w, h, color, shape, { dx = 0, dy = 0, x1, y1, x2, y2, bor
 
 	if (thickness) {
 		r.setAttribute('stroke-width', thickness);
-		r.setAttribute('stroke', border ? border : ms.fg);
+		r.setAttribute('stroke', border ? border : mobj.fg);
 	}
 	if (rounding){
 		r.setAttribute('rx', rounding); // rounding kann ruhig in % sein!
 		r.setAttribute('ry', rounding);
 	}
 
-	if (isdef(idx) && ms.elem.childNodes.length > idx) {
-		ms.elem.insertBefore(r, ms.elem.childNodes[idx]);
+	if (isdef(idx) && mobj.elem.childNodes.length > idx) {
+		mobj.elem.insertBefore(r, mobj.elem.childNodes[idx]);
 	} else {
-		ms.elem.appendChild(r);
+		mobj.elem.appendChild(r);
 	}
 	return r;
 }
-function _makeGroundShape(ms, x, y, w, h, color, shape, { dx = 0, dy = 0, x1, y1, x2, y2, overlay, scale, scaleX, scaleY, rot, color2, setFg, border, thickness, alpha, idx, rounding } = {}) {
+function _makeGroundShape(mobj, x, y, w, h, color, shape, { dx = 0, dy = 0, x1, y1, x2, y2, overlay, scale, scaleX, scaleY, rot, color2, setFg, border, thickness, alpha, idx, rounding } = {}) {
 
-	let r = _addShape(ms, w, h, color, shape, { dx: dx, dy: dy, x1: x1, y1: y1, x2: x2, y2: y2, border: border, thickness: thickness, alpha: alpha, idx: idx, rounding: rounding })
+	let r = _addShape(mobj, w, h, color, shape, { dx: dx, dy: dy, x1: x1, y1: y1, x2: x2, y2: y2, border: border, thickness: thickness, alpha: alpha, idx: idx, rounding: rounding })
 
 	//nur ground
 	//only ground
-	ms.orig.shape = shape;
-	let ov = overlay ? ms['_' + shape]() : null;
+	mobj.orig.shape = shape;
+	let ov = overlay ? mobj['_' + shape]() : null;
 	if (ov) ov.setAttribute('class', 'overlay');
 
 	let t = getTypeOf(r);
@@ -100,29 +100,29 @@ function _makeGroundShape(ms, x, y, w, h, color, shape, { dx = 0, dy = 0, x1, y1
 			ov.setAttribute('rx', rounding); // rounding kann ruhig in % sein!
 			ov.setAttribute('ry', rounding);
 		}
-		ms.elem.appendChild(ov); 
-		ms.overlay = ov; 
+		mobj.elem.appendChild(ov); 
+		mobj.overlay = ov; 
 	}
 
-	ms.bg = ms.orig.bg = color;
-	if (setFg || color2) ms.fg = ms.orig.fg = color2 ? color2 : colorIdealText(color);
+	mobj.bg = mobj.orig.bg = color;
+	if (setFg || color2) mobj.fg = mobj.orig.fg = color2 ? color2 : colorIdealText(color);
 
-	ms.orig.w = ms.w = w;
-	ms.orig.h = ms.h = h;
-	ms.orig.x = ms.x = x;
-	ms.orig.y = ms.y = y;
+	mobj.orig.w = mobj.w = w;
+	mobj.orig.h = mobj.h = h;
+	mobj.orig.x = mobj.x = x;
+	mobj.orig.y = mobj.y = y;
 	if (isdef(scale)) { scaleX = scaleY = scale; }
-	ms.orig.scaleX = ms.scaleX = scaleX ? scaleX : 1;
-	ms.orig.scaleY = ms.scaleY = scaleY ? scaleY : 1;
-	ms.orig.scale = ms.scale = scale ? scale : 1;
-	ms.orig.rot = ms.rot = rot ? rot : 0;
-	if (isdef(scaleX) || isdef(scaleX) || isdef(rot)) ms._setTransform(ms.elem, { x: x, y: y, scaleX: scaleX, scaleY: scaleY, rotDeg: rot });
-	else ms.setPos(x, y);
+	mobj.orig.scaleX = mobj.scaleX = scaleX ? scaleX : 1;
+	mobj.orig.scaleY = mobj.scaleY = scaleY ? scaleY : 1;
+	mobj.orig.scale = mobj.scale = scale ? scale : 1;
+	mobj.orig.rot = mobj.rot = rot ? rot : 0;
+	if (isdef(scaleX) || isdef(scaleX) || isdef(rot)) mobj._setTransform(mobj.elem, { x: x, y: y, scaleX: scaleX, scaleY: scaleY, rotDeg: rot });
+	else mobj.setPos(x, y);
 
-	ms.ground = r;
+	mobj.ground = r;
 
-	//console.log(ms.elem);
-	return ms;
+	//console.log(mobj.elem);
+	return mobj;
 
 }
 
@@ -153,34 +153,34 @@ function openTabTesting(cityName) {
 
 //#region TODO
 function disableClick(el) {
-	let ms = 'ms' in el ? el.ms : el;
-	ms.clickHandler = null;
-	ms.disable();
+	let mobj = 'mobj' in el ? el.mobj : el;
+	mobj.clickHandler = null;
+	mobj.disable();
 }
 function enableClick(el, handler) {
 	// //console.log('enableClick_________________start')
-	let ms = 'ms' in el ? el.ms : el;
-	ms.clickHandler = handler;
-	ms.enable();
-	// //console.log(ms,el,handler)
+	let mobj = 'mobj' in el ? el.mobj : el;
+	mobj.clickHandler = handler;
+	mobj.enable();
+	// //console.log(mobj,el,handler)
 	// //console.log('enableClick_________________end')
 }
 function disableHover(el) {
-	let ms = 'ms' in el ? el.ms : el;
-	ms.mouseEnterHandler = null;
-	ms.mouseLeaveHandler = null;
-	ms.disable();
+	let mobj = 'mobj' in el ? el.mobj : el;
+	mobj.mouseEnterHandler = null;
+	mobj.mouseLeaveHandler = null;
+	mobj.disable();
 }
 function enableHover(el, enterHandler, leaveHandler) {
 	// //console.log('enableClick_________________start')
 	// //console.log('enterHandler', enterHandler);
 	// //console.log('leaveHandler', leaveHandler);
-	let ms = 'ms' in el ? el.ms : el;
-	ms.mouseEnterHandler = enterHandler;
-	ms.mouseLeaveHandler = leaveHandler;
-	ms.enable();
+	let mobj = 'mobj' in el ? el.mobj : el;
+	mobj.mouseEnterHandler = enterHandler;
+	mobj.mouseLeaveHandler = leaveHandler;
+	mobj.enable();
 
-	// //console.log(ms, el);
+	// //console.log(mobj, el);
 	// //console.log('enableClick_________________end')
 }
 function glabels(board, ids, func, { bg, fg, contrastBackground = false, force = true, shrinkFont = false, wrap = false, fz = 20 } = {}) {
@@ -191,12 +191,12 @@ function glabels(board, ids, func, { bg, fg, contrastBackground = false, force =
 	}
 }
 function glabel(el, val, { bg, fg, contrastBackground = false, force = true, shrinkFont = false, wrap = false, fz = 20 } = {}) {
-	let ms = el.ms;
+	let mobj = el.mobj;
 	if (contrastBackground) {
 		unitTestMS('.................fill black!!!');
-		ms.text({ txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: 'white', fill: 'black' });
+		mobj.text({ txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: 'white', fill: 'black' });
 	} else {
-		ms.text({ txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: bg, fill: fg });
+		mobj.text({ txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: bg, fill: fg });
 	}
 }
 function updateColors(o) {

@@ -1,12 +1,19 @@
-function showBoard(oidBoard, oBoard, areaName, shape) {
+function showBoard(oidBoard, oBoard, shape, areaName) {
 	//console.log('showBoard','oidBoard',oidBoard,'oBoard',oBoard,'areaName',areaName,'shape',shape)
+	timit.showTime('*** board start ***')
+
+	//#region create board
 	let table = serverData.table;
 	let div = document.getElementById(areaName);
-
 	//console.log('showBoard', table, div);
+
+	//so waer besser:
+	//let board = irgendwas das id hat und gelinkt ist zu allen die damit zu tun haben
+	//das linking ist eh nicht schlecht
+	//es muss nur contained werden!
+
 	let domel = addSvgg(div, null, { originInCenter: true, bg: 'blue' });
 	let rBoard = oManager.addRSG(oidBoard, oBoard, domel);
-
 	rBoard.structInfo = shape == 'hex' ? _getHexGridInfo(oBoard.rows, oBoard.cols) : _getQuadGridInfo(oBoard.rows, oBoard.cols);
 
 	//fields
@@ -102,9 +109,100 @@ function showBoard(oidBoard, oBoard, areaName, shape) {
 		}
 	}
 
+	//#endregion
+
+	//#region add visuals
+	visualizeBoard(oidBoard,oBoard,div);
 }
+function visualizeBoard(oidBoard,oBoard,div, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 20, edgeColor, fieldColor, nodeColor, iPalette = 1, nodeShape = 'circle', factors, w, h } = {}) {
+
+	let board = oManager.getRSG(oidBoard);
+	let dim = getBounds(div); //TODO: take into account transform???? muss ich bei ***zoom
+	w=dim.width;
+	h=dim.height;
+	console.log(dim,w,h);
+	let pal = getPalette('powderblue');
+	[fieldColor, nodeColor, edgeColor] = [pal[2], pal[3], pal[4]];
+	let [fw, fh, nw, nh, ew] = _getBoardScaleFactors(board, { factors: factors, opt: opt, f2nRatio: f2nRatio, w: w, h: h, margin: margin });
 
 
+	for (const id of board.structInfo.fields) {
+		console.log('field:',id)
+		let o = getRSG(id);
+		console.log('main visual',o);
+		// //console.log(o)
+		makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.structInfo.wdef * fw - gap, board.structInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
+		// o.memInfo.isPal = isPalField;
+		// o.attach();
+	}
+
+	return;
+	//opt can be  fitRatio | fitStretch | none
+	//coloring: if iPalette is set, board object will set this as its palette
+	//if fieldColor is a number 0-8, it will be interpreted as ipal into board palette, and all fields will be given ipal and iPalette in addition to bg
+	//if fieldColor is a color, field members will just be given that bg, and they wont have an ipal or iPalette
+	//if fieldColor is undefined, in getMemberColors the default colors will be set which are from board palette (board will inherit palette if not set!)
+	//same for nodeColor, edgeColor
+	let area = UIS[board.idParent];
+	w = area.w;
+	h = area.h;
+	//console.log(w,h);
+	let isPalField, isPalCorner, isPalEdge = [false, false, false];
+	pal = S.settings.palette;
+	[fieldColor, nodeColor, edgeColor] = [pal[2], pal[3], pal[4]];
+	[fw, fh, nw, nh, ew] = _getBoardScaleFactors(board, { factors: factors, opt: opt, f2nRatio: f2nRatio, w: w, h: h, margin: margin });
+	//---------------------------------------------------------da bin ich--------------
+	//console.log('---------------',w,h,fieldColor,fw,fh)
+
+	for (const id of board.strInfo.fields) {
+		let o = getVisual(id);
+		//console.log(o)
+		makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.strInfo.wdef * fw - gap, board.strInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
+		o.memInfo.isPal = isPalField;
+		o.attach();
+	}
+	if (isdef(board.strInfo.corners)) {
+		for (const id of board.strInfo.corners) {
+			let ms = getVisual(id);
+			ms.memInfo.isPal = isPalCorner;
+			makeVisual(ms, ms.memInfo.x * fw, ms.memInfo.y * fh, Math.max(board.strInfo.wdef * nw, ew), Math.max(board.strInfo.hdef * nh, ew), nodeColor, nodeShape);
+			
+		}
+	}
+	if (isdef(board.strInfo.edges)) {
+
+		//get reference val for nodesize to compute edge length
+		//TODO: what if irregular node shape? 
+		let nodeSize = getVisual(board.strInfo.corners[0]).w;
+
+		for (const id of board.strInfo.edges) {
+			let ms = getVisual(id);
+			ms.memInfo.isPal = isPalEdge;
+			//edgeColor = 'green'
+			//console.log('edge thickness',o.memInfo.thickness * ew)
+			makeVisual(ms, ms.memInfo.x * fw, ms.memInfo.y * fh, ms.memInfo.thickness * ew, 0, edgeColor, 'line', { x1: ms.memInfo.x1 * fw, y1: ms.memInfo.y1 * fh, x2: ms.memInfo.x2 * fw, y2: ms.memInfo.y2 * fh });
+			//set length of line!
+			ms.length = ms.h = ms.distance-nodeSize;
+			ms.attach();
+		}
+	}
+	if (isdef(board.strInfo.corners)) {
+		for (const id of board.strInfo.corners) getVisual(id).attach();
+	}
+
+
+
+
+
+
+
+
+
+
+
+	timit.showTime('*** board end ***')
+
+}
 
 
 //#region helpers
@@ -174,5 +272,29 @@ function _getHexFieldInfo(boardInfo, row, col) {
 	return info;
 }
 
+function _getBoardScaleFactors(board, { factors, opt, f2nRatio, w, h, margin } = {}) {
+	let [fw, fh, nw, nh, ew] = isdef(factors) ? factors : [43, 50, 12, 12, 10];
+	if (startsWith(opt, 'fit')) {
+		if (w == 0) {
+			let g = document.getElementById(board.id);
+			let transinfo = getTransformInfo(g);
+			w = transinfo.translateX * 2;
+			h = transinfo.translateY * 2;
+		}
+		let divBy = 2 * (f2nRatio - 2);
+		fw = Math.floor((w - margin) / (board.structInfo.w + board.structInfo.wdef / divBy));
+		fh = Math.floor((h - margin) / (board.structInfo.h + board.structInfo.hdef / divBy));
+
+		let maintainRatio = (opt[3] == 'R');
+		if (maintainRatio) {
+			let ff = Math.min(fw, fh);
+			fw = ff;
+			fh = ff;
+		}
+		nw = Math.floor(fw / f2nRatio);
+		nh = Math.floor(fh / f2nRatio);
+	}
+	return [fw, fh, nw, nh, ew];
+}
 
 

@@ -5,7 +5,7 @@ COND = {
 FUNCS = {
 	board_setup(oid, o) {
 		console.log('board_setup', oid, o);
-		showBoard(oid, o, 'board', 'hex');
+		showBoard(oid, o, 'hex', 'board');
 	},
 };
 

@@ -1,6 +1,6 @@
 
 function bgNum(k,v){
-	//let ms=dddddddddddddddddddddddddddddddsssssssssssssssssssssssss
+	//let mobj=dddddddddddddddddddddddddddddddsssssssssssssssssssssssss
 }
 
 function showPlayerStats(plid, propName, areaName) {

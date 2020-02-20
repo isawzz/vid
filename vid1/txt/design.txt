@@ -97,6 +97,8 @@ there are only 2 ways to do it:
 
 hab mich derzeit fuer 1. variante entschieden, weil ich daraus immer noch 2te variante machen kann
 
+fuer die objects provided by gsm, kann es so implementieren
+kann aber auch andere dinge darueber hinaus implementieren
 createBoard: only calcs addresses
 visualizeBoard: actually makes objects for addresses
 easily could imagine a game where not every field is an object
@@ -104,8 +106,19 @@ rather, only pieces are represented!
 eg.: 
 table:{{whiteKing:E3,blackKnight:D4,...}}
 still I want to visualize a chess board!
-createHand
+createHand: unterschied zu createBoard: THERE IS NO OBJECT HAND!!! it is just a list of cards!
+listOfCards
+listOfCounters
+...
+layouts:lineUp,wrap,table,snail,circle,cardHand,faecher,
 visualizeHand
+createCard
+visualizeCard
+
+ist so ein layout eigentlich wie ein board? mit fields?
+nein das waer in Nations: civ hat ein grid board freestyle
+
+
 
 
 

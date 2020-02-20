@@ -3,7 +3,7 @@ html,body{
 	margin:0;
 }
 #rsg{
-	min-height: 500px;
+	min-height: 320px;
 }
 .flex{
 	box-sizing:border-box;

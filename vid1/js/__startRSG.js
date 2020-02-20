@@ -4,7 +4,7 @@ var oManager = null;
 var RUI = {};
 
 function rStart() {
-	timit.showTime('*timer');
+
 	oManager = new ObjectManager();
 
 	rMergeSpec();
@@ -16,7 +16,7 @@ function gameStep(){
 
 	rBehaviors();
 
-	timit.showTime('*timer');
+	timit.showTime('*presentation done!');
 
 }
 

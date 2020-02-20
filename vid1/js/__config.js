@@ -6,5 +6,7 @@ var SEED = 1;
 
 var USERSPEC_FNAME = 'catan_simple';
 
+const TESTING = true; // true | false
+
 var SPEC = null; //merged userSpec and defaultSpec
 

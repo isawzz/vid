@@ -4,10 +4,10 @@ class LazyCache {
 		this.caches = {};
 		if (resetStorage) localStorage.clear();
 	}
-	async load(primKey, loaderFunc, useLocal = true) {
+	async load(primKey, loaderFunc, reload = false, useLocal = true) {
 		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
 		this.caches[primKey] = cd;
-		await cd.load();
+		if (reload) await cd.reload(); else await cd.load();
 		return cd;
 	}
 }
@@ -37,6 +37,13 @@ class CacheDict {
 
 	//async access: lazy load
 	async aget(k) { if (this.live || this._local() || await this._server()) return this.live[k]; }
+
+	invalidate(){
+		//delete local copy and live
+		localStorage.removeItem(this.primKey);
+		this.live = null;
+	}
+	async reload(){ this.invalidate();return await this.load();}
 
 	_local() {
 		if (!this.useLocal) return null;

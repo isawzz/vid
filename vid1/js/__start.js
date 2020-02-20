@@ -7,39 +7,40 @@ var iconChars = null;
 var userSpec = null;
 var userCode = null;
 var initialData = {};
+var serverDataCache = null;
 var serverData = null;
-
 
 window.onload = () => _start();
 //#endregion
 
-async function _start() {
+function clear() {
+	clearElement('t1');
+}
+async function _start(resetLocalStorage=false) {
 
-	//#region testing
-	// userSpec = await route_userSpec('catan');
-	// console.log(userSpec)
-	// return;
-	//#endregion testing
+	clear();
 
 	//#region loading
 	timit = new TimeIt('*');
-	// zoom_on_wheel_alt(); //TODO!
-	// zoom_on_resize();
-	// initZoom();
 	timit.showTime('*timer');
 
-	vidCache = new LazyCache();//********** true for LOCALSTORAGE CLEAR!!!!! */
+	vidCache = new LazyCache(resetLocalStorage);//********** true for LOCALSTORAGE CLEAR!!!!! */
 	iconChars = await vidCache.load('iconChars', route_iconChars);
 	allGames = await vidCache.load('allGames', route_allGames);
 	playerConfig = stubPlayerConfig(allGames.live); //stub to get player info
-	userSpec = await vidCache.load('userSpec', () => route_userSpec(GAME, USERSPEC_FNAME));//, false); //set false to reload from server!
-	let fname = userSpec.get('CODE');
 
-	userCode = await vidCache.load('userCode', () => route_userCode(GAME, fname));//, false); //set false to reload from server!
-	loadCode(GAME,userCode.live.asText);
-	initialData[GAME] = await vidCache.load('_initial_' + GAME, () => route_initGame(GAME, playerConfig[GAME]));
-	serverData = initialData[GAME].live;
-	//serverData = await route_initGame(GAME,playerConfig[GAME]); // if not caching init data
+	if (TESTING) {
+		await loadTest(1, 1, 1);
+	} else {
+		userSpec = await vidCache.load('userSpec', async () => await route_userSpec(GAME, USERSPEC_FNAME));//, true); //set true to reload from server!
+		let fname = userSpec.get('CODE');
+
+		userCode = await vidCache.load('userCode', async () => await route_userCode(GAME, fname));//, true); //set true to reload from server!
+		loadCode(GAME, userCode.live.asText);
+
+		serverDataCache = initialData[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME])); //, true); //set true to reload from server
+		serverData = initialData[GAME].live;
+	}
 
 	//timit.showTime('*** DONE ***');
 	// document.getElementById('table').innerHTML = '<pre>' + userSpec.get('asText') + '</pre>'; //PERFECT!!!!!!!!!!
@@ -48,10 +49,5 @@ async function _start() {
 	// document.getElementById("json-result").innerHTML = JSON.stringify(serverData, undefined, 2);
 	//#endregion
 
-	//this is where RSG takes over!
-	//console.log(userSpec.live)
-	//console.log(userCode.live)
 	rStart();
-
-
 }

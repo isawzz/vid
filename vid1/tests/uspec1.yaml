@@ -1,0 +1,15 @@
+tableSize: [500, 330]
+layout: [
+  'd z z o',
+  'd z z o',
+  'd p p a',
+  'h h h h',
+  ]
+
+areas: 
+  d: decks
+  z: zone
+  a: achievements
+  h: hand
+  o: others
+

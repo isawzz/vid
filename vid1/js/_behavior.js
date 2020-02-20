@@ -1,8 +1,8 @@
 //UI generation simple
 function rBehaviors() {
-	console.log('________________rBehaviors');
+	//console.log('________________rBehaviors');
 	for (const key in serverData) {
-		if (key != 'table' && key != 'players') continue;
+		if (key != 'table' && key != 'players') continue; //TODO actions also!
 		let group = serverData[key];
 		for (const oid in group) {
 			let o = group[oid];

@@ -32,11 +32,22 @@ async function route_userSpec(game, fname) {
 		return { asText: '' }; //empty spec!
 	}
 }
+async function route_test_userSpec(url) {
+	try {
+		let text = await route_path_text(url);
+		let spec = jsyaml.load(text);
+		spec.asText = text;
+		return spec;
+	} catch{
+		return { asText: '' }; //empty spec!
+	}
+}
 function loadCode(game,text){
+	//console.log('text',text)
 	var scriptTag = document.createElement("script");
-	scriptTag.onload = () => console.log('code for', game, 'loaded');
+	scriptTag.onload = () => //console.log('code for', game, 'loaded');
 	scriptTag.setAttribute("type", "text/javascript");
-	scriptTag.innerHTML = text; // "console.log('HALLOOOOOOOOOO DU!!!!!!!');";
+	scriptTag.innerHTML = text; // "//console.log('HALLOOOOOOOOOO DU!!!!!!!');";
 	document.getElementsByTagName("body")[0].appendChild(scriptTag);
 }
 async function route_userCode(game, fname) {
@@ -68,6 +79,11 @@ async function route_initGame(game, gc) {
 }
 
 //#region server routes (low level)
+// async function route_usecase(filename, ext = 'yaml') {
+// 	let url = '/vid1/saves/' + filename + '.' + ext;
+// 	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
+// 	return response;
+// }
 async function route_rsg_asset(filename, ext = 'yml') {
 	let url = '/vid0/static/rsg/assets/' + filename + '.' + ext;
 	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
@@ -88,6 +104,10 @@ async function route_path_yaml_dict(url) {
 	let text = await data.text();
 	let dict = jsyaml.load(text);
 	return dict;
+}
+async function route_path_text(url) {
+	let data = await fetch(url);
+	return await data.text();
 }
 async function postData(url = '', data = {}) {
 	//usage: postData('https://example.com/answer', { answer: 42 })

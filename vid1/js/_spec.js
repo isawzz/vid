@@ -6,6 +6,6 @@ function rMergeSpec() {
 	SPEC = deepmerge(defaultSpec, userSpec.live, { arrayMerge: overwriteMerge });
 
 	//SPEC is merged userSpec!
-	console.log(SPEC);
+	//console.log(SPEC);
 
 }

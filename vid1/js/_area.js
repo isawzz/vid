@@ -10,7 +10,7 @@ function rAreas() {
 	d.style.gridTemplateAreas = s; //style.gridTemplateAreas = '"z z z" "a b c" "d e f"';
 	for (const k in SPEC.areas) {
 		let areaName = SPEC.areas[k];
-		console.log(k, areaName)
+		//console.log(k, areaName)
 		let d1 = document.createElement('div');
 		d1.id = areaName;
 		d1.style.gridArea = k;

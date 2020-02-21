@@ -4,7 +4,7 @@ class LazyCache {
 		this.caches = {};
 		if (resetStorage) localStorage.clear(); //*** */
 	}
-	addCache(primKey, cache){this.caches[primKey]=cache;return cache;} // loaderFunc, reload = false, useLocal = true)
+	addCache(primKey, cache) { this.caches[primKey] = cache; return cache; } // loaderFunc, reload = false, useLocal = true)
 	async load(primKey, loaderFunc, reload = false, useLocal = true) {
 		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
 		this.caches[primKey] = cd;
@@ -12,6 +12,29 @@ class LazyCache {
 		return cd;
 	}
 }
+
+class LazyCache2 {
+	constructor(resetStorage = false) {
+		this.caches = {};
+		if (resetStorage) localStorage.clear(); //*** */
+	}
+	// var handler = { get: function (target, name) { return "Hello, " + name; } };
+	// var proxy = new Proxy({}, handler);
+	// console.log(proxy.world); // output: Hello, world
+	//addCache(primKey, cache) { 		this.caches[primKey] = cache; 		return cache; 	} // loaderFunc, reload = false, useLocal = true)
+	async load(primKey, loaderFunc, reload = false, useLocal = true) {
+		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
+		this.caches[primKey] = cd;
+		if (reload) await cd.reload(); else await cd.load();
+
+		//ich will machen: c52[key] soll returnen c52.live[key]
+		let handler = { get: function (target, name) { return target.live[name]; } };
+		let proxy = new Proxy(cd, handler);
+
+		return proxy;
+	}
+}
+
 //#endregion
 
 //#region CacheDict
@@ -39,12 +62,12 @@ class CacheDict {
 	//async access: lazy load
 	async aget(k) { if (this.live || this._local() || await this._server()) return this.live[k]; }
 
-	invalidate(){
+	invalidate() {
 		//delete local copy and live
 		localStorage.removeItem(this.primKey); //*** */
 		this.live = null;
 	}
-	async reload(){ this.invalidate();return await this.load();}
+	async reload() { this.invalidate(); return await this.load(); }
 
 	_local() {
 		if (!this.useLocal) return null;

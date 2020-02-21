@@ -2,16 +2,29 @@ function makeBoard(oid, o) {
 
 }
 
-function makeCard52_test(oid, o, { rank, suit, area, hand }) {
-	if (nundef(rank)) { rank = '1'; suit = 'B'; } if (rank == '10') rank = 'T'; if (nundef(suit)) suit = 'H';//joker:J1,J2, back:1B,2B
+function cardFace({ rank, suit, key}){
+	let cardKey, svgCode;
+	if (isdef(key)) {
+		cardKey = key;
+		svgCode = testCards[cardKey];
+	} else {
+		if (nundef(rank)) { rank = '2'; suit = 'B'; } if (rank == '10') rank = 'T'; if (nundef(suit)) suit = 'H';//joker:J1,J2, back:1B,2B
+		cardKey = 'card_' + rank + suit;
+		svgCode = c52.get(cardKey); //c52 is cached asset loaded in _start
+	}
 
-	let cardKey = 'card_' + rank + suit; let svgCode = '<div>' + c52.get(cardKey) + '</div>'; //c52 is cached asset loaded in _start
+	svgCode = '<div>' + svgCode + '</div>';
 
 	let el = createElementFromHTML(svgCode);
-	//console.log(el)
+	return el;
 
-	let sz = 40; 
-	el.style=`height:${sz}px;width:${sz * 0.7}px;margin:5px;margin-top:20px;float:left;display:inline-box`;
+}
+function makeCard52_test(oid, o, { rank, suit, key, area, hand }) {
+	//console.log(el)
+	let el = cardFace({rank,suit,key}); //got a div w/ svg inside
+
+	let sz = 90;
+	el.style = `height:${sz}px;width:${sz * 0.7}px;margin:5px;margin-top:20px;float:left;display:inline-box`;
 
 	if (nundef(area)) area = 'objects';
 	let dParent = document.getElementById(area); dParent.appendChild(el);

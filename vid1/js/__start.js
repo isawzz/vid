@@ -10,6 +10,7 @@ var userCode = null;
 var initialData = {};
 var serverDataCache = null;
 var serverData = null;
+var testCards = null
 
 window.onload = () => _start();
 //#endregion
@@ -25,14 +26,25 @@ async function _start(resetLocalStorage=false) {
 
 	//#region loading
 	timit = new TimeIt('*');
-	//timit.tacit();
+	timit.tacit();
 	timit.showTime('*timer');
 
-	vidCache = new LazyCache(resetLocalStorage);//********** true for LOCALSTORAGE CLEAR!!!!! */
+	//loading assets
+	vidCache = new LazyCache2();//resetLocalStorage);//********** true for LOCALSTORAGE CLEAR!!!!! */
+	testCards = await vidCache.load('testCards',async()=>await route_rsg_asset('cards','yaml')); 
+	//return;
+
 	iconChars = await vidCache.load('iconChars', route_iconChars);
 	c52 = await vidCache.load('c52',route_c52);
 	allGames = await vidCache.load('allGames', route_allGames);
 	playerConfig = stubPlayerConfig(allGames.live); //stub to get player info
+
+	console.log('testCards',testCards['green2']);
+	console.log('c52',c52['card_2C']);
+	console.log('icons',iconChars.crow);
+	console.log('allGames',allGames.catan);
+	console.log(vidCache);
+	return;
 
 	if (TESTING) {
 		await loadTest(1, 1, 1);
@@ -43,6 +55,8 @@ async function _start(resetLocalStorage=false) {
 		userCode = await vidCache.load('userCode', async () => await route_userCode(GAME, fname), true, false); //set true to reload from server!
 		loadCode(GAME, userCode.live.asText);
 
+		//serverdata are cached now for testing,later will just:
+		//serverData = await route_initGame(GAME,playerConfig[GAME]);
 		serverDataCache = initialData[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME])); //, true); //set true to reload from server
 		serverData = initialData[GAME].live;
 	}
@@ -56,4 +70,6 @@ async function _start(resetLocalStorage=false) {
 	//#endregion
 
 	rStart();
+
+	makeCard52_test(1,null,{key:'green2',area:'decks'});
 }

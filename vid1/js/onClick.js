@@ -4,7 +4,6 @@ async function onClickReloadAll() {
 	serverDataCache.invalidate();
 	_start();
 }
-async function onClickReloadServerData() {
-	serverDataCache.invalidate();
-	gameStep();
+async function onClickResetLocal() {
+	_start(true);
 }

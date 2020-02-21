@@ -1,14 +1,23 @@
 COND = {
-	board_setup: (o) => { if (o.map && o.fields) return { f: 'board_setup' }; },
+	dummy: (o) => { if (o.someprop == 'x') return { f: 'some_key_in_FUNCS' }; },
+	card: (o) => { if (o.generic_type == 'card') return { f: 'card' } }
 };
 
 FUNCS = {
-	board_setup(oid, o) {
-		console.log('board_setup', oid, o);
-		showBoard(oid, o, 'hex', 'board');
-	},
+	dummy(oid, o) { console.log('dummy', oid, o); },
+
+	card(oid, o) {
+		
+		let card = makeCard52_test(oid, o, { rank: o.short_name, area: 'zone' });
+		for (let i = 0; i < 100; i++) {
+			card = makeCard52_test(oid, o, { rank: o.short_name, suit: 'C', area: 'player' });
+			card = makeCard52_test(oid, o, { rank: '2', suit: 'S', area: 'hand' });
+			card = makeCard52_test(oid, o, { rank: 'T', suit: 'S', area: 'hand' });
+			card = makeCard52_test(oid, o, { rank: 'T', suit: 'C', area: 'hand' });
+		}
+	}
 };
 
-console.log('code1 loaded hahaha...')
+//console.log('code1 loaded hahaha...')
 
 

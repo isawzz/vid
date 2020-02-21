@@ -1,11 +1,7 @@
 var COND = {};
 var FUNCS = {};
-var oManager = null;
-var RUI = {};
 
 function rStart() {
-
-	oManager = new ObjectManager();
 
 	rMergeSpec();
 	rAreas();

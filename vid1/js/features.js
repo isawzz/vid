@@ -2,8 +2,9 @@
 class LazyCache {
 	constructor(resetStorage = false) {
 		this.caches = {};
-		if (resetStorage) localStorage.clear();
+		if (resetStorage) localStorage.clear(); //*** */
 	}
+	addCache(primKey, cache){this.caches[primKey]=cache;return cache;} // loaderFunc, reload = false, useLocal = true)
 	async load(primKey, loaderFunc, reload = false, useLocal = true) {
 		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
 		this.caches[primKey] = cd;
@@ -16,7 +17,7 @@ class LazyCache {
 //#region CacheDict
 class CacheDict {
 	constructor(primKey, { func = null } = {}, useLocal = true) {
-		this.primKey = primKey; //this is key under which object is stored in localStorage
+		this.primKey = primKey; //this is key under which object is stored in localStorage/indexedDB
 		this.func = func;
 		this.live = null;
 		this.useLocal = useLocal;
@@ -40,7 +41,7 @@ class CacheDict {
 
 	invalidate(){
 		//delete local copy and live
-		localStorage.removeItem(this.primKey);
+		localStorage.removeItem(this.primKey); //*** */
 		this.live = null;
 	}
 	async reload(){ this.invalidate();return await this.load();}
@@ -48,7 +49,7 @@ class CacheDict {
 	_local() {
 		if (!this.useLocal) return null;
 		//console.log('....from local', this.primKey);
-		let res = localStorage.getItem(this.primKey);
+		let res = localStorage.getItem(this.primKey); //**** */
 		if (res) this.live = JSON.parse(res);
 		return res;
 	}
@@ -58,7 +59,7 @@ class CacheDict {
 		if (this.func) {
 			this.live = await this.func();
 			//console.log('after call: live',this.live)
-			if (this.useLocal) localStorage.setItem(this.primKey, JSON.stringify(this.live));
+			if (this.useLocal) localStorage.setItem(this.primKey, JSON.stringify(this.live)); //*** */
 		}
 		return this.func;
 	}

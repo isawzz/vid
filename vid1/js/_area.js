@@ -1,8 +1,9 @@
 function rAreas() {
 	let d = document.getElementById('t1');
 	d.style.width = SPEC.tableSize[0] + 'px';
-	d.style.height = SPEC.tableSize[1] + 'px';
+	d.style.minHeight = SPEC.tableSize[1] + 'px';
 	d.style.display = 'grid';
+	// d.style.justifyContent = 'center'
 	let s='';
 	for(const line of SPEC.layout){
 		s+='"'+line+'" ';

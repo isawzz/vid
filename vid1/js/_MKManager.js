@@ -1,1 +1,5 @@
-var MKS=null;
+var UIS=null;
+
+class MKManager{
+	
+}

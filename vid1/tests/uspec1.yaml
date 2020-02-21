@@ -1,4 +1,4 @@
-tableSize: [500, 330]
+tableSize: [500, 400]
 layout: [
   'd z z o',
   'd z z o',
@@ -9,7 +9,8 @@ layout: [
 areas: 
   d: decks
   z: zone
-  a: achievements
+  a: extra
   h: hand
+  p: player
   o: others
 

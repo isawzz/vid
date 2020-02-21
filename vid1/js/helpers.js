@@ -809,6 +809,13 @@ function addDivTo(dParent, w = 100, h = 100, unit = '%', bg = 'blue') { return a
 function addDivPosTo(dParent, x = 0, y = 0, w = 100, h = 100, unit = '%', bg = 'blue', position = 'absolute') {
 	return addDivU({ dParent: dParent, x: x, y: y, w: w, h: h, unit: unit, position: position, bg: bg });
 }
+function createElementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+
+  // Change this to div.childNodes to support multiple top-level nodes
+  return div.firstChild; 
+}
 //code 2019
 function addDiv(dParent, { html, w = '100%', h = '100%', bg, fg, border, rounding, margin, padding, float, position, x, y, textAlign, fontSize }) {
 	return addDivU({ dParent: dParent, html: html, w: w, h: h, bg: bg, fg: fg, border: border, rounding: rounding, margin: margin, padding: padding, float: float, position: position, x: x, y: y, textAlign: textAlign, fz: fontSize });
@@ -877,6 +884,7 @@ function getRelBounds(elem, elRel) {
 	};
 }
 function getBounds(elem, relToParent = false, relativeToElem) {
+	if (isString(elem)) elem = document.getElementById(elem);
 	if (relToParent) return getRelBounds(elem, getParent(elem));
 	else if (isdef(relativeToElem)) return getRelBounds(elem, relativeToElem);
 	else return elem.getBoundingClientRect();

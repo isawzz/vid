@@ -7,6 +7,9 @@ async function route_allGames() {
 	}
 	return res;
 }
+async function route_c52(){
+	return await route_rsg_asset('c52','yaml'); //'/vid0/static/rsg/assets/c52.yaml');
+}
 async function route_iconChars() {
 	let gaIcons = await route_rsg_asset('gameIconCodes');
 	let faIcons = await route_rsg_asset('faIconCodes');
@@ -79,11 +82,6 @@ async function route_initGame(game, gc) {
 }
 
 //#region server routes (low level)
-// async function route_usecase(filename, ext = 'yaml') {
-// 	let url = '/vid1/saves/' + filename + '.' + ext;
-// 	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
-// 	return response;
-// }
 async function route_rsg_asset(filename, ext = 'yml') {
 	let url = '/vid0/static/rsg/assets/' + filename + '.' + ext;
 	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
@@ -149,6 +147,45 @@ function stubPlayerConfig(gameInfo) {
 	}
 	return gcs;
 	//console.log('-------------------',gcs);
+}
+async function loadCards52() {
+	let keys1 = ['B', 'J'];
+	let keys2 = ['B', 'J', 'C', 'D', 'H', 'S'];
+	let prefixes = ['3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+	let keys = ['C', 'D', 'H', 'S'];
+	let c52 = {};
+	for (const k of keys1) {
+		let key = '1' + k;
+
+		let cardKey = 'card_' + key;
+		let fname = '/vid0/static/rsg/assets/svgCardsSmall/' + key + '.svg';
+		let text = await route_server_text(fname);
+		c52[cardKey] = text;
+	}
+	for (const k of keys2) {
+		let key = '2' + k;
+
+		let cardKey = 'card_' + key;
+		let fname = '/vid0/static/rsg/assets/svgCardsSmall/' + key + '.svg';
+		let text = await route_server_text(fname);
+		c52[cardKey] = text;
+	}
+	for (const p of prefixes) {
+		for (const k of keys) {
+			let key = p + k;
+
+			let cardKey = 'card_' + key;
+			let fname = '/vid0/static/rsg/assets/svgCardsSmall/' + key + '.svg';
+			let text = await route_server_text(fname);
+			c52[cardKey] = text;
+		}
+	}
+	console.log(c52);
+	return c52;
+	//localStorage.setItem('c52', JSON.stringify(c52));
+	//downloadFile(c52, 'c52');
+	//let cache = new Cache('card_2B',)
+	//let cache = vidCache.load('card_2B',
 }
 
 

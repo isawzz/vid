@@ -4,6 +4,7 @@ var vidCache = null;
 var allGames = null;
 var playerConfig = null;
 var iconChars = null;
+var c52 = null;
 var userSpec = null;
 var userCode = null;
 var initialData = {};
@@ -12,6 +13,8 @@ var serverData = null;
 
 window.onload = () => _start();
 //#endregion
+
+
 
 function clear() {
 	clearElement('t1');
@@ -22,10 +25,12 @@ async function _start(resetLocalStorage=false) {
 
 	//#region loading
 	timit = new TimeIt('*');
+	//timit.tacit();
 	timit.showTime('*timer');
 
 	vidCache = new LazyCache(resetLocalStorage);//********** true for LOCALSTORAGE CLEAR!!!!! */
 	iconChars = await vidCache.load('iconChars', route_iconChars);
+	c52 = await vidCache.load('c52',route_c52);
 	allGames = await vidCache.load('allGames', route_allGames);
 	playerConfig = stubPlayerConfig(allGames.live); //stub to get player info
 
@@ -35,7 +40,7 @@ async function _start(resetLocalStorage=false) {
 		userSpec = await vidCache.load('userSpec', async () => await route_userSpec(GAME, USERSPEC_FNAME));//, true); //set true to reload from server!
 		let fname = userSpec.get('CODE');
 
-		userCode = await vidCache.load('userCode', async () => await route_userCode(GAME, fname));//, true); //set true to reload from server!
+		userCode = await vidCache.load('userCode', async () => await route_userCode(GAME, fname), true, false); //set true to reload from server!
 		loadCode(GAME, userCode.live.asText);
 
 		serverDataCache = initialData[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME])); //, true); //set true to reload from server
@@ -43,10 +48,11 @@ async function _start(resetLocalStorage=false) {
 	}
 
 	//timit.showTime('*** DONE ***');
-	// document.getElementById('table').innerHTML = '<pre>' + userSpec.get('asText') + '</pre>'; //PERFECT!!!!!!!!!!
-	document.getElementById('objects').innerHTML = '<pre>' + userCode.get('asText') + '</pre>'; //PERFECT!!!!!!!!!!
-	// document.getElementById('actions').innerHTML = '<pre id="json-result"></pre>';
-	// document.getElementById("json-result").innerHTML = JSON.stringify(serverData, undefined, 2);
+	document.getElementById('userSpec').innerHTML = '<pre>' + userSpec.get('asText') + '</pre>'; //PERFECT!!!!!!!!!!
+	document.getElementById('code').innerHTML = '<pre>' + userCode.get('asText') + '</pre>'; //PERFECT!!!!!!!!!!
+
+	document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
+	document.getElementById("json-result").innerHTML = JSON.stringify(serverData.table, undefined, 2);
 	//#endregion
 
 	rStart();

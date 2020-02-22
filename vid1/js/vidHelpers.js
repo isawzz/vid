@@ -107,6 +107,15 @@ async function route_path_text(url) {
 	let data = await fetch(url);
 	return await data.text();
 }
+async function route_path_asText_dict(url) {
+	let data = await fetch(url);
+	let res = {};
+	res.asText =await data.text();
+	//console.log(res.asText)
+	//res.asDict = JSON.parse(res.asText);//
+	return res; // await data.text();
+}
+
 async function postData(url = '', data = {}) {
 	//usage: postData('https://example.com/answer', { answer: 42 })
 

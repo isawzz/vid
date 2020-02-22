@@ -1,7 +1,5 @@
 async function onClickReloadAll() {
-	userSpec.invalidate();
-	userCode.invalidate();
-	serverDataCache.invalidate();
+	vidCache.invalidate('testCards','allGames','userSpec','serverData','userCode');
 	_start();
 }
 async function onClickResetLocal() {

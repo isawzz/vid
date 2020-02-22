@@ -7,6 +7,10 @@ var SEED = 1;
 var USERSPEC_FNAME = 'catan_simple';
 
 const TESTING = true; // true | false
+const TEST_PATH = '/vid1/tests/';
+const SPEC_VERSION = 1;
+const CODE_VERSION = 1;
+const DATA_VERSION = 1;
 
 var SPEC = null; //merged userSpec and defaultSpec
 

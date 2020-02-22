@@ -90,11 +90,6 @@ function enableDragForDeck(d) {
 
 	});
 }
-function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
-	if (nundef(nOrString)) return defaultVal;
-	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
-	return nOrString;
-}
 function makeDeck({ kind, N, nJokers, fPrep, fDraw, bDraw, x, y, w, h } = {}) {
 	if (nundef(kind)) kind = 'deck52';
 	let params = {

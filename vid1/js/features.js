@@ -1,43 +1,49 @@
-//#region LazyCache
 class LazyCache {
 	constructor(resetStorage = false) {
 		this.caches = {};
 		if (resetStorage) localStorage.clear(); //*** */
 	}
-	addCache(primKey, cache) { this.caches[primKey] = cache; return cache; } // loaderFunc, reload = false, useLocal = true)
-	async load(primKey, loaderFunc, reload = false, useLocal = true) {
-		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
-		this.caches[primKey] = cd;
-		if (reload) await cd.reload(); else await cd.load();
-		return cd;
-	}
-}
+	get(key) { return this.caches[key]; }
 
-class LazyCache2 {
-	constructor(resetStorage = false) {
-		this.caches = {};
-		if (resetStorage) localStorage.clear(); //*** */
-	}
-	// var handler = { get: function (target, name) { return "Hello, " + name; } };
-	// var proxy = new Proxy({}, handler);
-	// console.log(proxy.world); // output: Hello, world
-	//addCache(primKey, cache) { 		this.caches[primKey] = cache; 		return cache; 	} // loaderFunc, reload = false, useLocal = true)
+	asDict(key) { return this.caches[key].live; }
+
+	getRandom(key) { let d = this.asDict(key); return chooseRandom(Object.values(d)); }
+	getRandomKey(key) { return getRandomKey(this.asDict(key)); }
+	getFirstKey(key, cond) { return firstCondDictKeys(this.asDict(key), cond); }
+
+	invalidate(...keys) { for (const k of keys) if (this.caches[k]) this.caches[k].invalidate(); }
+
 	async load(primKey, loaderFunc, reload = false, useLocal = true) {
 		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
 		this.caches[primKey] = cd;
 		if (reload) await cd.reload(); else await cd.load();
 
-		//ich will machen: c52[key] soll returnen c52.live[key]
-		let handler = { get: function (target, name) { return target.live[name]; } };
+		let handler = {
+			get: function (target, name) { return target.live[name]; },
+			set: function (target, name, val) { target.live[name] = val; return true; },
+			has: function (target, name) { return name in target.live; },
+			delete: function (target, name) { return delete target.live[name]; },
+			// enumerate: function (target) { return Symbol.iterator(target.live);},//.iterator(); }, //[Symbol.iterator]();},
+			// // 	var props = [];
+			// // 	for (name in target.live) { props.push(name); };
+			// // 	return props;
+			// // },
+			// iterate: function () {
+			// 	var props = target.enumerate(), i = 0;
+			// 	return {
+			// 		next: function () {
+			// 			if (i === props.length) throw StopIteration;
+			// 			return props[i++];
+			// 		}
+			// 	}
+			// },
+			// keys: function (target) { return Object.keys(target.live); },
+		};
 		let proxy = new Proxy(cd, handler);
-
 		return proxy;
 	}
 }
 
-//#endregion
-
-//#region CacheDict
 class CacheDict {
 	constructor(primKey, { func = null } = {}, useLocal = true) {
 		this.primKey = primKey; //this is key under which object is stored in localStorage/indexedDB
@@ -49,19 +55,6 @@ class CacheDict {
 		if (this.live) return this;
 		return this._local() || await this._server();
 	}
-	//sync access after load call!
-	get(k) { return this.live[k]; }
-	getRandom() { return this.live[getRandomKey(this.live)]; }
-	getRandomKey() { return getRandomKey(this.live); }
-	getFirstKey(cond) { return firstCondDictKeys(this.live, cond); }
-	getDictUnsafe() { return this.live; }
-
-	//lazy load for objects only saved at client
-	getLocal(k) { return this.live[k] || this._local() && this.get(k); }
-
-	//async access: lazy load
-	async aget(k) { if (this.live || this._local() || await this._server()) return this.live[k]; }
-
 	invalidate() {
 		//delete local copy and live
 		localStorage.removeItem(this.primKey); //*** */
@@ -78,7 +71,7 @@ class CacheDict {
 	}
 
 	async _server() {
-		//console.log('....from server', this.primKey);
+		console.log('....from server', this.primKey);
 		if (this.func) {
 			this.live = await this.func();
 			//console.log('after call: live',this.live)
@@ -86,8 +79,16 @@ class CacheDict {
 		}
 		return this.func;
 	}
+
+	//#region NOT IMPLEMENTED!!!
+	// //lazy load for objects only saved at client
+	// getLocal(k) { return this.live[k] || this._local() && this.get(k); }
+	// //async access: lazy load
+	// async aget(k) { if (this.live || this._local() || await this._server()) return this.live[k]; }
+	//#endregion 
+
 }
-//#endregion
+
 
 //#region zoom_on_wheel_alt(), zoom_on_resize(), initZoom(), zoom(factor), zoomBy(factor)
 var bodyZoom = 1.0;

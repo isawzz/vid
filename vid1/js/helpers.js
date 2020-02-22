@@ -760,6 +760,11 @@ function setCSSVariable(varName, val) {
 //#endregion
 
 //#region DOM: creating divs: 2020
+function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
+	if (nundef(nOrString)) return defaultVal;
+	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
+	return nOrString;
+}
 
 function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, className, styleStr, border, rounding, gap, margin, padding, float, textAlign, fz }) {
 	let d1 = document.createElement('div');
@@ -797,7 +802,7 @@ function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, classN
 	}
 	if (isdef(margin)) d1.style.setProperty('margin', makeUnitString(margin, 'px'));
 	if (isdef(padding)) d1.style.setProperty('padding', makeUnitString(padding, 'px'));
-	if (float) d1.style.float = float;
+	if (float) d1.style.setProperty('float',float);
 	if (textAlign) d1.style.textAlign = textAlign;
 	if (isdef(fz)) d1.style.setProperty('fontSize', makeUnitString(fz, 'px'));
 

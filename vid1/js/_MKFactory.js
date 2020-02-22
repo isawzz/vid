@@ -2,15 +2,40 @@ function makeBoard(oid, o) {
 
 }
 
-function cardFace({ rank, suit, key}){
+//#region card
+function makeCard(info, styles, classes) {
+	//makes a card object but does not place it anywhere!
+	//returns domel for card
+	let el = cardFace(info);
+	return el;
+}
+function showCard(card, size, area, hand, layout) {//sz=80,{area,layout='overlap'}){
+	let d = document.getElementById(area);
+	console.log(d);
+
+	styleElement(card, { width: size * .66, height: size });
+	if (nundef(layout)) card.style.setProperty('float', 'left');
+	//how many hands does this area have already???
+	//if no hand id is given, the area only has 1 hand by definition
+	//this hand is named 'hand'
+	let dHand = isdef(hand) ? d.getElementById(hand) : d.childElementCount >= 1 ? d.lastChild : addDivPosTo(d, 12, 25, 'auto', 90, 'px', null);
+
+	console.log('area', area, 'has', d.childElementCount, 'hands')
+	dHand.appendChild(card);
+}
+function makeHand(area) {
+
+}
+function cardFace({ rank, suit, key }) {
 	let cardKey, svgCode;
 	if (isdef(key)) {
 		cardKey = key;
 		svgCode = testCards[cardKey];
+		if (!svgCode) svgCode = vidCache.getRandom('c52');
 	} else {
 		if (nundef(rank)) { rank = '2'; suit = 'B'; } if (rank == '10') rank = 'T'; if (nundef(suit)) suit = 'H';//joker:J1,J2, back:1B,2B
 		cardKey = 'card_' + rank + suit;
-		svgCode = c52.get(cardKey); //c52 is cached asset loaded in _start
+		svgCode = c52[cardKey]; //c52 is cached asset loaded in _start
 	}
 
 	svgCode = '<div>' + svgCode + '</div>';
@@ -19,12 +44,22 @@ function cardFace({ rank, suit, key}){
 	return el;
 
 }
-function makeCard52_test(oid, o, { rank, suit, key, area, hand }) {
+function styleElement(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
+function makeCard52_test(oid, o, { html, rank, suit, key, func, area, hand }) {
 	//console.log(el)
-	let el = cardFace({rank,suit,key}); //got a div w/ svg inside
+	//console.log(...arguments)
+	let el;
+	if (isdef(func)) {
+		el = func(oid, o, { key: 'wiebitte???' });
+	} else {
+		el = cardFace({ rank, suit, key }); //got a div w/ svg inside
+	}
+	console.log(el)
 
 	let sz = 90;
-	el.style = `height:${sz}px;width:${sz * 0.7}px;margin:5px;margin-top:20px;float:left;display:inline-box`;
+	el.style.setProperty('float', 'left');
+	styleElement(el, { width: sz * .6 + 'px', height: sz + 'px', margin: 5 + 'px', marginTop: '20px', display: 'inline-box' });
+	//el.style = `height:${sz}px;width:${sz * 0.7}px;margin:5px;margin-top:20px;float:left;display:inline-box`;
 
 	if (nundef(area)) area = 'objects';
 	let dParent = document.getElementById(area); dParent.appendChild(el);
@@ -96,10 +131,10 @@ function makeCard52(oid, o, { rank, suit, area, hand }) {
 	// // let x = d3.select('zone');
 	// // console.log(x)
 }
-function makeDeck(oid, o) {
 
-}
-function makeHand(oid, o) {
+
+
+function makeDeck(oid, o) {
 
 }
 function makePicto(oid, o) {

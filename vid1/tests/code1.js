@@ -11,11 +11,22 @@ FUNCS = {
 	},
 
 	card: (oid, o) => {
-		let card = makeCard({rank:o.short_name});
-		showCard(card,80,'zone');//{area:'zone',layout:'overlap'});
+		let card = emptyCard(); // makeCard({rank:o.short_name});
+		cardContent(card,{
+			title:'Knight',
+			topLeft:['crow',2],
+			topRight:['house',4],
+			middle:'A',
+			text:'this is a card to test how cards could really look like'
+		});
+		// cardContent({topleft:['crow',2],topright:['house',4],middle:'crow',text:'this is a card to test how cards could really look like'});
+		showCard(card,{area:'zone',height:80});
+
+		card = makeCard({rank:'A'});
+		showCard(card,{area:'zone',height:80});
 
 		card = makeCard({rank:'Q'});
-		showCard(card,80,'zone');//{area:'zone',layout:'overlap'});
+		showCard(card,{area:'zone',height:80});
 		// let card = makeCard52_test(oid, o, { rank: o.short_name, func:FUNCS.cardFace, area:'hand'});
 		// let card = makeCard52_test(oid, o, { rank: o.short_name, area: 'zone' });
 		// for (let i = 0; i < 1; i++) {

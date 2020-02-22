@@ -49,6 +49,40 @@ html,body{
 	min-width: 180px;
 	margin: 3px 10px;
 }
+.centered {
+  position: relative;
+  top: 50%;
+  left: 50%;
+	/* transform: translate(-50%, -50%); */
+	/* text-align: center; */
+}
+.centerCentered{
+	margin: 0;
+	/* background: yellow; */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -50%) 
+}
+.centerCenteredTopHalf{
+	margin: 0;
+	/* background: yellow; */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, -100%) 
+}
+.centerCenteredBottomHalf{
+	margin: 0;
+	/* background: yellow; */
+	position: absolute;
+	top: 46%;
+	left: 50%;
+	margin-right: -50%;
+	transform: translate(-50%, 0%) 
+}
 
 
 

@@ -3,30 +3,118 @@ function makeBoard(oid, o) {
 }
 
 //#region card
+function divStyle(d,styles){styleElement(d,styles);}
+function styleElement(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
+function divSize(d,w,h,unit='px'){	styleElement(d,{width:w,height:h},unit);}
+function posTL(d){divPos(d,0,0)}
+function posTR(d){styleElement(d,{right:0,top:0,position:'absolute'});}
+function posBL(d){styleElement(d,{left:0,bottom:0,position:'absolute'});}
+function posBLR(d){styleElement(d,{left:0,bottom:0,position:'absolute'});divRot(d,180)}
+function posBR(d){styleElement(d,{right:0,bottom:0,position:'absolute'});}
+function posBRR(d){styleElement(d,{right:0,bottom:0,position:'absolute'});divRot(d,180)}
+function divPos(d,x,y,unit='px'){styleElement(d,{left:x,top:y,position:'absolute'},unit);}
+function divRot(d,angle){divStyle(d,{transform:'rotate('+angle+'deg)'});}
+function makeDiv(dParent=null){let d=document.createElement('div');if (dParent) dParent.appendChild(d); return d;}
+function dGap(d,gap){d.style.setProperty('margin',gap+'px');}
+function asList(x){return isList(x)?x:[x];}
+function posCIC(d){d.classList.add('centerCentered');}
+function posCICT(d){d.classList.add('centerCenteredTopHalf');}
+function posCICB(d){d.classList.add('centerCenteredBottomHalf');}
+function cardContent(card,{topLeft,topRight,bottomLeft,bottomRight,reverseBottom=false,title,footer,middle,text}){
+	//get card svg
+	//wenn innerhalb von svg arbeit dann use viewbox w=240,h=336 und px
+	//wenn in div arbeite, use percentages!!!!
+	let svg=card.firstChild;
+	let div=card;
+	card.style.setProperty('position','relative');
+	card.style.setProperty('font-size','3mm');
+	console.log('svg',svg,'div',div);
+	topLeft=['A','2'];
+	bottomRight=['A',2];
+	let gap=2;let d;
+	let fBL = reverseBottom?posBLR:posBL;
+	let fBR = reverseBottom?posBRR:posBR;
+	if (isdef(topLeft)){d=makeDiv(card);dGap(d,gap);posTL(d);asList(topLeft).map(x=>makeDiv(d).innerHTML=x);}
+	if (isdef(topRight)){d=makeDiv(card);dGap(d,gap);posTR(d);asList(topRight).map(x=>makeDiv(d).innerHTML=x);}
+	if (isdef(bottomLeft)){d=makeDiv(card);dGap(d,gap);fBL(d);asList(bottomLeft).map(x=>makeDiv(d).innerHTML=x);}
+	if (isdef(bottomRight)){d=makeDiv(card);dGap(d,gap);fBR(d);asList(bottomRight).map(x=>makeDiv(d).innerHTML=x);}
+	if (isdef(middle)){
+		d=makeDiv(card);
+		//centerDiv
+		divSize(d,50,50,'%');
+		d.style.setProperty('font-size','6mm');
+		// posCenterInCenter(d);
+		let dContent = makeDiv(d);
+		dContent.innerHTML=middle;
+		if (isdef(text)) posCICT(dContent); else posCIC(dContent);
+	}
+	if (isdef(text)){
+		d=makeDiv(card);
+		
+		let dContent = makeDiv(d);
+
+		//dGap(dContent,0)
+		if (isdef(middle)) posCICB(d); else posCIC(d);
+		//centerDiv
+		divSize(d,80,50,'%');
+		d.style.setProperty('font-size','2mm');
+		// posCenterInCenter(d);
+		dContent.innerHTML='<hr></hr>'+text;
+		// dContent.style.setProperty('max-width','120%');
+		// d.style.setProperty('max-width','90%');
+	}
+
+	
+
+	// if (isdef(topLeft)){
+	// 	console.log('topLeft',topLeft);
+	// 	//topLeft,topRight,midLeft,midRight,bttomLeft,bottomRight are lists of symbol keys,numbers,or text
+	// 	if (!isList(topLeft)) topLeft =[topLeft];
+	// 	let d=document.createElement('div');
+	// 	//divSize(d,0,0,25,25,'%');
+	// 	//divPos(d,0,0);
+	// 	//d.style.transform='rotate(180deg)';
+	// 	posTL(d);
+	// 	//divRot(d,180);
+	// 	for(const sym of topLeft){
+	// 		let dsym=document.createElement('div');
+	// 		dsym.textContent=sym;
+	// 		d.appendChild(dsym);
+	// 	}
+	// 	div.appendChild(d);
+
+	// }
+}
+function emptyCard(){
+	return cardFace({key:'empty'});
+}
 function makeCard(info, styles, classes) {
 	//makes a card object but does not place it anywhere!
 	//returns domel for card
+	//TODO: should give the card an id! if oid and o are present
 	let el = cardFace(info);
 	return el;
 }
-function showCard(card, size, area, hand, layout) {//sz=80,{area,layout='overlap'}){
+function showCard(card, {size=90, area, hand, layout}={}) {//sz=80,{area,layout='overlap'}){
 	let d = document.getElementById(area);
-	console.log(d);
+	//console.log('area',d);
 
-	styleElement(card, { width: size * .66, height: size });
+	styleElement(card, { width: size * .66, height: size }); //standard ratio waere 0.71 fuer 2.5x3.5 cards 78x110
 	if (nundef(layout)) card.style.setProperty('float', 'left');
 	//how many hands does this area have already???
 	//if no hand id is given, the area only has 1 hand by definition
 	//this hand is named 'hand'
 	let dHand = isdef(hand) ? d.getElementById(hand) : d.childElementCount >= 1 ? d.lastChild : addDivPosTo(d, 12, 25, 'auto', 90, 'px', null);
 
-	console.log('area', area, 'has', d.childElementCount, 'hands')
+	//console.log('area', area, 'has', d.childElementCount, 'hands')
 	dHand.appendChild(card);
 }
+
+
 function makeHand(area) {
 
 }
-function cardFace({ rank, suit, key }) {
+function cardFace({ rank, suit, key }={}) {
 	let cardKey, svgCode;
 	if (isdef(key)) {
 		cardKey = key;
@@ -44,7 +132,6 @@ function cardFace({ rank, suit, key }) {
 	return el;
 
 }
-function styleElement(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
 function makeCard52_test(oid, o, { html, rank, suit, key, func, area, hand }) {
 	//console.log(el)
 	//console.log(...arguments)

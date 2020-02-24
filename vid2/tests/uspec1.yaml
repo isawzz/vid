@@ -1,0 +1,39 @@
+tableSize: [500, 300]
+
+layout: [
+  'd z z o',
+  'd z z o',
+  'd p p a',
+  'h h h h',
+  ]
+
+areas: 
+  d: decks
+  z: zone
+  a: extra
+  h: hand
+  p: player
+  o: others
+
+table:
+  optin: [res, num, building, port]
+pieceSizeRelativeToLoc:
+  field: ['w', 30]
+symbols:
+  city: 'castle'
+  settlement: 'house'
+dev:
+  run_to_buttons:
+    devdeck: "buy devcard"
+    hex: "place robber"
+    Corner: "settlement"
+    settlement: 'city upgrade'
+    Edge: "road" 
+  cheat_buttons: 
+    robber: "cheat robber" 
+    devcard: "cheat devcard"
+    road: 'cheat road'
+    settlement: 'cheat settlement'
+    city: 'cheat city'
+  scenario_buttons:
+    devdeck: 'devcard devdeck' 

@@ -11,7 +11,7 @@ var vidCache_dep = null;
 async function _start() {
 
 	timit = new TimeIt(getFunctionCallerName());
-	vidCache = new LazyCache(true);
+	vidCache = new LazyCache();
 	vidCache_dep = new VidCache_dep();
 
 	//#region testing

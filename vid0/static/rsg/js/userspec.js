@@ -19,7 +19,7 @@ function specAndDOM(callbacks = []) {
 	if (!hasStructure && S.settings.deckDetection) {
 		detectDecks(G.table, 'a_d_game');
 	}
-	openTabTesting(S.settings.openTab);
+	openTab(S.settings.openTab);
 
 	if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
 }

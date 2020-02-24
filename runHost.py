@@ -404,11 +404,16 @@ def vid0_save_UI_code(game,code,v=None):
 
 #endregion
 
-#region front vid1
+#region front vid1 and vid2
 @app.route('/')
-def rootsim():
+@app.route('/2')
+def rootvid2():
+	return send_from_directory('vid2', 'index.html')
+
+@app.route('/1')
+def rootvid1():
 	# return app.send_static_file('vid1/index.html')
-	return send_from_directory('vid_common', 'index.html')
+	return send_from_directory('vid1', 'index.html')
 
 @app.route('/text/<path:path>')
 def rootsimTextPath(path):

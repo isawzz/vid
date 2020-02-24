@@ -14,7 +14,9 @@
 	<script src="/vid1/lib/js-yaml.min.js"></script>
 	<script src="/vid1/lib/d3.min.js"></script>
 	<link href="/vid1/css/main.css" rel="stylesheet">
-	<script src="/vid2/js/helpers.js"></script>
+	<link href="/vid2/css/main2.css" rel="stylesheet">
+	<link href="/vid2/css/tabs.css" rel="stylesheet">
+
 
 </head>
 
@@ -26,14 +28,17 @@
 	</div>
 
 	<div id='rsg' class='flex'>
-		<div id='actions' class='side'>
-			actions
+		<div  id='actions' class='side'>
+			<div class='header'>actions</div>
+			<div id='a_d_actions' class='content'></div>
 		</div>
-		<div id='table' style='background-color:green;'>
-			<div id='t1' style='background-color:rgba(255,255,255,.5);width:800px;height:100%;'></div>
+		<div id='table'>
+			<div id='status' class='header'>status</div>
+			<div class='content'><div id='tableTop'>hallo</div></div>
 		</div>
-		<div id='log'>
-			log
+		<div  id='log' >
+			<div class='header'>log</div>
+			<div id='a_d_log' class='content'></div>
 		</div>
 	</div>
 	<hr>
@@ -44,11 +49,41 @@
 			<button class='button' onclick='onClickResetLocal()'>reset local</button>
 
 		</div>
-		<div id='objects'>
-			objects
-		</div>
-		<div id='tabs' class='side'>
-			tabs
+
+		<div id='testing'>
+			<div id='tabs' class='tab'>
+				<button onclick="openTab(this)" class='tablinks'>objects</button>
+				<button onclick="openTab(this)" class='tablinks active'>settings</button>
+			</div>
+			<div id='tabPages' class='flex' style='margin-top:-4px;width:100%'>
+				<div id="objects" class="tabcontent" >
+					<div id='a_d_objects'></div>
+				</div>
+				<div id="settings" class="tabcontent" style="display:block">
+					<div id='a_d_settings'>
+						<fieldset id='a_d_autoplay_buttons'>
+							<legend>autoplay</legend>
+							<button id='c_b_NextPlayer' onclick="onClickRunToNextPlayer()">next player</button>
+							<button id='c_b_NextTurn' onclick="onClickRunToNextTurn()">next turn</button>
+							<button id='c_b_NextPhase' onclick="onClickRunToNextPhase()">next phase</button>
+							<br />
+						</fieldset>
+						<fieldset id='a_d_cheat_buttons'>
+							<legend>cheats</legend>
+
+						</fieldset>
+						<fieldset id='a_d_scenario_buttons'>
+							<legend>scenarios</legend>
+
+						</fieldset>
+						<fieldset>
+							<legend>miscellaneous</legend>
+							<button id="c_b_TTip" onclick="toggleTooltips(this)">tooltips: OFF</button>
+							<button onclick="colorSystem()">new colors</button>
+						</fieldset>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div id='test2' class='flex'>
@@ -60,27 +95,31 @@
 		</div>
 	</div>
 	<div id='test3' class='flex'>
+		<div id='mergedSpec'>
+			SPEC
+		</div>
 		<div id='serverData'>
 			serverData
 		</div>
 	</div>
 
 	<!-- #region loading -->
+	<script src="/vid2/js/helpers.js"></script>
+	<script src="/vid2/js/__config.js"></script>
+	<script src="/vid2/js/assets.js"></script>
 	<script src="/vid2/js/features.js"></script>
 	<script src="/vid2/js/vidHelpers.js"></script>
 	<script src="/vid2/js/onClick.js"></script>
 
-	<script src="/vid1/js/__config.js"></script>
-	<script src="/vid1/js/_area.js"></script>
-	<script src="/vid1/js/_behavior.js"></script>
-	<script src="/vid1/js/_board.js"></script>
-	<script src="/vid1/js/_library.js"></script>
-	<script src="/vid1/js/_MK.js"></script>
-	<script src="/vid1/js/_MKFactory.js"></script>
-	<script src="/vid1/js/_MKManager.js"></script>
-
-	<script src="/vid1/js/_spec.js"></script>
 	<script src="/vid1/js/_testing.js"></script>
+
+	<script src="/vid2/rsg/area.js"></script>
+	<script src="/vid2/rsg/behavior.js"></script>
+	<script src="/vid2/rsg/factory.js"></script>
+	<script src="/vid2/rsg/library.js"></script>
+	<script src="/vid2/rsg/MK.js"></script>
+	<script src="/vid2/rsg/MKManager.js"></script>
+	<script src="/vid2/rsg/spec.js"></script>
 
 	<!-- alles fuer board detection noetige: hopfully <= 5 modules!!!! -->
 	<!-- versuche das ALLES zu eliminieren !!!! -->
@@ -93,11 +132,11 @@
 	<!-- <script src="/vid0/rsg/js/interact.js"></script>
 	<script src="/vid0/rsg/js/infobox.js"></script> -->
 
-	<script src="/vid1/js/__startRsg.js"></script>
-	<script src="/vid1/js/__start.js"></script>
+	<script src="/vid2/rsg/__startRsg.js"></script>
+	<script src="/vid2/js/__start.js"></script>
 	<!-- #endregion loading -->
 
-	<!-- #region indexedDB -->
+	<!-- #region indexedDB: not yet used but will replace localStorage -->
 	<script>
 		(() => {
 			'use strict'

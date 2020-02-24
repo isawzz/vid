@@ -1,7 +1,7 @@
 class TimeIt {
-	constructor(msg) {
+	constructor(msg, showOutput = true) {
+		this.showOutput = showOutput;
 		this.init(msg);
-		this.showOutput = true;
 	}
 	tacit() { this.showOutput = false; }
 	timeStamp(name) {
@@ -13,8 +13,7 @@ class TimeIt {
 	}
 	reset() { this.init('timing start') }
 	init(msg) {
-		this.t = new Date(); //new Date().getTime();
-		//this.showOutput = true;
+		this.t = new Date();
 		if (this.showOutput) console.log('___', msg);
 		this.namedTimestamps = { start: this.t };
 	}
@@ -759,13 +758,32 @@ function setCSSVariable(varName, val) {
 }
 //#endregion
 
-//#region DOM: creating divs: 2020
-function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
-	if (nundef(nOrString)) return defaultVal;
-	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
-	return nOrString;
-}
+//#DOM 1 liners
+function asList(x) { return isList(x) ? x : [x]; }
+function mAppend(d, child) { if (d) d.appendChild(child); }
+function mById(id) { return document.getElementById(id); }
+function mCreate(tag) { return document.createElement(tag); }
+function mDiv(dParent = null) { let d = mCreate('div'); mAppend(dParent, d); return d; }
+function onMouseEnter(d, handler = null) { d3.on('mouse') }
+function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
+function mGap(d, gap) { d.style.setProperty('margin', gap + 'px'); }
+function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
+function mRot(d, angle) { mStyle(d, { transform: 'rotate(' + angle + 'deg)' }); }
+function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
+function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
+function mTextDiv(text, dParent = null) { let d = mCreate('div'); mAppend(dParent, d).innerHTML = text; return d; }
+function posTL(d) { mPos(d, 0, 0) }
+function posTR(d) { mStyle(d, { right: 0, top: 0, position: 'absolute' }); }
+function posBL(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); }
+function posBLR(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
+function posBR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); }
+function posBRR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
+function posCIC(d) { d.classList.add('centerCentered'); }
+function posCICT(d) { d.classList.add('centerCenteredTopHalf'); }
+function posCICB(d) { d.classList.add('centerCenteredBottomHalf'); }
 
+
+//#region DOM: creating divs: 2020
 function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, className, styleStr, border, rounding, gap, margin, padding, float, textAlign, fz }) {
 	let d1 = document.createElement('div');
 	if (isdef(dParent)) dParent.appendChild(d1); else dParent = null;
@@ -802,7 +820,7 @@ function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, classN
 	}
 	if (isdef(margin)) d1.style.setProperty('margin', makeUnitString(margin, 'px'));
 	if (isdef(padding)) d1.style.setProperty('padding', makeUnitString(padding, 'px'));
-	if (float) d1.style.setProperty('float',float);
+	if (float) d1.style.setProperty('float', float);
 	if (textAlign) d1.style.textAlign = textAlign;
 	if (isdef(fz)) d1.style.setProperty('fontSize', makeUnitString(fz, 'px'));
 
@@ -815,11 +833,16 @@ function addDivPosTo(dParent, x = 0, y = 0, w = 100, h = 100, unit = '%', bg = '
 	return addDivU({ dParent: dParent, x: x, y: y, w: w, h: h, unit: unit, position: position, bg: bg });
 }
 function createElementFromHTML(htmlString) {
-  var div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
+	var div = document.createElement('div');
+	div.innerHTML = htmlString.trim();
 
-  // Change this to div.childNodes to support multiple top-level nodes
-  return div.firstChild; 
+	// Change this to div.childNodes to support multiple top-level nodes
+	return div.firstChild;
+}
+function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
+	if (nundef(nOrString)) return defaultVal;
+	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
+	return nOrString;
 }
 //code 2019
 function addDiv(dParent, { html, w = '100%', h = '100%', bg, fg, border, rounding, margin, padding, float, position, x, y, textAlign, fontSize }) {
@@ -975,6 +998,7 @@ function makeDroppable(target) {
 
 //#region DOM: hierarchy, parent, children...
 function clearElement(elem) {
+	console.log(elem);
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
 	while (elem.firstChild) {
@@ -1610,26 +1634,11 @@ function lastCondDictPlusKey(dict, func) {
 
 	return null;
 }
-function listKey(d, lastKey, val, uniqueValues = true) {
-	// if (lastKey == '0') { //Number(lastKey)){
-	// 	console.log('//////dict', d);
-	// 	console.log('lastKey', lastKey);
-	// 	console.log('val', val, 'uniqueValues', uniqueValues)
-	// 	console.log('d[lastKey]', d[lastKey]);
-	// }
-	if (nundef(d[lastKey])) {
-		d[lastKey] = [];
-	}
-	if (uniqueValues) {
-		addIf(d[lastKey], val);
-	} else {
-		d[lastKey].push(val);
-	}
-	// if (lastKey == '0') {
-	// 	console.log('ende: d[lastKey]', jsCopy(d[lastKey]));
-	// 	console.log('dict',jsCopy(d))
-	// }
-	return d[lastKey];
+function listKey(d, key, val, uniqueValues = true) {
+	//adds val to array d[key], if d[key] does not exist, it is created
+	if (nundef(d[key])) { d[key] = []; }
+	if (uniqueValues) { addIf(d[key], val); } else { d[key].push(val); }
+	return d[key];
 }
 function lookup(dict, keys) {
 	let d = dict;
@@ -1976,11 +1985,11 @@ function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
 function nundef(x) { return x === null || x === undefined; }
 
-//#region faster version of getValueArray
+//faster version of getValueArray
 function getElements(o, elKey = '_obj', arrKey = '_set') {
 	// {_set:[{_obj:1},{_obj:2},...]} ==> [1,2,..]
-	let res=o[arrKey]?o[arrKey]:o;
-	if (isList(res) && res.length>0) return res[0][elKey]?res.map(x=>x[elKey]):res;
+	let res = o[arrKey] ? o[arrKey] : o;
+	if (isList(res) && res.length > 0) return res[0][elKey] ? res.map(x => x[elKey]) : res;
 	else return [];
 }
 function getValueArray(o, elKey = 'obj', arrKey = '_set') {

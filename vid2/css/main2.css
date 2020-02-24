@@ -1,0 +1,81 @@
+legend {
+	border:1px solid green;
+	color:green;
+	font-size:75%;
+}
+fieldset{
+	font-size:90%;
+	border: none;
+	margin-top:2%;
+	height:96%;
+	width:auto;
+	float:left;
+	position:relative;
+	text-align: center;
+}
+#a_d_settings >fieldset{
+	width:130px;
+}
+.radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+	border: 1px solid #999;
+	color: silver;
+  transition: 0.2s all linear;
+  margin: 5px;
+	padding: 0px;
+  position: relative;
+	top: 7px;
+	left: 0px;
+}
+.radio:focus {
+  outline-width: 0px;
+  outline-style: solid;
+	outline-color: transparent; 
+	/* outline-color: Highlight; */
+}
+.radio:checked {
+  border: 8px solid green;
+}
+button{
+	margin: 2px;
+	font-size: 90%;
+	min-width: 100px;
+	padding: 2px 2px 3px 2px;
+  color: white;
+  background-color: var(--darkerM);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 150ms ease-in;
+  outline: none;
+}
+button:hover {
+	background-color: rgb(165, 9, 9);
+	color:white;
+	/* background-color: var(--darkerXL); */
+}
+button:active {
+	background-color: var(--darkerXS);
+	color: white;
+}
+/* .header{
+	height:25px;
+}
+.content{
+	height:calc(100%-25px);
+	width:100%;
+}
+ */
+
+
+
+
+
+
+
+

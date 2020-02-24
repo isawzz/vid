@@ -682,77 +682,7 @@ function transformToString(k, val, refs) {
 }
 //#endregion
 
-//#region delete MS 
-function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
-function deleteRSG(id) {
-	//console.log('deleting',id)
-	let mobj = UIS[id];
-	if (nundef(mobj)) {
-		error('object that should be deleted does NOT exist!!!! ' + id);
-		//console.log(DELETED_IDS);
-		//console.log(DELETED_THIS_ROUND);
-		//return;
-	}
-	unhighlightMsAndRelatives(null, mobj)
-	unlink(id);
-	_deleteFromOwnerList(id);
-	mobj.destroy();
-	DELETED_IDS.push(id);
-	DELETED_THIS_ROUND.push(id);
-	delete UIS[id];
-}
-function deleteAll(rsgType, idoType) {
-	let ids = IdOwner[idoType];
-	//console.log(ids);
-	ids = isdef(IdOwner[idoType]) ? IdOwner[idoType].filter(x => x[0] == rsgType) : []; for (const id of ids) deleteRSG(id);
-}
-function deleteDefaultObjects() { deleteAll('d', 't'); }
-function deleteDefaultPlayers() { deleteAll('d', 'p'); }
-function deleteActions() { deleteAll('d', 'a'); }
-function deleteOid(oid) {
-	let uids = jsCopy(oid2ids[oid]);
 
-	//console.log('related to', oid, 'are', uids)
-	//of these only have to delete main object and default object
-	//no need to delete auxes?
-	//no need to delete because these will be updated in all objects that have changed via table update!
-	for (const uid of uids) {
-		if (uid[2] == 'r' || uid[2] == 'l') continue;
-		//console.log('deleting', uid);
-		if (UIS[uid]) deleteRSG(uid);
-	}
-}
-//#endregion
-
-
-//get or set attributes of a dom elem
-(function ($) {
-	$.fn.attrs = function (attrs) {
-		var t = $(this);
-		if (attrs) {
-			// Set attributes
-			t.each(function (i, e) {
-				var j = $(e);
-				for (var attr in attrs) {
-					j.attr(attr, attrs[attr]);
-				}
-			});
-			return t;
-		} else {
-			// Get attributes
-			var a = {},
-				r = t.get(0);
-			if (r) {
-				r = r.attributes;
-				for (var i in r) {
-					var p = r[i];
-					if (typeof p.nodeValue !== 'undefined') a[p.nodeName] = p.nodeValue;
-				}
-			}
-			return a;
-		}
-	};
-})(jQuery);
 
 
 

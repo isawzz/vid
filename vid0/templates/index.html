@@ -121,7 +121,7 @@
 		}
 		for (const fname of FRONT_STYLES) styleLoader(fname, 'vid0/static/front/css', false, OFFLINE);
 		for (const fname of RSG_STYLES) styleLoader(fname, 'vid0/static/rsg/css', false, OFFLINE);
-		for (const fname of COMMON_JS) scriptLoader(fname, 'vid1/js', false, OFFLINE);
+		for (const fname of COMMON_JS) scriptLoader(fname, 'vid2/js', false, OFFLINE);
 		for (const fname of FRONT_JS) scriptLoader(fname, 'vid0/static/front/js', false, OFFLINE);
 		for (const fname of RSG_JS) scriptLoader(fname, 'vid0/static/rsg/js', false, OFFLINE);
 
@@ -330,14 +330,14 @@
 		</div>
 		<div id="a_d_testing" class="area">
 			<div class="tab">
-				<button id='c_b_London' class="tablinks active" onclick="openTabTesting('London')">objects</button>
-				<!-- <button id='c_b_Vienna' class="tablinks" onclick="openTabTesting('Vienna')">players</button> -->
-				<!-- <button id='c_b_Redmond' class="tablinks" onclick="openTabTesting('Redmond')">main menu</button> -->
-				<button id='c_b_Paris' class="tablinks" onclick="openTabTesting('Paris')">spec</button>
-				<button id='c_b_Oslo' class="tablinks" onclick="openTabTesting('Oslo')">code</button>
-				<button id='c_b_Seattle' class="tablinks" onclick="openTabTesting('Seattle')">settings</button>
-				<!-- <button id='c_b_Tokyo' class="tablinks" onclick="openTabTesting('Tokyo')">DIV</button>
-				<button id='c_b_Bangor' class="tablinks" onclick="openTabTesting('Bangor')">G</button> -->
+				<button id='c_b_London' class="tablinks active" onclick="openTab('London')">objects</button>
+				<!-- <button id='c_b_Vienna' class="tablinks" onclick="openTab('Vienna')">players</button> -->
+				<!-- <button id='c_b_Redmond' class="tablinks" onclick="openTab('Redmond')">main menu</button> -->
+				<button id='c_b_Paris' class="tablinks" onclick="openTab('Paris')">spec</button>
+				<button id='c_b_Oslo' class="tablinks" onclick="openTab('Oslo')">code</button>
+				<button id='c_b_Seattle' class="tablinks" onclick="openTab('Seattle')">settings</button>
+				<!-- <button id='c_b_Tokyo' class="tablinks" onclick="openTab('Tokyo')">DIV</button>
+				<button id='c_b_Bangor' class="tablinks" onclick="openTab('Bangor')">G</button> -->
 			</div>
 			<!-- keep this in block display! set default opened tab in settings.js -->
 			<div id="a_d_London" class="tabcontent" style="display:block">

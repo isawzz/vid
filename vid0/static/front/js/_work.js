@@ -133,22 +133,6 @@ function _makeGroundShape(mobj, x, y, w, h, color, shape, { dx = 0, dy = 0, x1, 
 
 
 //#region misc helpers
-function openTabTesting(cityName) {
-	//console.log('opening',cityName)
-	var i, tabcontent, tablinks;
-
-	tabcontent = document.getElementsByClassName('tabcontent');
-	for (i = 0; i < tabcontent.length; i++) {
-		tabcontent[i].style.display = 'none';
-	}
-	tablinks = document.getElementsByClassName('tablinks');
-	for (i = 0; i < tablinks.length; i++) {
-		tablinks[i].className = tablinks[i].className.replace(' active', '');
-	}
-	document.getElementById('a_d_' + cityName).style.display = 'block';
-	document.getElementById('c_b_' + cityName).className += ' active';
-	//evt.currentTarget.className += ' active';
-}
 //#endregion
 
 //#region TODO

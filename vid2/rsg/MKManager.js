@@ -1,3 +1,23 @@
+var UIS=null;
+var IdOwner = {}; //lists of ids by owner
+var id2oids = {}; // { uid : list of server object ids (called oids) }
+var oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
+var id2uids = {}; // { uid : list of mobj ids related to same oid }
+
+class MKManager{
+	constructor(){
+
+	}
+	clear(){
+		UIS = {}; // holds MS objects 
+		IdOwner = {}; //lists of ids by owner
+		id2oids = {}; // { uid : list of server object ids (called oids) }
+		oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
+		id2uids = {}; // { uid : list of mobj ids related to same oid }
+	
+	}
+}
+
 //#region helpers: linking UIS ...
 function _addRelatives(id, oid) {
 	// if (isdef(oid2ids[oid])) oid2ids[oid].map(x => listKey(id2uids, id, x)); //all other already existing uis are linked to newly created element!
@@ -11,17 +31,6 @@ function _addRelatives(id, oid) {
 			listKey(id2uids, idOther, id);
 		}
 	}
-}
-function getUser(idPlayer) { return G.playersAugmented[idPlayer].username; }
-function getPlayerColor(id) { return G.playersAugmented[id].color }
-function getPlayerColorString(id) { return G.playersAugmented[id].altName }
-
-function getColorHint(o) {
-	for (const k in o) {
-		if (k.toLowerCase() == 'color') return o[k];
-		if (isDict(o[k]) && isdef(o[k]._player)) return getPlayerColor(o[k]._player);
-	}
-	return null;
 }
 function linkObjects(id, oid) {
 	// if (isdef(UIS[id])) {
@@ -74,17 +83,17 @@ function unlink(id) {
 function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
 function deleteRSG(id) {
 	//console.log('deleting',id)
-	let mobj = UIS[id];
-	if (nundef(mobj)) {
+	let mk = UIS[id];
+	if (nundef(mk)) {
 		error('object that should be deleted does NOT exist!!!! ' + id);
 		//console.log(DELETED_IDS);
 		//console.log(DELETED_THIS_ROUND);
 		//return;
 	}
-	unhighlightMsAndRelatives(null, mobj)
+	unhighlightMsAndRelatives(null, mk)
 	unlink(id);
 	_deleteFromOwnerList(id);
-	mobj.destroy();
+	mk.destroy();
 	DELETED_IDS.push(id);
 	DELETED_THIS_ROUND.push(id);
 	delete UIS[id];
@@ -111,11 +120,4 @@ function deleteOid(oid) {
 	}
 }
 //#endregion
-
-
-
-
-
-
-
 

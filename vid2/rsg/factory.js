@@ -7,7 +7,7 @@ function cardContent(card, { topLeft, topRight, bottomLeft, bottomRight, reverse
 	let div = card;
 	card.style.setProperty('position', 'relative');
 	card.style.setProperty('font-size', '3mm');
-	console.log('svg', svg, 'div', div);
+	//console.log('svg', svg, 'div', div);
 	topLeft = ['A', '2'];
 	bottomRight = ['A', 2];
 	middle = null;

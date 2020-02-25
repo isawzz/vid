@@ -782,7 +782,6 @@ function posCIC(d) { d.classList.add('centerCentered'); }
 function posCICT(d) { d.classList.add('centerCenteredTopHalf'); }
 function posCICB(d) { d.classList.add('centerCenteredBottomHalf'); }
 
-
 //#region DOM: creating divs: 2020
 function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, className, styleStr, border, rounding, gap, margin, padding, float, textAlign, fz }) {
 	let d1 = document.createElement('div');
@@ -863,7 +862,20 @@ function addFlexGridDiv(dParent) { return addDivU({ dParent: dParent, className:
 //#region DOM: creating g elements
 function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter = false } = {}) {
 	//div dParent gets an svg and inside a g, returns g
+	//dParent must have its bounds width and height set
 	let svg1 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+	if (!dParent.style.width || !dParent.style.height) {
+		let pBounds = getBounds(dParent);
+		w=pBounds.width + 'px';
+		h=pBounds.height + 'px';
+		//console.log('--- addSvgg: CORRECTING MISSING WIDTH AND HEIGHT ON PARENT ---', dParent.id,w,h);
+
+		// svg1.setAttribute('width', pBounds.width + 'px');
+		// svg1.setAttribute('height', pBounds.height + 'px');
+		// dParent.style.setProperty('width', pBounds.width + 'px');
+		// dParent.style.setProperty('height', pBounds.height + 'px');
+	}
 	svg1.setAttribute('width', w);
 	svg1.setAttribute('height', h);
 	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
@@ -876,6 +888,9 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 	svg1.appendChild(g1);
 	// if (originInCenter) { g1.style='transform:translate(50%, 50%)'; } //works!
 	// if (originInCenter) { g1.setAttribute('class', 'gCentered'); } //works! but: relies on class gCentered
+	// console.log('____________________________')
+	// console.log(getBounds(svg1))
+	// console.log(getBounds(dParent))
 	if (originInCenter) { g1.style.transform = "translate(50%, 50%)"; } //works!
 
 	return g1;
@@ -998,7 +1013,7 @@ function makeDroppable(target) {
 
 //#region DOM: hierarchy, parent, children...
 function clearElement(elem) {
-	console.log(elem);
+	//console.log(elem);
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
 	while (elem.firstChild) {
@@ -1662,6 +1677,11 @@ function parseDictionaryName(s) {
 	if (!odict || typeof odict != 'object') return null;
 	if (o_keys.length > 1) odict = lookup(odict, o_keys.slice(1));
 	return odict;
+}
+function parsePropertyPath(odict, s) {
+	if (isEmpty(s)) return odict;
+	let o_keys = s.split('.');
+	return lookup(odict, o_keys);
 }
 function propDiffSimple(o_old, o_new, props = null) {
 	//berechne diff in props

@@ -1,9 +1,15 @@
 const DOMCATS = { rect: 'g', g: 'g', circle: 'g', text: 'g', polygon: 'g', line: 'g', body: 'd', svg: 'h', div: 'd', p: 'd', table: 'd', button: 'd', a: 'd', span: 'd', image: 'd', paragraph: 'd', anchor: 'd' };
 //#region one liners / getters
 function getPlayer(id) { return serverData.players[id]; }
-function getUser(idPlayer) { return playerConfig[idPlayer].username; }
-function getPlayerColor(id) { return playerConfig[id].color }
-function getPlayerColorString(id) { return playerConfig[id].altName }
+function getUser(idPlayer) { return playerConfig[GAME].players[idPlayer].username; }
+function getPlid(username) { 
+	console.log(playerConfig[GAME].players,username);
+	let res = firstCondDict(playerConfig[GAME].players,x=>x.username == username);
+	console.log(res)
+	return  res;
+}
+function getPlayerColor(id) { return playerConfig[GAME][id].color; }
+function getPlayerColorString(id) { return playerConfig[GAME][id].altName; }
 function getColorHint(o) {
 	for (const k in o) {
 		if (k.toLowerCase() == 'color') return o[k];
@@ -23,13 +29,14 @@ function getMainId(oid) { return firstCond(oid2ids[oid], x => x[0] == 'm'); }
 function getVisual(oid) { return UIS[getMainId(oid)]; }
 function getDefId(oid) { return firstCond(oid2ids[oid], x => x[0] == 'd'); }
 function getDefVisual(oid) { return UIS[getDefId(oid)]; }
-function getPageHeaderDivForPlayer(oid) { return document.getElementById('c_c_' + G.playersAugmented[oid].username); }
+function getDefaultVisual(oid) { return UIS[getDefId(oid)]; }
+function getPageHeaderDivForPlayer(oid) { return document.getElementById('c_c_' + playerConfig[GAME].players[oid].username); }
 function getFirstVisual(oid) { let res = getVisual(oid); return res ? res : getDefVisual(oid); }
 function _getChildrenOf(id) { let ui = UIS[id]; return ui.children; }
 function getList(lst) { return isdef(lst) ? lst : []; }
-function getDefaultObjectIds() { return _getChildrenOf(S.settings.table.defaultArea); }
+function getDefaultObjectIds() { return _getChildrenOf(SPEC.table.defaultArea); }
 function getDefaultObjects() { return getDefaultObjectIds(x => UIS[x]); }
-function getDefaultPlayerIds() { return _getChildrenOf(S.settings.player.defaultArea); }
+function getDefaultPlayerIds() { return _getChildrenOf(SPEC.player.defaultArea); }
 function getDefaultPlayers() { return getDefaultPlayerIds(x => UIS[x]); }
 function getAuxIds() { return getList(IdOwner.l); }
 function getAux() { return getAuxIds.map(x => UIS[x]); }
@@ -85,12 +92,88 @@ function defaultVisualExists(oid) { return firstCond(oid2ids[oid], x => x[0] == 
 function someVisualExists(oid) { return firstCond(oid2ids[oid], x => x[0] == 'd' || x[0] == 'm'); }
 function mainVisualExists(oid) { return firstCond(oid2ids[oid], x => x[0] == 'm'); }
 function isBoardElementObject(o) { return o.edges || o.corners; }
-function isBoardElement(oid) { let mobj = getVisual(oid); return mobj && mobj.idParent[2] == 's'; }
+function isBoardElement(oid) { let mk = getVisual(oid); return mk && mk.idParent[2] == 's'; }
 function isBoardObject(o) { return o.map && o.fields; }
 function isDeckObject(o) { return isdef(o.deck_count); }
 function isField(o) { return o.neighbors; }
-function isPlain() { return !S.settings.boardDetection && !S.settings.deckDetection && !S.settings.userStructures }
-function isDetection() { return (S.settings.boardDetection || S.settings.deckDetection) && !S.settings.userStructures }
+function isPlain() { return !SPEC.boardDetection && !SPEC.deckDetection && !SPEC.userStructures }
+function isDetection() { return (SPEC.boardDetection || SPEC.deckDetection) && !SPEC.userStructures }
+//#endregion
+
+//#region pageHeader
+function pageHeaderInit() { pageHeaderSetGame(); pageHeaderSetPlayers(); }
+
+function pageHeaderClearAll() { pageHeaderClearPlayers(); pageHeaderClearGame(); }
+function pageHeaderClearGame() { clearElement(mById('divGameName')); }
+function pageHeaderClearPlayers() { mById('divPlayerNames').innerHTML = '<div style="float:left">Players:&nbsp;</div>'; }
+function pageHeaderSetGame() { mById('divGameName').innerHTML = `<div style='float:right;margin:14px'><b>${allGames[GAME].name}</b><br>(${PLAYMODE})</div>`; }
+function pageHeaderSetPlayers() {
+	let divPlayerNames = mById('divPlayerNames');
+
+	let s = '<div style="float:left">Players:&nbsp;</div>';//&nbsp;';
+	let pc = playerConfig[GAME].players;
+	for (const pid in pc) {
+		let pl = pc[pid];
+		spl = pageHeaderGetPlayerHtml(pl.username, pid, pl.color);
+		s += spl;
+	}
+	divPlayerNames.innerHTML = s;
+}
+function pageHeaderAddPlayer(username, playerId, color, asMe = false) {
+	mById('divPlayerNames').insertAdjacentHTML('beforeend', pageHeaderGetPlayerHtml(username, playerId, color, asMe));
+
+}
+function pageHeaderGetPlayerHtml(username, playerId, color) {
+	let spl = `<div id='c_c_${username}' class='playerHeader'><div>${username}</div><div style='color:${color}'>${playerId}</div></div>`
+	return spl;
+}
+
+//#endregion
+
+//#region playerConfig
+function stubPlayerConfig(gameInfo) {
+	//automatically set a player configuration when starting in game view
+	gcs = {};
+	for (const gName in gameInfo) {
+		let info = gameInfo[gName]
+		//console.log(gName, info);
+		let nPlayers = info.num_players[0]; // min player number, info.num_players.length - 1]; // max player number
+		let pls = {};
+		for (let i = 0; i < nPlayers; i++) {
+			let id = info.player_names[i];
+			pls[id] = { id: id, playerType: 'me', agentType: null, username: USERNAME + (i > 0 ? i : ''), index: i };
+			//console.log('player:', pl)
+			// pls.push(pl);
+		}
+		gcs[gName] = { numPlayers: nPlayers, players: pls };
+
+	}
+	return gcs;
+	//console.log('-------------------',gcs);
+}
+function updatePlayerConfig() {
+	let keysPlayerColors = Object.keys(playerColors);
+	G.players = playerConfig[GAME].players;
+
+	//match colors to better colors!
+	let iColor = 0;
+	for (const id in serverData.players) {
+		let pl = serverData.players[id];
+		let colorName = isdef(pl.color) ? pl.color : keysPlayerColors[iColor];
+		colorName = colorName.toLowerCase();
+		let altName = capitalize(colorName);
+		let color = isdef(playerColors[colorName]) ? playerColors[colorName] : colorName;
+
+
+		G.players[id].color = color;
+		//playerConfig[id].color = color;
+		// playerConfig[id].altName = altName;
+		// playerConfig[id].index = i;
+		iColor += 1;
+	}
+}
+
+//#endregion
 
 //#region routes
 async function route_allGames() {
@@ -157,13 +240,14 @@ async function route_userCode(game, fname) {
 	} catch{ return {}; }
 
 }
-async function route_initGame(game, gc) {
+async function route_initGame(game, gc, username) {
 	await fetch(SERVER + '/restart');
 	await fetch(SERVER + '/game/select/' + game);
 	let nPlayers = gc.numPlayers;
 	//console.log(gc)
-	for (let i = 0; i < nPlayers; i++) {
-		let plInfo = gc.players[i];
+	// for (let i = 0; i < nPlayers; i++) {
+	for (plid in gc.players) {
+		let plInfo = gc.players[plid];
 		let isAI = plInfo.agentType !== null;
 		if (isAI) {
 			await postData(SERVER + '/add/client/agent/' + plInfo.username, { agent_type: plInfo.agentType, timeout: null });
@@ -171,7 +255,7 @@ async function route_initGame(game, gc) {
 		await fetch(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
 	}
 	await fetch(SERVER + '/begin/' + SEED);
-	let data = await route_server_js('/status/' + gc.players[0].username);
+	let data = await route_server_js('/status/' + username); //getPlid(username));
 	return data;
 }
 async function route_rsg_asset(filename, ext = 'yml') {
@@ -226,28 +310,7 @@ async function postData(url = '', data = {}) {
 	});
 	return await response.json(); // parses JSON response into native JavaScript objects
 }
-
-//#region stubs
-function stubPlayerConfig(gameInfo) {
-	//automatically set a player configuration when starting in game view
-	gcs = {};
-	for (const gName in gameInfo) {
-		let info = gameInfo[gName]
-		//console.log(gName, info);
-		let nPlayers = info.num_players[0]; // min player number, info.num_players.length - 1]; // max player number
-		let pls = {};
-		for (let i = 0; i < nPlayers; i++) {
-			let id = info.player_names[i];
-			pls[id] = { id: id, playerType: 'me', agentType: null, username: USERNAME + (i > 0 ? i : '') };
-			//console.log('player:', pl)
-			// pls.push(pl);
-		}
-		gcs[gName] = { numPlayers: nPlayers, players: pls };
-
-	}
-	return gcs;
-	//console.log('-------------------',gcs);
-}
+//#endregion
 
 //#region tabs
 function openTab(button) {
@@ -256,9 +319,9 @@ function openTab(button) {
 	let selected = button.textContent;
 	console.log(button, button.textContent);
 	tabcontent = document.getElementsByClassName('tabcontent');
-	for (i = 0; i < tabcontent.length; i++) {		tabcontent[i].style.display = 'none';	}
+	for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = 'none'; }
 	tablinks = document.getElementsByClassName('tablinks');
-	for (i = 0; i < tablinks.length; i++) {		tablinks[i].className = tablinks[i].className.replace(' active', '');	}
+	for (i = 0; i < tablinks.length; i++) { tablinks[i].className = tablinks[i].className.replace(' active', ''); }
 	document.getElementById(selected).style.display = 'block';
 	button.className += ' active';
 	//evt.currentTarget.className += ' active';

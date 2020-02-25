@@ -1,6 +1,5 @@
 //#region vars
 var timit = null;
-var mkMan = new MKManager();
 
 window.onload = () => _start();
 //#endregion
@@ -14,6 +13,9 @@ async function _start(resetLocalStorage = false) {
 	//resetLocalStorage = true; //********** true for LOCALSTORAGE CLEAR!!!!! */
 	await loadAssets(resetLocalStorage);
 
+
+	updatePlayerConfig();
+
 	rStart();
 
 //	makeCard52_test(1, null, { key: 'green2', area: 'decks' });
@@ -23,5 +25,6 @@ async function _start(resetLocalStorage = false) {
 function clear() {
 	for(const name of ['a_d_actions','status','tableTop','a_d_log','a_d_objects']) clearElement(name);
 	mById('status').innerHTML='status';
-	mkMan.clear();
+	if (mkMan) mkMan.clear();
+	G={};//do I really need that??? TODO: eliminate
 }

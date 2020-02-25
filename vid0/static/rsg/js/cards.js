@@ -11,7 +11,7 @@ function updateTableCardCollections(oid){
 		//console.log(propName, 'has changed!');
 		let o = G.table[propName];
 		//console.log('player.'+propName,o)
-		let plColl = getTableCollections(oid,propName);
+		let plColl = getCollections(oid,propName);
 		//console.log(plColl)
 		if (isdef(plColl)) {
 			for (const key in plColl) {
@@ -40,7 +40,7 @@ function updateTableCardCollections_COPY(oid){
 		//console.log(propName, 'has changed!');
 		let o = G.table[propName];
 		//console.log('player.'+propName,o)
-		let plColl = getTableCollections(oid,propName);
+		let plColl = getCollections(oid,propName);
 		//console.log(plColl)
 		if (isdef(plColl)) {
 			for (const key in plColl) {

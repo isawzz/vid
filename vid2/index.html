@@ -23,7 +23,14 @@
 <body>
 	<div id='header' class='flex'>
 		<div id='info'>
-			info
+			<div style='float:right;margin:4px;color:dimgray;'>
+				Game:
+				<div id='divGameName' class='header_name'>Catan</div>
+			</div>
+			<div id='divPlayerNames' style='float:left;margin:4px 10px;color:dimgray'>
+				Players:&nbsp;
+			</div>
+			<div id="statusInHeaderText" style='color:black;margin:10px;text-align:center'>status plain mode</div>
 		</div>
 	</div>
 
@@ -49,7 +56,6 @@
 			<button class='button' onclick='onClickResetLocal()'>reset local</button>
 
 		</div>
-
 		<div id='testing'>
 			<div id='tabs' class='tab'>
 				<button onclick="openTab(this)" class='tablinks'>objects</button>
@@ -57,7 +63,7 @@
 			</div>
 			<div id='tabPages' class='flex' style='margin-top:-4px;width:100%'>
 				<div id="objects" class="tabcontent" >
-					<div id='a_d_objects'></div>
+					<div id='a_d_objects' class='flex wrap'></div>
 				</div>
 				<div id="settings" class="tabcontent" style="display:block">
 					<div id='a_d_settings'>
@@ -108,8 +114,10 @@
 	<script src="/vid2/js/__config.js"></script>
 	<script src="/vid2/js/assets.js"></script>
 	<script src="/vid2/js/features.js"></script>
-	<script src="/vid2/js/vidHelpers.js"></script>
+	<script src="/vid2/js/interact.js"></script>
 	<script src="/vid2/js/onClick.js"></script>
+	<script src="/vid2/js/process.js"></script>
+	<script src="/vid2/js/vidHelpers.js"></script>
 
 	<script src="/vid1/js/_testing.js"></script>
 
@@ -119,7 +127,10 @@
 	<script src="/vid2/rsg/library.js"></script>
 	<script src="/vid2/rsg/MK.js"></script>
 	<script src="/vid2/rsg/MKManager.js"></script>
+	<script src="/vid2/rsg/present.js"></script>
+	<script src="/vid2/rsg/presentation_util.js"></script>
 	<script src="/vid2/rsg/spec.js"></script>
+	<script src="/vid2/rsg/structures.js"></script>
 
 	<!-- alles fuer board detection noetige: hopfully <= 5 modules!!!! -->
 	<!-- versuche das ALLES zu eliminieren !!!! -->

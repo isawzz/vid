@@ -16,4 +16,5 @@ function openTab(cityName) {
 	document.getElementById('c_b_' + cityName).className += ' active';
 	//evt.currentTarget.className += ' active';
 }
+function getPageHeaderDivForPlayer(oid) { return document.getElementById('c_c_' + G.playersAugmented[oid].username); }
 

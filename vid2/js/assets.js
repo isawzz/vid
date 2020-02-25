@@ -54,13 +54,13 @@ async function loadAssets(resetLocalStorage) {
 		let url = TEST_PATH + 'defaultSpec' + SPEC_VERSION + '.yaml';
 		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);
 
-		url = TEST_PATH + 'uspec' + SPEC_VERSION + '.yaml';
+		url = TEST_PATH+GAME+'/uspec' + SPEC_VERSION + '.yaml';
 		userSpecC = await vidCache.load('userSpec', async () => await route_test_userSpec(url), true, false);
 
-		url = TEST_PATH + 'code' + CODE_VERSION + '.js';
+		url = TEST_PATH +GAME+'/code' + CODE_VERSION + '.js';
 		userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);
 
-		url = TEST_PATH + 'data' + DATA_VERSION + '.yaml';
+		url = TEST_PATH +GAME+'/data' + DATA_VERSION + '_' + GAME + '.yaml';
 		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_path_yaml_dict(url)); //, true); //set true to reload from server
 		serverData = vidCache.asDict('_initial_' + GAME);
 
@@ -73,7 +73,7 @@ async function loadAssets(resetLocalStorage) {
 
 		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME, fname), true, false); //set true to reload from server!
 
-		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME])); //, true); //set true to reload from server
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME],USERNAME)); //, true); //set true to reload from server
 	}
 	defaultSpec = vidCache.asDict('defaultSpec');
 	userSpec = vidCache.asDict('userSpec');
@@ -92,6 +92,19 @@ async function loadAssets(resetLocalStorage) {
 
 }
 
+const playerColors = {
+	red: '#D01013',
+	blue: '#003399',
+	green: '#58A813',
+	orange: '#FF6600',
+	yellow: '#FAD302',
+	violet: '#55038C',
+	pink: '#ED527A',
+	beige: '#D99559',
+	sky: '#049DD9',
+	brown: '#A65F46',
+	white: '#FFFFFF',
+};
 
 
 

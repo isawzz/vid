@@ -71,7 +71,7 @@ class CacheDict {
 	}
 
 	async _server() {
-		console.log('....from server', this.primKey);
+		//console.log('....from server', this.primKey);
 		if (this.func) {
 			this.live = await this.func();
 			//console.log('after call: live',this.live)

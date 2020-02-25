@@ -34,9 +34,6 @@ function checkCleanup_III() {
 		delete S.players;
 	}
 }
-function clearPageHeader() {
-	UIS['a_d_divPlayerNames'].clear();
-}
 function clearLog() {
 	delete G.log;
 	UIS['a_d_log'].clear();

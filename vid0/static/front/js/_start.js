@@ -4,6 +4,7 @@ var iconChars = null;
 var firstDomLoad = null;
 var vidCache = null;
 var vidCache_dep = null; 
+var SPEC;
 
 //#region testing
 //#endregion

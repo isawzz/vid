@@ -18,6 +18,7 @@ function rAreas() {
 		d1.style.backgroundColor = randomColor();
 		d1.innerHTML = areaName;
 		d1.classList.add('area');
+		UIS[areaName]={elem:d1,children:[]};
 		d.appendChild(d1);
 	}
 }

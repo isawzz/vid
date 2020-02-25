@@ -5,6 +5,7 @@ function setDefaultSettings() {
 	checkedModeInput.checked = true;
 
 	S.settings = { table: {}, player: {}, game: {}, color: {} };
+	SPEC = S.settings;
 
 	//general settings defaults S_ settings are hardcoded in _config.js
 	S.settings.seed = SEED;

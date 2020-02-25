@@ -1,21 +1,28 @@
 var UIS=null;
 var IdOwner = {}; //lists of ids by owner
 var id2oids = {}; // { uid : list of server object ids (called oids) }
-var oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
-var id2uids = {}; // { uid : list of mobj ids related to same oid }
+var oid2ids = {}; // { oid : list of mk ids (called ids or uids) }
+var id2uids = {}; // { uid : list of mk ids related to same oid }
+
+var UPD={}; //all oids that have already been processed
+var PRES={};
+var DONE={};
 
 class MKManager{
 	constructor(){
-
+		this.clear();
 	}
 	clear(){
 		UIS = {}; // holds MS objects 
 		IdOwner = {}; //lists of ids by owner
 		id2oids = {}; // { uid : list of server object ids (called oids) }
-		oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
-		id2uids = {}; // { uid : list of mobj ids related to same oid }
+		oid2ids = {}; // { oid : list of mk ids (called ids or uids) }
+		id2uids = {}; // { uid : list of mk ids related to same oid }
 	
 	}
+	getDone(oid){return DONE[oid];}
+	setDone(oid){DONE[oid]=true;}
+	presentationStart(){DONE={};}
 }
 
 //#region helpers: linking UIS ...

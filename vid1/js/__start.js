@@ -65,7 +65,7 @@ async function _start(resetLocalStorage = false) {
 		userCode = await vidCache.load('userCode', async () => await route_userCode(GAME, fname), true, false); //set true to reload from server!
 		loadCode(GAME, userCode.asText);
 
-		initialData[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME])); //, true); //set true to reload from server
+		initialData[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME],USERNAME)); //, true); //set true to reload from server
 		serverData = vidCache.asDict('_initial_' + GAME);
 	}
 

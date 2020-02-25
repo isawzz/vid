@@ -252,7 +252,7 @@ class MK{
 		}
 
 
-		// mobj.text({txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: 'white', fill: 'black'});
+		// mk.text({txt: val, force: force, shrinkFont: shrinkFont, wrap: wrap, fz: fz, bg: 'white', fill: 'black'});
 		//TODO: shrinkFont,wrap,ellipsis options implementieren
 		//if replaceFirst true ... if this elem already contains a text, that text child is replaced by new text
 		let isFirstChild = this.elem.childNodes.length == 0;
@@ -854,8 +854,8 @@ class MK{
 		let pos = this.calcCenterPos(ev);
 		$('div#tooltip').css({
 			display: 'inline-block',
-			left: pos.x,//ev.pageX, //clientX-dx+mobj.w, //e.pageX, //clientX,
-			top: pos.y,//ev.pageY, //clientY-dy+mobj.h,//e.pageY, //clientY,
+			left: pos.x,//ev.pageX, //clientX-dx+mk.w, //e.pageX, //clientX,
+			top: pos.y,//ev.pageY, //clientY-dy+mk.h,//e.pageY, //clientY,
 			//width: '300px',
 			//height: '300px'
 		});
@@ -886,13 +886,15 @@ class MK{
 		if (S.settings.tooltips) this.ttHandling(ev, eventName);
 
 		if (!this.isEnabled) return;
-		let part = $(ev.currentTarget);
+		let part = ev.currentTarget; //$(ev.currentTarget);
 
 		let partName;
 		if (this.isa.deck && this.parts.topmost) partName = 'topmost';
 		else if (part.id == this.elem.id) partName = 'elem';
-		else { let props = $(part).attrs(); let name = props.name; if (nundef(name)) name = 'elem'; partName = name; }
+		// else { let props = $(part).attrs(); let name = props.name; if (nundef(name)) name = 'elem'; partName = name; }
+		else { let name = part.getAttribute('name'); if (nundef(name)) name = 'elem'; partName = name; }
 
+		console.log('partName',partName)
 
 		let handler = this.handlers[eventName][partName];
 		//console.log('eventName',eventName,'partName',partName, 'handler',handler)
@@ -1350,7 +1352,8 @@ class MK{
 		this.elem.appendChild(t);
 		this.parts[key] = t;
 		//add these props to part:
-		$(t).attrs({ name: key });//, bg: bg });
+		//$(t).attrs({ name: key });//, bg: bg });
+		t.setAttribute('name',key);
 		this.setBg(bg, { updateFg: (color != 'dimgray'), partName: key });
 		// t.name = key;
 		// t.bg = t.style.backgroundColor;
@@ -1367,7 +1370,9 @@ class MK{
 			this.elem.appendChild(t);
 			this.attach();
 			this.parts[key] = t;
-			t.name = key;
+			// t.name = key;
+			t.setAttribute('name',key);
+
 		}
 
 		return this;
@@ -1442,7 +1447,11 @@ class MK{
 		if (!this.isAttached) { 
 			this.isAttached = true; 
 			let parentMS = UIS[this.idParent];
-			let parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
+			let parentElem;
+			if (!parentMS) parentElem = mById(this.idParent);
+			else{
+				parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
+			}
 			parentElem.appendChild(this.elem); 
 		} 
 		return this; 
@@ -1451,7 +1460,13 @@ class MK{
 		if (this.isAttached) { 
 			this.isAttached = false; 
 			let parentMS = UIS[this.idParent];
-			let parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
+			let parentElem;
+			if (!parentMS) parentElem = mById(this.idParent);
+			else{
+				parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
+			}
+			// let parentMS = UIS[this.idParent];
+			// let parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
 			parentElem.removeChild(this.elem); 
 			// UIS[this.idParent].elem.removeChild(this.elem); 
 		} 
@@ -1459,7 +1474,7 @@ class MK{
 	}
 	clear(startProps = {}) {
 		//all children are destroyed: only destroys UI and removes from parent.children,
-		//does destroy MOBJ objects of children or remove them from any lists/dictionaries such as UIS,IdOwner,id2uids....
+		//does destroy MK objects of children or remove them from any lists/dictionaries such as UIS,IdOwner,id2uids....
 		let ids = this.children.map(x => x);
 		for (const id of ids) {
 			//console.log('delete',id)

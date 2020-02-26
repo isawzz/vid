@@ -250,7 +250,8 @@ button:active {
 	padding: 13px 15px;
 	font-weight: bold;
 	color: black;
-	font-size:28px;
+	font-size:18px;
+	/* background-color:yellow; */
 }
 /* #endregion pageHeader */
 

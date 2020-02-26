@@ -2,11 +2,12 @@ const DOMCATS = { rect: 'g', g: 'g', circle: 'g', text: 'g', polygon: 'g', line:
 //#region one liners / getters
 function getPlayer(id) { return serverData.players[id]; }
 function getUser(idPlayer) { return playerConfig[GAME].players[idPlayer].username; }
-function getPlid(username) { 
-	console.log(playerConfig[GAME].players,username);
-	let res = firstCondDict(playerConfig[GAME].players,x=>x.username == username);
+function getUsernameForPlayer(idPlayer){return getUser(idPlayer);} //TODO: eliminate!
+function getPlid(username) {
+	console.log(playerConfig[GAME].players, username);
+	let res = firstCondDict(playerConfig[GAME].players, x => x.username == username);
 	console.log(res)
-	return  res;
+	return res;
 }
 function getPlayerColor(id) { return playerConfig[GAME].players[id].color; }
 function getPlayerColorString(id) { return playerConfig[GAME].players[id].altName; }
@@ -98,10 +99,21 @@ function isDeckObject(o) { return isdef(o.deck_count); }
 function isField(o) { return o.neighbors; }
 function isPlain() { return !SPEC.boardDetection && !SPEC.deckDetection && !SPEC.userStructures }
 function isDetection() { return (SPEC.boardDetection || SPEC.deckDetection) && !SPEC.userStructures }
+function isMyPlayer(id) { let uname = getUsernameForPlayer(id); return startsWith(uname, ORIG_USERNAME); }
+
 //#endregion
 
 //#region pageHeader
 function pageHeaderInit() { pageHeaderSetGame(); pageHeaderSetPlayers(); }
+function pageHeaderUpdatePlayer(plid) {
+	let mk;
+	for (const pl in playerConfig[GAME].players) {
+		mk = getPageHeaderDivForPlayer(pl);
+		mk.classList.remove('gamePlayer');
+	}
+	mk = getPageHeaderDivForPlayer(plid);
+	mk.classList.add('gamePlayer');
+}
 
 function pageHeaderClearAll() { pageHeaderClearPlayers(); pageHeaderClearGame(); }
 function pageHeaderClearGame() { clearElement(mById('divGameName')); }

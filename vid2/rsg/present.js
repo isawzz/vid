@@ -39,6 +39,10 @@ function rPresentDefault() {
 
 }
 function _presentLocationChange(oid, o, mk) {
+	if (mk.o.obj_type != 'robber'){
+		console.log('loc shouldnt change!!!',oid);
+		return;
+	}
 	let oidLoc = o.loc._obj;
 	let visLoc = getVisual(oidLoc);
 	mk.setPos(visLoc.x, visLoc.y);

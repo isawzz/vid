@@ -543,9 +543,12 @@ function makeMainBoardElementVisual(oid, o) {
 		mk.setPos(locElem.x, locElem.y);
 	} else {
 		//default piece for edge is lineSegment along edge of length sz (w/ symbol only if addSymbolToEdges==true)
+
 		makeLineSegment(mk, o, locElem, sz, color);
+		console.log('........STREET',mk)
 	}
 	mk.attach();
+
 	return mk;
 }
 function makeLineSegment(mk, o, msLoc, sz, color) {

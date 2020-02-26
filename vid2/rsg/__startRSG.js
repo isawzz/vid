@@ -2,15 +2,52 @@ var COND = {};
 var FUNCS = {};
 var mkMan = null; //manages UIS
 var tupleGroups = null;
+var prevPlayerId = null;
+var gamePlayerId = null;
+var nextPlayerId = null;
+var plWaitingFor;
+var prevWaitingFor;
 
-function vidStart(){
+
+function vidStart() {
 	mkMan = new MKManager();
 	clear();
 	pageHeaderInit();
+	checkPlayerChange();
 
 	rStart();
 
 }
+
+async function presentWaitingFor() {
+	//console.log('changing player!')
+	//hier komm ich nur her wenn es mein turn war
+	//also kann switchen wenn entweder der pl me ist oder eine FrontAI
+	//console.log(G.serverData)
+	let pl = serverData.waiting_for[0];
+	if (nundef(prevWaitingFor) || prevWaitingFor != pl) {
+		//now waiting for a new player!!!
+		//update page header with that player and set G.previousWaitingFor
+		prevWaitingFor = pl;
+		//console.log('presenting waiting for', pl)
+		pageHeaderUpdatePlayer(pl);
+	}
+	if (PLAYMODE != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(gamePlayerId))) {
+		USERNAME = playerConfig[GAME].players[pl].username;
+		//console.log('just switching username to', user)
+		let data = await route_server_js('/status/' + USERNAME);
+		serverData=data;
+		vidStart();
+	} else if (PLAYMODE == 'passplay') {
+		//this is where I have to output message: NOT YOU TURN ANYMORE!!!!! please click pass!!!
+		_showPassToNextPlayer(pl);
+	} else {
+		//console.log('presentWaitingFor:',G.playersAugmented[G.player].username,'emits poll',pl);
+		socketEmitMessage({ type: 'poll', data: pl });
+	}
+	
+}
+
 function rStart() {
 
 	rMergeSpec();
@@ -41,15 +78,20 @@ function rStep() {
 	rPresentBehaviors(); //should enter completed oids in DONE dict
 
 	rPresentDefault();//???
-
-	presentActions();	
-
-	getReadyForInteraction();
-
 	timit.showTime('*presentation done!');
 
+	if (serverData.options) {
+		presentActions();
+		getReadyForInteraction();
+	} else if (serverData.waiting_for) {
+		presentWaitingFor(); //das ist async!!!
+	}
+
+
+	
+
 }
-function rClear(){
+function rClear() {
 
 }
 function presentActions() {
@@ -80,25 +122,25 @@ function rPreProcessActions() {
 	console.log(tupleGroups);
 }
 
-function getReadyForInteraction(){
+function getReadyForInteraction() {
 	startInteraction();
 }
-async function interaction(action,data) {
+async function interaction(action, data) {
 	//interaction(INTERACTION.selected,mk.o);
 	//action type can be option selected, game interrupted, or some other action...
 	if (action == INTERACTION.selected) {
 		//send option to server and come back at vidStep
 		let boat = data;
-		console.log('selected',data);
+		console.log('selected', data);
 		let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
 		let t = boat.tuple;
-		console.log('tuple is:',t);
+		console.log('tuple is:', t);
 		route += t.map(x => _pickStringForAction(x)).join('+');
-		console.log('sending action...',route);
+		console.log('sending action...', route);
 		// /action/felix/91b7584a2265b1f5/loc-settlement/96
 		// /action/felix/91b7584a2265b1f5/loc-settlement/95
 		let result = await route_server_js(route);
-		console.log('server returned',result);
+		console.log('server returned', result);
 		serverData = result;
 		vidStart();
 
@@ -208,6 +250,20 @@ function _pickStringForAction(x) {
 	if (x.type == 'obj') return x.ID;
 	if (x.type == 'player') return x.val;
 }
+function checkPlayerChange() {
+	if (!serverData.players) { alert('no players in serverData!!!'); }
+	let plid = firstCondDict(serverData.players, x => x.obj_type == 'GamePlayer');
+	if (plid != gamePlayerId) {
+		//player changed!!!
+		console.log('player changing to:', plid)
+		prevPlayerId = gamePlayerId;
+		gamePlayerId = plid;
+		console.log(playerConfig[GAME].players)
+		pageHeaderUpdatePlayer(plid);
+	}
+
+}
+
 
 
 

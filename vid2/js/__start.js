@@ -24,6 +24,7 @@ async function _start(resetLocalStorage = false) {
 function clear() {
 	//TODO: better naming!!!
 	pageHeaderClearAll();
+	gamePlayerId=null;
 	for(const name of ['a_d_divSelect','status','tableTop','a_d_log','a_d_objects']) clearElement(name);
 	mById('status').innerHTML='status';
 	G={};//do I really need that??? TODO: eliminate

@@ -120,6 +120,8 @@ function onClickStop() {
 	//setTimeout(showStep,100);
 }
 
+
+const INTERACTION={none:0,selected:1,stop:2,saveLoad:3,route:4};
 function onClickSelectTuple(ev, mk, part) {
 	//console.log(ev,mk,part)
 	if (choiceCompleted) return;
@@ -129,7 +131,7 @@ function onClickSelectTuple(ev, mk, part) {
 	//console.log(counters.msg + ': ' + G.player + ' :', iTuple, mk.o.desc, mk.o.text, mk.id);
 	freezeUI();
 	stopAllHighlighting();
-	sendAction(mk.o, [gameStep]);
+	interaction(INTERACTION.selected,mk.o);//, [gameStep]);
 }
 var startBoats = ['93', '99', '109', '121', '124', '116', '106', '111', '116', '129'];
 function getNextStartBoat() {

@@ -1,7 +1,14 @@
+function setTableSize(w,h,unit='px'){
+	console.log(w,h);
+	setCSSVariable('--hTable',h+unit);
+	mById('tableTop').style.setProperty('width',w+unit);
+}
+
 function rAreas() {
 	let d = document.getElementById('tableTop');
-	d.style.width = SPEC.tableSize[0] + 'px';
-	d.style.minHeight = SPEC.tableSize[1] + 'px';
+	setTableSize(...SPEC.tableSize);
+	// d.style.width = SPEC.tableSize[0] + 'px';
+	// d.style.minHeight = SPEC.tableSize[1] + 'px';
 	d.style.display = 'grid';
 	// d.style.justifyContent = 'center'
 	let s='';

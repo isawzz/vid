@@ -51,29 +51,29 @@ async function loadAssets(resetLocalStorage) {
 
 	if (TESTING) {
 
-		let url = TEST_PATH + 'defaultSpec' + SPEC_VERSION + '.yaml';
-		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);
+		let url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
+		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);// last 2 params: reload, useLocal
 
-		url = TEST_PATH+GAME+'/uspec' + SPEC_VERSION + '.yaml';
-		userSpecC = await vidCache.load('userSpec', async () => await route_test_userSpec(url), true, false);
+		url = TEST_PATH+GAME+'/uspec' + USPEC_VERSION + '.yaml';
+		userSpecC = await vidCache.load('userSpec', async () => await route_test_userSpec(url), true, false);// last 2 params: reload, useLocal
 
 		url = TEST_PATH +GAME+'/code' + CODE_VERSION + '.js';
-		userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);
+		userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);// last 2 params: reload, useLocal
 
 		url = TEST_PATH +GAME+'/data' + DATA_VERSION + '_' + GAME + '.yaml';
-		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_path_yaml_dict(url)); //, true); //set true to reload from server
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_path_yaml_dict(url)); // last 2 params: reload, useLocal
 		serverData = vidCache.asDict('_initial_' + GAME);
 
 	} else {
-		url = TEST_PATH + 'defaultSpec' + SPEC_VERSION + '.yaml';
-		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);
+		url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
+		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), !CACHE_DEFAULTSPEC, CACHE_DEFAULTSPEC);// last 2 params: reload, useLocal
 
-		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME, USERSPEC_FNAME));//, true); //set true to reload from server!
+		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME,USERSPEC_FNAME), !CACHE_USERSPEC, CACHE_USERSPEC);// last 2 params: reload, useLocal
 		let fname = userSpecC['CODE'];
 
-		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME, fname), true, false); //set true to reload from server!
+		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME,CODE_FNAME), !CACHE_CODE, CACHE_CODE); // last 2 params: reload, useLocal
 
-		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME],USERNAME)); //, true); //set true to reload from server
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME],USERNAME), !CACHE_INITDATA, CACHE_INITDATA); // last 2 params: reload, useLocal 
 	}
 	defaultSpec = vidCache.asDict('defaultSpec');
 	userSpec = vidCache.asDict('userSpec');

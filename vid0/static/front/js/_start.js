@@ -11,7 +11,7 @@ var SPEC;
 
 async function _start() {
 
-	timit = new TimeIt(getFunctionCallerName());
+	timit = new TimeIt(getFunctionCallerName(),true);
 	vidCache = new LazyCache();
 	vidCache_dep = new VidCache_dep();
 
@@ -32,12 +32,12 @@ async function _start() {
 	// //atestLoadIcons();
 	//#endregion
 
-	timit.showTime('vor loadAllGames_dep+loadIcons')
+	//timit.showTime('vor loadAllGames_dep+loadIcons')
 	await loadAllGames_dep();
 	_initServer([loadIconChars, ensureAllGames, () => {
 
 		//START HERE!!!! have iconChars,allGames,gcs
-		timit.showTime('nach loadAllGames_dep+loadIcons')
+		//timit.showTime('nach loadAllGames_dep+loadIcons')
 		gcsAuto();
 		S.gameConfig = gcs[GAME];
 		_startNewGame('starter');

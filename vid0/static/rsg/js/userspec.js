@@ -13,7 +13,7 @@ function specAndDOM(callbacks = []) {
 	//console.log(hasStructure,S.settings)
 	if (!hasStructure && S.settings.boardDetection) {
 		detectBoard(G.table, 'a_d_game');
-		timit.showTime('*** board end ***')
+		//timit.showTime('*** board end ***')
 
 	}
 	if (!hasStructure && S.settings.deckDetection) {
@@ -48,7 +48,7 @@ function initSTRUCTURES() {
 				let boardInfo = info.cond; //object in object_pool representing board, its id will be board main id!
 
 				let structObject = window[func](odict, areaId, boardInfo);
-				timit.showTime('*** board end ***')
+				//timit.showTime('*** board end ***')
 
 				// unused im moment
 			} else if (prop == 'binding') {

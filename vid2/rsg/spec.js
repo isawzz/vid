@@ -22,7 +22,7 @@ function rPresentSpec() {
 				if (mappingsInitialized[otype + '.' + oid]) continue;
 
 				executeMappings(otype, oid, o, pool);
-
+				mappingsInitialized[otype + '.' + oid]=true;
 			}
 		}
 	}
@@ -31,7 +31,7 @@ function executeMappings(otype, oid, o, pool) {
 	//there have been found mappings on this object type
 	//check all these mappings
 	let mm = mappings.filter(x => x[otype]);
-	console.log('matching mappings for object', oid, mm);
+	//console.log('matching mappings for object', oid, mm);
 
 	for (const mapping of mm) {
 		//find object to map (this can be o itself or some [nested] property)

@@ -763,6 +763,7 @@ function asList(x) { return isList(x) ? x : [x]; }
 function mAppend(d, child) { if (d) d.appendChild(child); }
 function mById(id) { return document.getElementById(id); }
 function mCreate(tag) { return document.createElement(tag); }
+function mDestroy(elem){if (isString(elem)) elem=mById(elem); elem.parentNode.removeChild(elem);}
 function mDiv(dParent = null) { let d = mCreate('div'); mAppend(dParent, d); return d; }
 function onMouseEnter(d, handler = null) { d3.on('mouse') }
 function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }

@@ -1,4 +1,5 @@
 :root{
+	--hTable: 400px;
 	--darkerXS:  rgba(0,0,0,0.2);
 	--darkerS:  rgba(0,0,0,0.3);
 	--darkerM:  rgba(0,0,0,0.5);
@@ -32,17 +33,40 @@ html,body{
 .flex>div{
 	box-sizing:border-box;
 	background-color: var(--darkerXS);
-	flex: 1 0 auto;
+	flex: 1 0 auto; /* grow shrink basis */
 	margin:4px;
 	padding:4px;
 	border-radius: 8px;
 }
 .flex>.side{
-	flex: 0 1 auto;
+	flex: 0 1 auto; /* grow shrink basis */
+	/* display:flex;
+	flex-direction: column; */
+}
+.actionPane {
+	/* background-color: blue; */
+	/* //overflow-x: visible; */
+	max-height: var(--hTable);
+	min-width: 200px;
+	flex: auto;
+	text-align: left;
+	display: flex;
+	flex-flow: column wrap;
+}
+main > section:last-child {
+  display: flex;
+  flex: auto;
+  flex-direction: column;  
+}
+main > section:last-child > textarea {
+  flex: auto;  
 }
 #table{
-	flex:0 0 auto;
+	flex:0 0 auto; /* grow shrink basis */
 	text-align: center;
+}
+#tableTop{
+	height: var(--hTable);
 }
 .break {
 	width: 800px;

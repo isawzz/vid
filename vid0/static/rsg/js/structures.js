@@ -111,7 +111,7 @@ function hexGrid(soDict, loc, condList) {
 	return _hexGrid(loc, idBoard, sBoard, soDict);
 }
 function detectBoard(soDict, loc) {
-	timit.showTime('*** board start ***')
+	//timit.showTime('*** board start ***')
 	let idBoard = firstCondDict(soDict, x => isBoardObject(x)); // isdef(x.map) && isdef(x.fields));
 	if (isdef(idBoard)) {
 		let sBoard = soDict[idBoard];

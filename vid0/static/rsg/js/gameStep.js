@@ -7,7 +7,7 @@ var flags = {};
 
 function gameStep(data) {
 	DELETED_THIS_ROUND = [];
-	//timit.showTime('start presentation!');
+	timit.showTime('start presentation!');
 
 	//console.log(jsCopy(G.serverData))
 	//console.log('*** gameStep ***, data',data)
@@ -37,7 +37,7 @@ function gameStepII() {
 	//console.log('tupleGroups',G.tupleGroups);
 	if (G.tupleGroups) {
 		presentActions();
-		//timit.showTime('...presentation done!');
+		timit.showTime('...presentation done!');
 		startInteraction();
 
 		//testingMS();

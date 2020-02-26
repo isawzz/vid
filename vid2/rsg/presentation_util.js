@@ -459,8 +459,9 @@ function makeDefaultAction(boat, areaName) {
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = areaName;
 	mk.idParent = idParent;
-	let parent = UIS[idParent];
-	parent.children.push(id);
+	let parent = mById(idParent);//UIS[idParent];
+	
+	//parent.children.push(id);
 
 	mk.o = boat;
 	mk.isa.boat = true;
@@ -476,6 +477,13 @@ function makeDefaultAction(boat, areaName) {
 	listKey(IdOwner, id[2], id);
 	UIS[id] = mk;
 	mk.attach();
+
+	let b=getBounds(mk.elem);
+	let bParent=getBounds(parent);
+	console.log(b.x,b.width);
+	let wNeeded = b.x+b.width-8;
+	if  (bParent.width < wNeeded) parent.style.setProperty('width',wNeeded+28+'px');
+
 	return mk;
 
 }

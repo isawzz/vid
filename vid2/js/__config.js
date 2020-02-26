@@ -3,13 +3,21 @@ var GAME = 'catan'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
-var USERSPEC_FNAME = 'catan_simple';
-
-const TESTING = true; // true | false
+//when testing, uses files in tests/GAME/uspecN and codeN
+const TESTING = false; // true | false
 const TEST_PATH = '/vid2/tests/';
-const SPEC_VERSION = 1;
+const DSPEC_VERSION = 1;
+const USPEC_VERSION = 1;
 const CODE_VERSION = 1;
 const DATA_VERSION = 1;
+
+//used when NOT testing:
+var USERSPEC_FNAME = 'catan_2';
+var CODE_FNAME = 'catan_2';
+var CACHE_DEFAULTSPEC = true;
+var CACHE_USERSPEC = true;
+var CACHE_CODE = true;
+var CACHE_INITDATA = false;
 
 var SPEC = null; //merged userSpec and defaultSpec
 

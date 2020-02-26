@@ -8,8 +8,8 @@ function getPlid(username) {
 	console.log(res)
 	return  res;
 }
-function getPlayerColor(id) { return playerConfig[GAME][id].color; }
-function getPlayerColorString(id) { return playerConfig[GAME][id].altName; }
+function getPlayerColor(id) { return playerConfig[GAME].players[id].color; }
+function getPlayerColorString(id) { return playerConfig[GAME].players[id].altName; }
 function getColorHint(o) {
 	for (const k in o) {
 		if (k.toLowerCase() == 'color') return o[k];
@@ -153,7 +153,7 @@ function stubPlayerConfig(gameInfo) {
 }
 function updatePlayerConfig() {
 	let keysPlayerColors = Object.keys(playerColors);
-	G.players = playerConfig[GAME].players;
+	//let players = playerConfig[GAME].players;
 
 	//match colors to better colors!
 	let iColor = 0;
@@ -165,7 +165,7 @@ function updatePlayerConfig() {
 		let color = isdef(playerColors[colorName]) ? playerColors[colorName] : colorName;
 
 
-		G.players[id].color = color;
+		playerConfig[GAME].players[id].color = color;
 		//playerConfig[id].color = color;
 		// playerConfig[id].altName = altName;
 		// playerConfig[id].index = i;

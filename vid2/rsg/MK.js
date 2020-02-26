@@ -22,7 +22,7 @@ class MK{
 		//soll das ein g oder ein d sein?
 		//sollte eigentlich fuer beide gehen!
 		//zuerst als g
-		console.log('_picto, type of iconChars is',getTypeOf(iconChars));
+		//console.log('_picto, type of iconChars is',getTypeOf(iconChars));
 		let ch = getTypeOf(iconChars)=='Object'?iconChars[key] : iconChars.get(key);
 		if (!ch) ch=iconChars.get('crow');
 		return this._pictoFromChar(ch,x,y,w,h,fg,bg);
@@ -879,11 +879,11 @@ class MK{
 	//#region events
 	_handler(ev) {
 		//if (this.isa.deck) console.log('event!',ev,this.handlers);
-		//console.log('event!',ev,this.id,this.handlers)
+		console.log('event!',ev,this.id,this.handlers)
 		ev.stopPropagation();
-		let eventName = ev.handleObj.origType;
+		let eventName = ev.type;// ev.handleObj.origType;
 
-		if (S.settings.tooltips) this.ttHandling(ev, eventName);
+		//if (SPEC.tooltips) this.ttHandling(ev, eventName);
 
 		if (!this.isEnabled) return;
 		let part = ev.currentTarget; //$(ev.currentTarget);
@@ -913,7 +913,11 @@ class MK{
 			this.handlers[evName][partName] = handler; 
 		}
 
-		$(part).off(evName).on(evName, this._handler.bind(this)); //only this handler is on for that event!!!
+		//console.log(part)
+		if (evName == 'click') part.onclick=this._handler.bind(this);
+		else if (evName == 'mouseenter') part.onMouseEnter=this._handler.bind(this);
+		else if (evName == 'mouseleave') part.onMouseLeave=this._handler.bind(this);
+		// d3.select(part).on(evName, this._handler.bind(this)); //only this handler is on for that event!!!
 
 		if (autoEnable) this.enable();
 	}
@@ -1489,11 +1493,15 @@ class MK{
 	}
 	destroy() {
 		this.clear(); //first properly delete all children!
-		$(this.elem).remove(); // removes element and all its handlers from UI
+
+		mDestroy(this.elem);
+		//$(this.elem).remove(); // removes element and all its handlers from UI
+		
+		
 		this.elem = null;
 		this.isAttached = false;
 		let parent = UIS[this.idParent];
-		removeInPlace(parent.children, this.id);
+		if (parent) removeInPlace(parent.children, this.id);
 	}
 	len() { return this.elem.children.length; }
 	replaceChild(oldChild, newChild) {

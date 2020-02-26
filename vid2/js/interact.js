@@ -15,7 +15,7 @@ function startInteraction() {
 	_preselectFirstVisualsForBoats();
 	choiceCompleted = false;
 	let nBoats = getBoatIds().length;
-	let autoplay = S_autoplayFunction(G) || nBoats < 2 || robbedDescInBoats();
+	let autoplay = autoplayFunction(G) || nBoats < 2 || robbedDescInBoats();
 	if (autoplay) {
 		//console.log(nBoats<2?'autoplay:...only 1 option!!!':'different function....');
 		setTimeout(onClickStep, S_AIThinkingTime);
@@ -111,7 +111,7 @@ function unfreezeUI() {
 	frozen = false;
 	hide('tempFreezer');
 }
-function hideTooltip() { $('div#tooltip').css({ display: 'none' }); }
+function hideTooltip() { }//$('div#tooltip').css({ display: 'none' }); }
 
 //#region local helpers
 function _addFilterHighlight(mk) { mk.highC('green'); }
@@ -258,6 +258,12 @@ function robbedDescInBoats() {
 }
 
 
+function setAutoplayFunctionForMode(mode, isStartup = false) {
+	// in solo playmode, solo player is always index 0 player
+	if (nundef(mode)) mode = SPEC.playmode;
+	// if (!isStartup) S_autoplayFunction = mode == 'solo' ? (_g, _) => _g.playerIndex != 0 : () => false;
+	if (!isStartup) autoplayFunction = (_g, _) => false; //isFrontAIPlayer(_g.player);
+}
 
 
 

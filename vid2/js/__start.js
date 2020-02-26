@@ -6,25 +6,25 @@ window.onload = () => _start();
 
 async function _start(resetLocalStorage = false) {
 
-	clear();
-
-	timit = new TimeIt('*timer',false);//,false); // [true] | false (false fuer tacit)
+	timit = new TimeIt('*timer',true); // [true] | false (false fuer tacit)
 
 	//resetLocalStorage = true; //********** true for LOCALSTORAGE CLEAR!!!!! */
 	await loadAssets(resetLocalStorage);
 
+	timit.showTime('*load asset and server done!');
 
 	updatePlayerConfig();
 
-	rStart();
+	vidStart();
 
 //	makeCard52_test(1, null, { key: 'green2', area: 'decks' });
 }
 
 
 function clear() {
-	for(const name of ['a_d_actions','status','tableTop','a_d_log','a_d_objects']) clearElement(name);
+	//TODO: better naming!!!
+	pageHeaderClearAll();
+	for(const name of ['a_d_divSelect','status','tableTop','a_d_log','a_d_objects']) clearElement(name);
 	mById('status').innerHTML='status';
-	if (mkMan) mkMan.clear();
 	G={};//do I really need that??? TODO: eliminate
 }

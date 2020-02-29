@@ -53,6 +53,7 @@ function rMergeSpec() {
 
 	//SPEC is merged userSpec!
 	//console.log(SPEC);
+	delete SPEC.asText;
 	document.getElementById('mergedSpec').innerHTML = '<pre id="spec-result"></pre>';
 	document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
 

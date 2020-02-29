@@ -1,23 +1,4 @@
-var COND = {};
-var FUNCS = {};
-var mkMan = null; //manages UIS
-var tupleGroups = null;
-var prevPlayerId = null;
-var gamePlayerId = null;
-var nextPlayerId = null;
-var plWaitingFor;
-var prevWaitingFor;
 
-
-function vidStart() {
-	mkMan = new MKManager();
-	clear();
-	pageHeaderInit();
-	checkPlayerChange();
-
-	rStart();
-
-}
 
 async function presentWaitingFor() {
 	//console.log('changing player!')
@@ -35,9 +16,9 @@ async function presentWaitingFor() {
 	if (PLAYMODE != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(gamePlayerId))) {
 		USERNAME = playerConfig[GAME].players[pl].username;
 		//console.log('just switching username to', user)
-		let data = await route_server_js('/status/' + USERNAME);
+		let data = await route_status(USERNAME);
 		serverData=data;
-		vidStart();
+		vrStep();
 	} else if (PLAYMODE == 'passplay') {
 		//this is where I have to output message: NOT YOU TURN ANYMORE!!!!! please click pass!!!
 		_showPassToNextPlayer(pl);
@@ -60,8 +41,6 @@ function rStart() {
 
 }
 function vidStep() {
-	//pre process data: check for player change needed
-	processData();  //does NOTHING
 
 	rStep();
 }
@@ -88,7 +67,8 @@ function rStep() {
 	}
 
 
-	
+	calcScreenSizeNeeded();
+
 
 }
 function rClear() {
@@ -103,23 +83,76 @@ function presentActions() {
 	let iGroup = 0;
 	let iTuple = 0;
 
+	//new code
+	
+	//end of new code
+	let boats=[];
 	for (const tg of tupleGroups) {
 		for (const t of tg.tuples) {
 			let boatInfo = { obj_type: 'boat', oids: [], desc: tg.desc, tuple: t, iGroup: iGroup, iTuple: iTuple, text: t.map(x => x.val), weg: false };
-			let mobj = makeDefaultAction(boatInfo, areaName);
+			let mk = makeDefaultAction(boatInfo, areaName, `<a>${boatInfo.text}</a>`);
+			boats[iTuple]=mk;
 			iTuple += 1;
 		}
 		iGroup += 1;
 	}
+
+	console.log('number of boats',iTuple,IdOwner['a'].length,areaName,SPEC.tableSize);
+	fillActions(areaName,boats,SPEC.tableSize[1]);
+
+}
+function fillActions(areaName, boats, availHeight) {
+	let nActions = boats.length;
+	console.log(areaName, nActions, availHeight)
+	//let html='hallo133'; `<a>hallo</a>`
+	let html=boats[0].elem.innerHTML;
+	console.log('html for measuring',html)
+	let nRowsFit = calcNumRowsFitting(areaName,availHeight,html);//b.height);
+	nRowsFit = Math.floor(nRowsFit);
+	let colsNeeded = Math.ceil(nActions / nRowsFit);
+	console.log('need', colsNeeded, 'to fit all actions')
+
+	let d = document.getElementById(areaName);
+	d.style.gridTemplateColumns = 'auto '.repeat(colsNeeded);
+
+	d.innerHTML = ''; 
+	d.style.width = 'auto';
+	for (let i = 0; i < nActions; i++) {
+		boats[i].attach();
+		// let d1 = document.createElement('div');
+		// // d1.innerHTML = 'hallo' + i;
+		// d1.innerHTML =html+i; //`<a>hallo ${i}</a>`;
+		// d.appendChild(d1);
+	}
 }
 
+function fillActions2(dname, nActions, availHeight) {
+	console.log(dname, nActions, availHeight)
+	let html='hallo133'; `<a>hallo</a>`
+	let nRowsFit = calcNumRowsFitting(dname,availHeight,html);//b.height);
+	nRowsFit = Math.floor(nRowsFit);
+	let colsNeeded = Math.ceil(nActions / nRowsFit);
+	console.log('need', colsNeeded, 'to fit all actions')
+
+	let d = document.getElementById(dname);
+	d.style.gridTemplateColumns = 'auto '.repeat(colsNeeded);
+
+	d.innerHTML = ''; 
+	d.style.width = 'auto';
+	for (let i = 0; i < nActions; i++) {
+		let d1 = document.createElement('div');
+		// d1.innerHTML = 'hallo' + i;
+		d1.innerHTML =html+i; //`<a>hallo ${i}</a>`;
+		d.appendChild(d1);
+	}
+}
 
 
 function rPreProcessPlayers() { for (const plid in serverData.players) { let pl = serverData.players[plid]; if (nundef(pl.obj_type)) pl.obj_type == 'opponent'; } }
 function rPreProcessActions() {
 	if (!serverData.options) tupleGroups = null;
 	tupleGroups = getTupleGroups();
-	console.log(tupleGroups);
+	//console.log(tupleGroups);
 }
 
 function getReadyForInteraction() {
@@ -129,20 +162,21 @@ async function interaction(action, data) {
 	//interaction(INTERACTION.selected,mk.o);
 	//action type can be option selected, game interrupted, or some other action...
 	if (action == INTERACTION.selected) {
+		timit.showTime('*send action');
 		//send option to server and come back at vidStep
 		let boat = data;
-		console.log('selected', data);
+		//console.log('selected', data);
 		let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
 		let t = boat.tuple;
-		console.log('tuple is:', t);
+		//console.log('tuple is:', t);
 		route += t.map(x => _pickStringForAction(x)).join('+');
-		console.log('sending action...', route);
+		//console.log('sending action...', route);
 		// /action/felix/91b7584a2265b1f5/loc-settlement/96
 		// /action/felix/91b7584a2265b1f5/loc-settlement/95
 		let result = await route_server_js(route);
-		console.log('server returned', result);
+		//console.log('server returned', result);
 		serverData = result;
-		vidStart();
+		vrStep();
 
 	} else if (action == INTERACTION.stop) {
 		// stop game etc.... send restart or whatever and come out at _start
@@ -255,10 +289,10 @@ function checkPlayerChange() {
 	let plid = firstCondDict(serverData.players, x => x.obj_type == 'GamePlayer');
 	if (plid != gamePlayerId) {
 		//player changed!!!
-		console.log('player changing to:', plid)
+		//console.log('player changing to:', plid)
 		prevPlayerId = gamePlayerId;
 		gamePlayerId = plid;
-		console.log(playerConfig[GAME].players)
+		//console.log(playerConfig[GAME].players)
 		pageHeaderUpdatePlayer(plid);
 	}
 

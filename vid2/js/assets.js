@@ -78,15 +78,16 @@ async function loadAssets(resetLocalStorage) {
 	defaultSpec = vidCache.asDict('defaultSpec');
 	userSpec = vidCache.asDict('userSpec');
 	userCode = vidCache.asDict('userCode');
-	loadCode(GAME, userCode.asText);
+	loadCode(userCode.asText);
 	serverData = vidCache.asDict('_initial_' + GAME);
 
 	//timit.showTime('*** DONE ***');
 	document.getElementById('userSpec').innerHTML = '<pre>' + userSpec.asText + '</pre>'; //PERFECT!!!!!!!!!!
 	document.getElementById('code').innerHTML = '<pre>"' + userCode.asText + '"</pre>'; //PERFECT!!!!!!!!!!
 
-	document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
-	document.getElementById("json-result").innerHTML = JSON.stringify(serverData.table, undefined, 2);
+	//delete serverData.table.asText;
+	// document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
+	// document.getElementById("json-result").innerHTML = JSON.stringify(serverData.table, undefined, 2);
 	//#endregion
 
 

@@ -879,10 +879,10 @@ class MK{
 	//#region events
 	_handler(ev) {
 		//if (this.isa.deck) console.log('event!',ev,this.handlers);
-		console.log('event!',ev,this.id,this.handlers)
+		//console.log('event!',ev,this.id,this.handlers)
 		ev.stopPropagation();
 		let eventName = ev.type;// ev.handleObj.origType;
-
+		//console.log(eventName)
 		//if (SPEC.tooltips) this.ttHandling(ev, eventName);
 
 		if (!this.isEnabled) return;
@@ -894,7 +894,7 @@ class MK{
 		// else { let props = $(part).attrs(); let name = props.name; if (nundef(name)) name = 'elem'; partName = name; }
 		else { let name = part.getAttribute('name'); if (nundef(name)) name = 'elem'; partName = name; }
 
-		console.log('partName',partName)
+		//console.log('partName',partName)
 
 		let handler = this.handlers[eventName][partName];
 		//console.log('eventName',eventName,'partName',partName, 'handler',handler)
@@ -915,8 +915,8 @@ class MK{
 
 		//console.log(part)
 		if (evName == 'click') part.onclick=this._handler.bind(this);
-		else if (evName == 'mouseenter') part.onMouseEnter=this._handler.bind(this);
-		else if (evName == 'mouseleave') part.onMouseLeave=this._handler.bind(this);
+		else if (evName == 'mouseenter') part.onmouseenter=this._handler.bind(this);
+		else if (evName == 'mouseleave') part.onmouseleave=this._handler.bind(this);
 		// d3.select(part).on(evName, this._handler.bind(this)); //only this handler is on for that event!!!
 
 		if (autoEnable) this.enable();
@@ -982,7 +982,7 @@ class MK{
 				this.setTextFill(this.picto, '#ccff00', 1);//.elem.addClass('high',this.ground); 
 				//console.log('high', this.id, this.ground);
 			} else addClass(this.overlay, 'high');
-		} else part.style.backgroundColor = '#ccff00';
+		} else {part.style.backgroundColor = '#ccff00';part.style.color = '#000000';}
 
 		// if (this.isLine) {
 		// 	console.log('high', this.id, this.overlay);
@@ -1004,7 +1004,10 @@ class MK{
 			}
 
 			//removeClass('high', this.overlay);
-		} else { let bg = part.bg; if (nundef(bg)) bg = null; part.style.backgroundColor = bg; }
+		} else { 
+			let bg = part.bg; if (nundef(bg)) bg = null; part.style.backgroundColor = bg; 
+			let fg = part.fg; if (nundef(fg)) fg = null; part.style.color = fg; 
+		}
 	}
 	highFrame(pname = 'elem', elIfMiss = true) {
 		let part = this._getPart(pname, elIfMiss);

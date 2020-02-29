@@ -445,21 +445,22 @@ function _makeDefault(id, oid, o, areaName, title) {
 	return mk;
 
 }
-function makeDefaultAction(boat, areaName) {
+function makeDefaultAction(boat, areaName, html) {
 	let mk = new MK();
 	let id = 'd_a_' + boat.iTuple;
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return null; }
 	mk.id = id;
 	let domel = document.createElement('div');
-	domel.textContent = boat.text;
-	domel.style.cursor = 'pointer';
+	// domel.textContent = boat.text;
+	domel.innerHTML = html;
+	//domel.style.cursor = 'pointer';
 	mk.elem = domel;
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
-	let idParent = areaName;
-	mk.idParent = idParent;
-	let parent = mById(idParent);//UIS[idParent];
+	// let idParent = areaName;
+	mk.idParent = areaName;
+	//let parent = mById(areaName);//UIS[idParent];
 	
 	//parent.children.push(id);
 
@@ -476,13 +477,13 @@ function makeDefaultAction(boat, areaName) {
 
 	listKey(IdOwner, id[2], id);
 	UIS[id] = mk;
-	mk.attach();
 
-	let b=getBounds(mk.elem);
-	let bParent=getBounds(parent);
-	console.log(b.x,b.width);
-	let wNeeded = b.x+b.width-8;
-	if  (bParent.width < wNeeded) parent.style.setProperty('width',wNeeded+28+'px');
+	// mk.attach();
+	// let b=getBounds(mk.elem);
+	// let bParent=getBounds(parent);
+	// //console.log(b.x,b.width);
+	// let wNeeded = b.x+b.width-8;
+	// if  (bParent.width < wNeeded) parent.style.setProperty('width',wNeeded+28+'px');
 
 	return mk;
 
@@ -545,7 +546,7 @@ function makeMainBoardElementVisual(oid, o) {
 		//default piece for edge is lineSegment along edge of length sz (w/ symbol only if addSymbolToEdges==true)
 
 		makeLineSegment(mk, o, locElem, sz, color);
-		console.log('........STREET',mk)
+		//console.log('........STREET',mk)
 	}
 	mk.attach();
 

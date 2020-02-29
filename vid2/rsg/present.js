@@ -39,13 +39,43 @@ function rPresentDefault() {
 
 }
 function _presentLocationChange(oid, o, mk) {
-	if (mk.o.obj_type != 'robber'){
-		console.log('loc shouldnt change!!!',oid);
+	// if (mk.o.obj_type != 'robber'){
+	// 	let otype = mk.o.obj_type;
+	// 	console.log('loc shouldnt change!!!',oid,otype);
+	// 	if (otype == 'road' || otype == 'Edge') {
+	// 		console.log(o);
+	// 	}else return;
+	// 	//return;
+	// }
+	if (mk.o.loc._obj ==o.loc._obj){
+		//console.log('nothing to change!',oid); 
 		return;
 	}
 	let oidLoc = o.loc._obj;
 	let visLoc = getVisual(oidLoc);
-	mk.setPos(visLoc.x, visLoc.y);
+
+	if (visLoc.isLine && mk.isLine){
+		//set endPoints of new line same as visLoc
+		//set x,y,center.x,center.y also same as visLoc
+		//same as distance,h,length,thickness,w
+		mk.ground.x1=mk.x1=visLoc.x1;
+		mk.ground.y1=mk.y1=visLoc.y1;
+		mk.ground.x2=mk.x2=visLoc.x2;
+		mk.ground.y2=mk.y2=visLoc.y2;
+		mk.x=visLoc.x;
+		mk.y=visLoc.y;
+		mk.center={x:visLoc.center.x,y:visLoc.center.y};
+		mk.distance=visLoc.distance;
+		mk.h=visLoc.h;
+		mk.length=visLoc.length;
+		mk.thickness=visLoc.thickness;
+		mk.w=visLoc.w;
+		mk.ground.x1=mk.x1;
+	}else{
+		mk.setPos(visLoc.x, visLoc.y);
+	}
+
+	
 }
 function presentMain(oid, o, mk, isTableObject = true) {
 	let validKeys = computePresentedKeys(o, isTableObject);

@@ -61,18 +61,15 @@ function onClickLobby() {
 	lobbyView();
 	if (!isReallyMultiplayer) openGameConfig();
 }
-//#region game control flow: Restart, RunTo..., STOP, Step
-async function onClickRestart() {
+function onClickRestart() {
 	unfreezeUI();
-	USERNAME = USERNAME_ORIG;
-	serverData = await route_restart(USERNAME);
-	vrStep();
+	_startRestartSame();
 }
 function onClickRunToNextPlayer() {
-	let pl = gamePlayerId;
-	autoplayFunction = (win) => win.gamePlayerId == pl;
+	let pl = G.player;
+	autoplayFunction = (_G) => _G.player == pl;
 
-	onClickStep();
+	onClickStep(G);
 }
 function onClickRunToNextTurn() {
 	let pl = gamePlayerId;
@@ -87,17 +84,23 @@ function onClickRunToNextTurn() {
 function onClickRunToNextPhase() {
 	let phase = serverData.phase;
 	autoplayFunction = (win) => win.serverData.phase == phase;
-	onClickStep();
+	onClickStep(); //kick off
 }
 function onClickRunToEnd() {
 	autoplayFunction = () => true;
 	onClickStep();
 }
 function onClickRunToAction(keyword) {
-	autoplayFunction = (_) => {
+	//let b = document.getElementById(bId);
+	//console.log(getFunctionCallerName(), bId, keyword)
+	autoplayFunction = (_G) => {
+		//run to action available that contains keyword
+		//should return true unless one of the boats.tuple has an element with val.includes(keyword)
+		//console.log(getBoats());
 		for (const mk of getBoats()) {
 			for (const ti of mk.o.tuple) {
 				if (ti.val.toString().includes(keyword)) {
+					//console.log('STOP!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 					setAutoplayFunctionForMode();
 					return false;
 				}
@@ -105,26 +108,17 @@ function onClickRunToAction(keyword) {
 		}
 		return true;
 	}
-	onClickStep();
+	onClickStep(G);
 }
 function onClickStop() {
+	//console.log('*** clicked STOP!!! ***');
 	setAutoplayFunctionForMode(PLAYMODE);
 	unfreezeUI();
+	//startInteraction();
+	// setTimeout(()=>setAutoplayFunctionForMode(S_playMode),1000);
+	//STOP = true;
+	//setTimeout(showStep,100);
 }
-function onClickStep() {
-	if (!this.choiceCompleted) {
-		//let mk = getRandomBoat();
-		//let mk = getBoatWith(['demand', 'offer'], false);
-		let mk = getNextStartBoat();
-		if (nundef(mk)) mk = getBoatWith(['demand', 'offer'], false);
-		if (nundef(mk)) mk = getBoatWith(['buy'], true);
-		if (nundef(mk)) mk = getBoatWith(['pass'], true);
-		if (nundef(mk)) mk = getBoatWith(['demand', 'offer'], false);
-		if (nundef(mk)) mk = getRandomBoat();
-		onClickSelectTuple(null, mk);
-	}
-}
-//#endregion game control flow: Restart, RunTo..., STOP, Step
 
 
 const INTERACTION={none:0,selected:1,stop:2,saveLoad:3,route:4};
@@ -144,7 +138,7 @@ function getNextStartBoat() {
 	//console.log('phase', G.phase)
 	let mk = null;
 	let sb = startBoats[0];
-	if (serverData.phase == 'setup') {
+	if (G.phase == 'setup') {
 		let boats = getBoats();
 		for (const b of boats) {
 			//console.log(b, b.o, b.o.text);
@@ -164,6 +158,19 @@ function getNextStartBoat() {
 	}
 	//console.log(startBoats)
 	return mk;
+}
+function onClickStep() {
+	if (!this.choiceCompleted) {
+		//let mk = getRandomBoat();
+		//let mk = getBoatWith(['demand', 'offer'], false);
+		let mk = getNextStartBoat();
+		if (nundef(mk)) mk = getBoatWith(['demand', 'offer'], false);
+		if (nundef(mk)) mk = getBoatWith(['buy'], true);
+		if (nundef(mk)) mk = getBoatWith(['pass'], true);
+		if (nundef(mk)) mk = getBoatWith(['demand', 'offer'], false);
+		if (nundef(mk)) mk = getRandomBoat();
+		onClickSelectTuple(null, mk);
+	}
 }
 function onClickToggleButton(button, handlerList) {
 	let current = button.textContent;

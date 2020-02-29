@@ -1,14 +1,7 @@
 /* #region root, body, html */
 :root{
 	--hTable: 400px;
-	--wTable: 500px;
-	--gridGap: 4px;
 	/* -rgba(0,0,0,0.2); -rgba(255,255,255,0.2); */
-	--tableRowPadding: 6px;
-	--upRowPadding: -10px;
-
-	--bgWinner: null;
-
 }
 html,body{
 	font: 400 13.3333px Arial;
@@ -21,106 +14,55 @@ html,body{
 }
 /* #endregion root, body, html */
 
-/* #region #root #rsg grid */
-#root{
-	display: grid;
-	grid-template-rows: min-content auto auto auto auto;
-	grid-template-areas: 'i' 'g' 'o' 's' 'd' ;
-	justify-items: stretch;
-	justify-content: stretch;	
-	padding:2px;
-	text-align:center;
-	grid-gap:var(--gridGap);
-}
+/* #region main divs, flex */
+
 #rsg{
-	display: grid;
-	grid-template-columns: min-content var(--wTable) auto;
-	grid-template-areas: 'ha hb hc' 'a b c';
-	/* justify-items: stretch;
-	justify-content: stretch;	 */
-	grid-column-gap:var(--gridGap);
+	min-height: 320px;
 }
-#rsg>div, #pageHeader, #test3>div, #test>div, #test2>div, #test3>div{
-	border-radius: 12px;
-	background-color: silver;
-	/* margin: 4px; */
+.flex{
+	box-sizing:border-box;
+	display:flex;
+	padding:0px;
+	margin:0;
+	/* width:calc(100vw-8px); */
 }
-#test, #test2, #test3{
-	grid-gap:var(--gridGap);
-	display:grid;
-	grid-template-columns: min-content auto;
+.flex:after{
+	background-color:yellow;
+	min-width:100vw;
 }
-#actions{
-	grid-area: a;
-	min-width: 200px;
+.flex.wrap{
+	flex-wrap: wrap;
 }
-#a_d_divSelect{
-	display: grid;
-	max-height: var(--hTable);
-	grid-gap: 0px;
-	text-align: left;
+.flex>div{
+	/* box-sizing:border-box; */
+	background-color: rgba(255,255,255,0.2);
+	flex: 1 0 auto; 
+	/* box-sizing:border-box; */
+	margin:4px;
+	padding:4px;
+	border-radius: 8px;
 }
-#a_d_divSelect>*{
-	margin: 0px 6px 2px 2px;
-	padding: 0;
-	cursor: pointer;
-	white-space: nowrap;
-	/* color:white; */
+.flex>.side{
+	flex: 0 1 auto; 
 }
 #table{
-	grid-area: b;
-	align-self: stretch;
-	/* box-sizing:border-box; */
-	/* flex:0 1 auto; 
-	text-align: center; */
+	flex:0 1 auto; /* grow shrink basis */
+	text-align: center;
 }
 #tableTop{
-	/* border-radius: 12px; */
-	box-sizing:border-box;
-	padding:10px;
 	height: var(--hTable);
-	width: var(--wTable);
-	/* flex:0 1 auto; */
+	flex:0 1 auto;
 	position:relative;
 }
-#a_d_log{
-	grid-area: c;
-	align-self: stretch;
-}
-/* .actionPane {
+.actionPane {
+	/* background-color: blue; */
 	max-height: var(--hTable);
+	/* flex: 1 1 auto; */
 	display: flex;
 	flex-flow: column wrap;
 	text-align: left;
-} */
-#test2,#test3{
-	text-align:left;
 }
-#headerActions{
-	grid-area: ha;
-}
-#divStatus{
-	grid-area: hb;
-}
-#headerLog{
-	grid-area: hc;
-}
-
-/* #endregion #rsg grid */
-
-
-
-/* #region TESTING */
-
-/* #test{
-	background-color:green;
-}
-#rsg{
-	background-color:blue;
-} */
-
-/* #endregion TESTING */
-
+/* #endregion main divs, flex */
 
 /* #region centering */
 .centered {
@@ -224,8 +166,8 @@ fieldset{
   text-decoration: none;
   outline: none;
 	cursor: pointer;
-	/* background-color: var(--fgButton);
-	color: var(--bgButton); */
+	background-color: var(--fgButton);
+	color: var(--bgButton);
   border: none;
   border-radius: 12px;
 	width: 140px;
@@ -248,8 +190,8 @@ fieldset{
   text-decoration: none;
   outline: none;
 	cursor: pointer;
-	/* background-color: white;
-	color: var(--bgButton); */
+	background-color: white;
+	color: var(--bgButton);
   border: none;
   border-radius: 12px;
 	width: 120px;
@@ -308,7 +250,7 @@ button:active {
 	outline: none;
 	padding: 14px 16px;
 	transition: 0.3s;
-	/* font-size: 16px; */
+	font-size: 16px;
 	text-align: center;
 }
 .gamePlayer{
@@ -425,17 +367,17 @@ button:active {
 	overflow: hidden;
 	display: block;
 } */
-/* #a_d_divSelect>*.high {
+.actionPane.high {
 	cursor: pointer;
 	background-color:#ccff00;
 	color:black;
-	font-size: 120px;
+	font-size: 20px;
 }
-#a_d_divSelect.selected {
+.actionPane.selected {
 	background-color:#ccff00;
 	color:black;
 	font-size: 20px;
-} */
+}
 
 /* #endregion actions */
 
@@ -473,34 +415,6 @@ button:active {
 }
 /* #endregion tabs */
 
-/* #region objects */
-
-.flex{
-	box-sizing:border-box;
-	display:flex;
-	padding:0px;
-	margin:0;
-	/* width:calc(100vw-8px); */
-}
-.flex.wrap{
-	flex-wrap: wrap;
-}
-.flex>div{
-	/* box-sizing:border-box; */
-	background-color: rgba(255,255,255,0.2);
-	flex: 1 0 auto; 
-	/* box-sizing:border-box; */
-	margin:4px;
-	padding:4px;
-	border-radius: 8px;
-}
-.flex.wrap>div{
-	background-color: dimgray;
-}
-/* #endregion objects */
-
-
-/* #region UNUSED: ELIMINATE!!! */
 .box-wrap {
   display: block;
   position: relative;
@@ -555,88 +469,5 @@ button:active {
   transform: scale(0.5);
   margin: 0 auto calc(-150px * (1 - 0.5));
 }
-/* #endregion UNUSED */
-
-/* #region MK */
-.high{
-	fill: #ccff00;
-	stroke: #ccff00;
-	/* background-color: #ccff00;
-	background-color:red;
-	color: black;
-	font-size:20px; */
-}
-.highFrame{
-	/* fill: #ccff0080; */
-	stroke: #ccff00;
-	stroke-width: 2px;
-	/* border: 2px solid #ccff00;
-	background-color:red;
-	color: black;
-	font-size:20px; */
-}
-.fieldHighFrame{
-	fill: #ffffff4d;
-	stroke: #ffffff4d;
-	color: black;
-}
-.lineHighFrame{
-	fill: #ccff0099;
-	stroke: #ccff0099;
-	color: black;
-}
 
 
-.tttable{
-	padding:2px;
-	border-radius:4px;
-	text-align: left;
-	border-collapse: separate;
-	border-spacing: 4px 2px;
-}
-.hallo{
-	display: inline-block;
-	margin: 2px;
-	padding: 0px;
-	/* font-size: 12pt; */
-	text-align: center;
-	text-decoration: none;
-	outline: none;
-	border: none;
-	border-radius: 12px;
-	padding:2px 6px;
-	/* padding: 6px 6px 6px 8px;
-	margin-top: 6px; */
-	/* background-color: var(--bgButton); */
-	/* color: var(--fgButton); */
-	background-color: black;
-	color: white;
-}
-.tttitle{
-	color:silver;
-}
-.tttable th{
-	padding-top: var(--tableRowPadding);
-	vertical-align:top;
-	color:silver;
-}
-.tttable td {
-	padding-top: var(--tableRowPadding);
-	vertical-align:top;
-	color:gold;
-}
-.tttable td .obj{
-	padding:4px 12px; 
-	margin-top:var(--upRowPadding);
-}
-.up10{
-	margin-top:var(--upRowPadding);
-}
-.up5{
-	margin-top:calc(var(--upRowPadding)/2);
-}
-.up2{
-	margin-top:calc(var(--upRowPadding)/4);
-}
-
-/* #endregion */

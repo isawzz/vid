@@ -15,10 +15,10 @@ function startInteraction() {
 	_preselectFirstVisualsForBoats();
 	choiceCompleted = false;
 	let nBoats = getBoatIds().length;
-	let autoplay = autoplayFunction(G) || nBoats < 2 || robbedDescInBoats();
+	let autoplay = autoplayFunction(this) || nBoats < 2 || robbedDescInBoats();
 	if (autoplay) {
 		//console.log(nBoats<2?'autoplay:...only 1 option!!!':'different function....');
-		setTimeout(onClickStep, S_AIThinkingTime);
+		setTimeout(onClickStep, AIThinkingTime);
 		return;
 	} else if (!isEmpty(scenarioQ)){
 		let func = scenarioQ.shift();

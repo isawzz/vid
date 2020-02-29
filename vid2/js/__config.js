@@ -1,5 +1,5 @@
 var USERNAME = 'felix';
-const ORIG_USERNAME = USERNAME;
+const USERNAME_ORIG = USERNAME;
 var GAME = 'catan'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
@@ -23,6 +23,8 @@ var CACHE_INITDATA = false;
 var SPEC = null; //merged userSpec and defaultSpec
 
 var autoplayFunction = ()=>false;
+var AIThinkingTime = 30;
+
 var CLICK_TO_SELECT = true; //S.settings.clickToSelect = true;
 var TOOLTIPS = false; //S.settings.tooltips = document.getElementById('c_b_TTip').textContent.includes('ON');
 //var OPEN_TAB = 'Seattle'; //S.settings.openTab = S_openTab;

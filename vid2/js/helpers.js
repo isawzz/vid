@@ -763,7 +763,7 @@ function asList(x) { return isList(x) ? x : [x]; }
 function mAppend(d, child) { if (d) d.appendChild(child); }
 function mById(id) { return document.getElementById(id); }
 function mCreate(tag) { return document.createElement(tag); }
-function mDestroy(elem){if (isString(elem)) elem=mById(elem); elem.parentNode.removeChild(elem);}
+function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null) { let d = mCreate('div'); mAppend(dParent, d); return d; }
 function onMouseEnter(d, handler = null) { d3.on('mouse') }
 function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
@@ -868,8 +868,8 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 
 	if (!dParent.style.width || !dParent.style.height) {
 		let pBounds = getBounds(dParent);
-		w=pBounds.width + 'px';
-		h=pBounds.height + 'px';
+		w = pBounds.width + 'px';
+		h = pBounds.height + 'px';
 		//console.log('--- addSvgg: CORRECTING MISSING WIDTH AND HEIGHT ON PARENT ---', dParent.id,w,h);
 
 		// svg1.setAttribute('width', pBounds.width + 'px');
@@ -899,7 +899,7 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 
 //#endregion
 
-//#region DOM: coordinate and bounds helpers
+//#region DOM: coordinate and bounds helpers, text measuring!
 function myFunction() {
 	console.log('onresize!!!');
 	//for(const id of [])
@@ -911,6 +911,11 @@ function actualTop(elem, relToParent = false, elRelTo) { return Math.round(getBo
 function actualCenter(elem, relToParent = false, elRelTo) {
 	let b = getBounds(elem, relToParent, elRelTo);
 	return { x: Math.round(b.left + b.width / 2), y: Math.round(b.top + b.height / 2) };
+}
+function calcNumRowsFitting(dParent,maxHeight,html) {
+	let sz=getTextSize(html,dParent);
+	console.log('line height as per calcNumRowsFitting',sz.h);
+	return maxHeight/sz.h;
 }
 function getRelBounds(elem, elRel) {
 	let b1 = elem.getBoundingClientRect();
@@ -938,6 +943,21 @@ function getRelCoords(ev, elem) {
 	let y = ev.pageY - elem.offset().top;
 	//console.log('coords rel to',elm,':',x,y);
 	return { x: x, y: y };
+}
+function getTextSize(s = 'hallo', parentDivOrId) {
+	var newDiv = document.createElement("div");
+	newDiv.innerHTML = s;
+	newDiv.style.cssText = "position:fixed; top:-9999px; opacity:0;"
+	if (isdef(parentDivOrId)) {
+		if (isString(parentDivOrId)) parentDivOrId = document.getElementById(parentDivOrId);
+		parentDivOrId.appendChild(newDiv);
+	} else {
+		document.body.appendChild(newDiv);
+	}
+	height = newDiv.clientHeight;
+	width = newDiv.clientWidth;
+	newDiv.parentNode.removeChild(newDiv)
+	return { w: width, h: height };
 }
 function getTextWidth(text, font) {
 	// re-use canvas object for better performance
@@ -1157,18 +1177,68 @@ function show(elem) {
 
 //#endregion
 
-//#region file IO
+//#region DOM: load code, fire event
+function loadCode(text) {
+	if (isdef(text))	text = text.trim();
+	if (isEmpty(text)) {
+		//console.log('text is empty!!! no script loaded!');
+		return;
+	}
+	//console.log('text', text);
+
+	var scriptTag = document.createElement("script");
+	scriptTag.onload = () => console.log('code loaded.....');
+	scriptTag.setAttribute("type", "text/javascript");
+	scriptTag.innerHTML = text;
+	document.getElementsByTagName("body")[0].appendChild(scriptTag);
+}
 function fireClick(node) {
 	if (document.createEvent) {
 		var evt = document.createEvent('MouseEvents');
 		evt.initEvent('click', true, false);
+		console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
 		node.dispatchEvent(evt);
 	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
 		node.fireEvent('onclick');
 	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
 		node.onclick();
 	}
 }
+function fireWheel(node) {
+	if (document.createEvent) {
+		var evt = document.createEvent('MouseEvents');
+		evt.initEvent('wheel', true, false);
+		console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
+		node.dispatchEvent(evt);
+	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+function fireKey(k, { control, alt, shift } = {}) {
+	console.log('fireKey called!' + document.createEvent)
+	if (document.createEvent) {
+		// var evt = document.createEvent('KeyEvents');
+		// evt.initEvent('keyup', true, false);
+		console.log('fireKey: createEvent and node.dispatchEvent exist!!!', k, control, alt, shift);
+		//el.dispatchEvent(new Event('focus'));
+		//el.dispatchEvent(new KeyboardEvent('keypress',{'key':'a'}));
+		window.dispatchEvent(new KeyboardEvent('keypress', { key: '+', ctrlKey: true }));
+	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+
+//#region file IO
 function downloadFile(jsonObject, filenameNoExt) {
 	json_str = JSON.stringify(jsonObject);
 	saveFileAtClient(filenameNoExt + ".json", "data:application/json", new Blob([json_str], { type: "" }));
@@ -1177,7 +1247,7 @@ function downloadFile(jsonObject, filenameNoExt) {
 function saveFileAtClient(name, type, data) {
 	// Function to download data to a file
 	//usage:
-	// json_str = JSON.stringify(G);
+	// json_str = JSON.stringify(someObject);
 	// saveFileAtClient("yourfilename.json", "data:application/json", new Blob([json_str], {type: ""}));
 
 	console.log(navigator.msSaveBlob);

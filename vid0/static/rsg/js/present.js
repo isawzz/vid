@@ -224,7 +224,7 @@ function setStatus(s) {
 	mobj.clear(); clearElement(d);
 	d.innerHTML = s;
 }
-function presentLog() {
+function rPresentLog() {
 	//add new logEntries to div
 	let pl = G.player;
 	let logId = 'a_d_log' + '_' + pl;

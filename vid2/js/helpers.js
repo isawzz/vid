@@ -760,7 +760,7 @@ function setCSSVariable(varName, val) {
 
 //#DOM 1 liners
 function asList(x) { return isList(x) ? x : [x]; }
-function mAppend(d, child) { if (d) d.appendChild(child); }
+function mAppend(d, child) {if(isString(d))d=mById(d); if (d) d.appendChild(child); }
 function mById(id) { return document.getElementById(id); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
@@ -772,7 +772,7 @@ function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'ab
 function mRot(d, angle) { mStyle(d, { transform: 'rotate(' + angle + 'deg)' }); }
 function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
 function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
-function mTextDiv(text, dParent = null) { let d = mCreate('div'); mAppend(dParent, d).innerHTML = text; return d; }
+function mTextDiv(text, dParent = null) { let d = mCreate('div'); mAppend(dParent, d); d.innerHTML = text; return d; }
 function posTL(d) { mPos(d, 0, 0) }
 function posTR(d) { mStyle(d, { right: 0, top: 0, position: 'absolute' }); }
 function posBL(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); }
@@ -914,7 +914,7 @@ function actualCenter(elem, relToParent = false, elRelTo) {
 }
 function calcNumRowsFitting(dParent,maxHeight,html) {
 	let sz=getTextSize(html,dParent);
-	console.log('line height as per calcNumRowsFitting',sz.h);
+	//console.log('line height as per calcNumRowsFitting',sz.h);
 	return maxHeight/sz.h;
 }
 function getRelBounds(elem, elRel) {

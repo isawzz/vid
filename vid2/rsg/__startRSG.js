@@ -18,7 +18,7 @@ async function presentWaitingFor() {
 		//console.log('just switching username to', user)
 		let data = await route_status(USERNAME);
 		serverData=data;
-		vrStep();
+		_startStep();
 	} else if (PLAYMODE == 'passplay') {
 		//this is where I have to output message: NOT YOU TURN ANYMORE!!!!! please click pass!!!
 		_showPassToNextPlayer(pl);
@@ -97,20 +97,20 @@ function presentActions() {
 		iGroup += 1;
 	}
 
-	console.log('number of boats',iTuple,IdOwner['a'].length,areaName,SPEC.tableSize);
+	//console.log('number of boats',iTuple,IdOwner['a'].length,areaName,SPEC.tableSize);
 	fillActions(areaName,boats,SPEC.tableSize[1]);
 
 }
 function fillActions(areaName, boats, availHeight) {
 	let nActions = boats.length;
-	console.log(areaName, nActions, availHeight)
+	//console.log(areaName, nActions, availHeight)
 	//let html='hallo133'; `<a>hallo</a>`
 	let html=boats[0].elem.innerHTML;
-	console.log('html for measuring',html)
+	//console.log('html for measuring',html)
 	let nRowsFit = calcNumRowsFitting(areaName,availHeight,html);//b.height);
 	nRowsFit = Math.floor(nRowsFit);
 	let colsNeeded = Math.ceil(nActions / nRowsFit);
-	console.log('need', colsNeeded, 'to fit all actions')
+	//console.log('need', colsNeeded, 'to fit all actions')
 
 	let d = document.getElementById(areaName);
 	d.style.gridTemplateColumns = 'auto '.repeat(colsNeeded);
@@ -176,7 +176,7 @@ async function interaction(action, data) {
 		let result = await route_server_js(route);
 		//console.log('server returned', result);
 		serverData = result;
-		vrStep();
+		_startStep();
 
 	} else if (action == INTERACTION.stop) {
 		// stop game etc.... send restart or whatever and come out at _start
@@ -294,6 +294,8 @@ function checkPlayerChange() {
 		gamePlayerId = plid;
 		//console.log(playerConfig[GAME].players)
 		pageHeaderUpdatePlayer(plid);
+		//hide logs of other players!
+		logUpdateVisibility(plid,serverData.players);
 	}
 
 }

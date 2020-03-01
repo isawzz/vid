@@ -690,9 +690,6 @@ class MK{
 		if (isdef(cap)) r.setAttribute('stroke-linecap', cap);
 
 
-		// Math.max(thickness,Math.abs(x1-x2)/2); 
-		// this.h=Math.max(thickness,Math.abs(y1-y2)/2);
-
 		let isFirstChild = this.elem.childNodes.length == 0;
 
 		let stroke = anyColorToStandardString(fill, alpha);

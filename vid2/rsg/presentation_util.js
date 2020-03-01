@@ -77,7 +77,7 @@ function makeVisual(mk, x, y, w, h, color, shape, { x1, y1, x2, y2 } = {}) {
 		mk.line({ className: 'ground', x1: x1, y1: y1, x2: x2, y2: y2, fill: fill, thickness: thickness })
 			.line({ className: 'overlay', x1: x1, y1: y1, x2: x2, y2: y2, thickness: thickness, });
 	} else {
-		mk[shape]({ className:'ground',w: w, h: h});//,fill:color });
+		mk[shape]({ className: 'ground', w: w, h: h });//,fill:color });
 		mk[shape]({ className: 'overlay', w: w, h: h });
 		mk.setPos(x, y);
 	}
@@ -85,9 +85,9 @@ function makeVisual(mk, x, y, w, h, color, shape, { x1, y1, x2, y2 } = {}) {
 	mk.orig.bg = color;
 	mk.originalBg = color;
 	mk.orig.shape = shape;
-	mk.originalSize = {w:w,h:h};
-	mk.orig.w=w;
-	mk.orig.h=h;
+	mk.originalSize = { w: w, h: h };
+	mk.orig.w = w;
+	mk.orig.h = h;
 	return mk;
 }
 
@@ -236,31 +236,6 @@ function makeArea(areaName, idParent) {
 	listKey(IdOwner, id[2], id);
 	return mk;
 }
-function makeLogArea(plid) {
-	let mk = new MK();
-	let idParent = 'a_d_log';
-	let id = idParent + '_' + plid;
-	mk.id = id;
-	let el = document.createElement('div');
-	el.style.position = 'absolute';
-	el.style.left = '0px';
-	el.style.top = '0px';
-	el.style.width = '100%';
-	el.style.height = '100%';
-	el.style.overflowY = 'auto';
-	mk.elem = el;
-	mk.elem.id = id;
-	mk.parts.elem = mk.elem;
-	mk.domType = getTypeOf(mk.elem);
-	mk.cat = DOMCATS[mk.domType];
-	mk.idParent = idParent;
-	let parent = UIS[idParent];
-	parent.children.push(id);
-	mk.attach();
-	UIS[id] = mk;
-	listKey(IdOwner, id[2], id);
-	return mk;
-}
 function makeDrawingArea(id, idArea, addToUIS = false) {
 
 	if (addToUIS && isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
@@ -323,21 +298,21 @@ function makeCard(oid, o, areaName) {
 	let idArea = getIdArea(areaName);
 	//console.log('***makeCard', oid, areaName);
 	let id = 'm_t_' + oid;
-	if (isdef(UIS[id])) { 
-		error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); 
-		return; 
+	if (isdef(UIS[id])) {
+		error('CANNOT create ' + id + ' TWICE!!!!!!!!!');
+		return;
 	}
 	let mk = new MK();
 	mk.id = id;
-	
-	let cardName = isdef(o.name)?o.name:'King';
+
+	let cardName = isdef(o.name) ? o.name : 'King';
 	//console.log('makeCard', oid, cardName);//, areaName);
 
 	//TODO: move to behaviors!!!!
 	let domel;
 	if (GAME == 'catan') domel = _makeCardDivCatan(oid, o);
-	else if (GAME == 'aristocracy') domel = _makeCardDivAristocracy(oid,o);
-	else domel = _makeCardDivDefault(oid,o);
+	else if (GAME == 'aristocracy') domel = _makeCardDivAristocracy(oid, o);
+	else domel = _makeCardDivDefault(oid, o);
 	domel.id = id;
 	mk.elem = domel;
 	mk.parts.elem = mk.elem;
@@ -398,8 +373,8 @@ function makeAux(s, oid, areaName, directParent) {
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = areaName;
 	mk.idParent = idParent;
-	let parent = UIS[idParent];
-	parent.children.push(id);
+	// let parent = UIS[idParent];
+	// parent.children.push(id);
 
 	mk.isa.aux = true;
 
@@ -461,7 +436,7 @@ function makeDefaultAction(boat, areaName, html) {
 	// let idParent = areaName;
 	mk.idParent = areaName;
 	//let parent = mById(areaName);//UIS[idParent];
-	
+
 	//parent.children.push(id);
 
 	mk.o = boat;
@@ -691,7 +666,7 @@ function transformToString(k, val, refs) {
 		// if (isList(val)) {
 		// 	//console.log('##############ERROR!!! transformToString list would be lost!!!!',val)
 		// }
-		sval = tableHTMLX(val, refs); 
+		sval = tableHTMLX(val, refs);
 	}
 	else sval = simpleRep(val);
 

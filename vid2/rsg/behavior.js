@@ -1,4 +1,6 @@
 //UI generation simple
+var COND = {};
+var FUNCS = {};
 function rPresentBehaviors() {
 	
 	//console.log('________________rBehaviors');

@@ -49,6 +49,8 @@ html,body{
 	padding:2px;
 	text-align:center;
 	grid-gap:var(--gridGap);
+	min-width:97vw;
+
 }
 #rsg{
 	display: grid;
@@ -101,9 +103,16 @@ html,body{
 	/* flex:0 1 auto; */
 	position:relative;
 }
-#a_d_log{
+#logDiv{
 	grid-area: c;
 	align-self: stretch;
+	min-width:150px;
+	text-align:left;
+	position:relative;
+}
+#logDiv>div{
+	max-height:var(--hTable);
+	overflow-y:auto;
 }
 /* .actionPane {
 	max-height: var(--hTable);
@@ -318,8 +327,8 @@ button:active {
 .gamePlayer{
 	padding: 13px 15px;
 	font-weight: bold;
-	color: black;
-	font-size:18px;
+	/* color: black; */
+	font-size:110%;
 	/* background-color:yellow; */
 }
 /* #endregion pageHeader */

@@ -5,7 +5,7 @@ var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 //when testing, uses files in tests/GAME/uspecN and codeN
-const TESTING = true; // true | false
+const TESTING = false; // true | false
 const TEST_PATH = '/vid2/tests/';
 const DSPEC_VERSION = 1;
 const USPEC_VERSION = 1;

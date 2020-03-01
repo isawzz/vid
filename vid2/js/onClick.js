@@ -1,9 +1,9 @@
 async function onClickReloadAll() {
 	vidCache.invalidate('testCards','allGames','userSpec','serverData','userCode');
-	_start();
+	_startSession();
 }
 async function onClickResetLocal() {
-	_start(true);
+	_startSession(true);
 }
 
 
@@ -66,7 +66,7 @@ async function onClickRestart() {
 	unfreezeUI();
 	USERNAME = USERNAME_ORIG;
 	serverData = await route_restart(USERNAME);
-	vrStep();
+	_startStep();
 }
 function onClickRunToNextPlayer() {
 	let pl = gamePlayerId;

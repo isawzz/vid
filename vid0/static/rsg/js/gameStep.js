@@ -31,7 +31,7 @@ function gameStepII() {
 	//timit.showTime('presentation done!!!s')
 	presentStatus();
 
-	presentLog();
+	rPresentLog();
 	if (G.end) { presentEnd(); return; }
 
 	//console.log('tupleGroups',G.tupleGroups);

@@ -609,6 +609,16 @@ function getPalette(color, type = 'shade') {
 	color = anyColorToStandardString(color);
 	return colorPalShade(color);
 }
+function getTransPalette(color = '#000000') {
+	let res = [];
+	for (const alpha of [.0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]) res.push(colorTrans(color, alpha));
+	return res;
+}
+function getTransPalette9(color = '#000000') {
+	let res = [];
+	for (const alpha of [.1, .2, .3, .4, .5, .6, .7, .8, .9]) res.push(colorTrans(color, alpha));
+	return res;
+}
 function HSLAToRGBA(hsla, isPct) {
 	//if isPct == true, will output 'rgb(xx%,xx%,xx%)' umgerechnet in % von 255
 	let ex = /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
@@ -760,10 +770,11 @@ function setCSSVariable(varName, val) {
 
 //#DOM 1 liners
 function asList(x) { return isList(x) ? x : [x]; }
-function mAppend(d, child) {if(isString(d))d=mById(d); if (d) d.appendChild(child); }
+function mAppend(d, child) { if (isString(d)) d = mById(d); if (d) d.appendChild(child); }
 function mById(id) { return document.getElementById(id); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
+function mRemove(elem) { mDestroy(elem); }
 function mDiv(dParent = null) { let d = mCreate('div'); mAppend(dParent, d); return d; }
 function onMouseEnter(d, handler = null) { d3.on('mouse') }
 function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
@@ -870,6 +881,7 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 		let pBounds = getBounds(dParent);
 		w = pBounds.width + 'px';
 		h = pBounds.height + 'px';
+
 		//console.log('--- addSvgg: CORRECTING MISSING WIDTH AND HEIGHT ON PARENT ---', dParent.id,w,h);
 
 		// svg1.setAttribute('width', pBounds.width + 'px');
@@ -877,8 +889,42 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 		// dParent.style.setProperty('width', pBounds.width + 'px');
 		// dParent.style.setProperty('height', pBounds.height + 'px');
 	}
+	if (!dParent.style.position) dParent.style.position = 'relative';
+
 	svg1.setAttribute('width', w);
 	svg1.setAttribute('height', h);
+	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
+	if (bg) style += 'background-color:' + bg;
+	svg1.setAttribute('style', style);
+	dParent.appendChild(svg1);
+
+	let g1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+	if (gid) g1.id = gid;
+	svg1.appendChild(g1);
+	// if (originInCenter) { g1.style='transform:translate(50%, 50%)'; } //works!
+	// if (originInCenter) { g1.setAttribute('class', 'gCentered'); } //works! but: relies on class gCentered
+	// console.log('____________________________')
+	// console.log(getBounds(svg1))
+	// console.log(getBounds(dParent))
+	if (originInCenter) { g1.style.transform = "translate(50%, 50%)"; } //works!
+
+	return g1;
+}
+function addSvggViewbox(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter = false } = {}) {
+	//div dParent gets an svg and inside a g, returns g
+	//dParent must have its bounds width and height set
+	let svg1 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+	if (!dParent.style.width || !dParent.style.height) {
+		let pBounds = getBounds(dParent);
+		w = pBounds.width + 'px';
+		h = pBounds.height + 'px';
+	}
+	if (!dParent.style.position) dParent.style.position = 'relative';
+
+	svg1.setAttribute('width', w);
+	svg1.setAttribute('height', h);
+	svg1.setAttribute('viewBox', "0 0 433 375");
 	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
 	if (bg) style += 'background-color:' + bg;
 	svg1.setAttribute('style', style);
@@ -912,10 +958,10 @@ function actualCenter(elem, relToParent = false, elRelTo) {
 	let b = getBounds(elem, relToParent, elRelTo);
 	return { x: Math.round(b.left + b.width / 2), y: Math.round(b.top + b.height / 2) };
 }
-function calcNumRowsFitting(dParent,maxHeight,html) {
-	let sz=getTextSize(html,dParent);
+function calcNumRowsFitting(dParent, maxHeight, html) {
+	let sz = getTextSize(html, dParent);
 	//console.log('line height as per calcNumRowsFitting',sz.h);
-	return maxHeight/sz.h;
+	return maxHeight / sz.h;
 }
 function getRelBounds(elem, elRel) {
 	let b1 = elem.getBoundingClientRect();
@@ -1179,7 +1225,7 @@ function show(elem) {
 
 //#region DOM: load code, fire event
 function loadCode(text) {
-	if (isdef(text))	text = text.trim();
+	if (isdef(text)) text = text.trim();
 	if (isEmpty(text)) {
 		//console.log('text is empty!!! no script loaded!');
 		return;
@@ -1896,6 +1942,13 @@ function randomColor(s = 100, l = 70, a = 1) {
 	//s,l in percent, a in [0,1], returns hsla string
 	var hue = Math.random() * 360;
 	return hslToHslaString(hue, s, l, a);
+}
+function randomHexColor() {
+	let s = '#';
+	for (let i = 0; i < 6; i++) {
+		s += chooseRandom(['f', 'c', '9', '6', '3', '0']);
+	}
+	return s;
 }
 function randomNumber(min = 0, max = 100) {
 	return Math.floor(Math.random() * (max - min + 1)) + min; //min and max inclusive!

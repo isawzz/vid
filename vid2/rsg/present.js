@@ -14,7 +14,7 @@ function rPresentDefault() {
 				if ('loc' in o && isBoardElement(o.loc._obj)) mk = makeMainBoardElementVisual(oid, o);
 			}
 			if (!mk && !mkDefault && SPEC.table.createDefault != false) {
-				mkDefault = makeDefaultObject(oid, o, SPEC.table.defaultArea);
+				mkDefault = makeDefaultObject(oid, o, SPEC[kPool].defaultArea);
 				//console.log(mkDefault)
 			}
 
@@ -92,7 +92,7 @@ function presentMain(oid, o, mk, isTableObject = true) {
 	if (!isEmpty(akku)) { mk.multitext({ txt: akku, fill: color }); } else mk.clearText();
 }
 function computePresentedKeys(o, isTableObject) {
-	let optin = isTableObject ? SPEC.table.optin : SPEC.player.optin;
+	let optin = isTableObject ? SPEC.table.optin : SPEC.players.optin;
 	//console.log(optin)
 
 	if (optin) return intersection(Object.keys(o), optin);
@@ -105,7 +105,7 @@ function computePresentedKeys(o, isTableObject) {
 		return keys;
 	}
 
-	optout = isTableObject ? SPEC.table.optout : SPEC.player.optout;
+	optout = isTableObject ? SPEC.table.optout : SPEC.players.optout;
 	for (const k in o) { if (optout[k]) continue; keys.push(k); }
 	return keys;
 
@@ -116,8 +116,8 @@ function presentDefault(oid, o, mk, isTableObject = true) {
 	if (isPlain() && !isTableObject) mk.show();
 
 	//filter keys using optin and optout lists
-	let optin = isTableObject ? SPEC.table.optin : SPEC.player.optin;
-	let optout = isTableObject ? SPEC.table.optout : SPEC.player.optout;
+	let optin = isTableObject ? SPEC.table.optin : SPEC.players.optin;
+	let optout = isTableObject ? SPEC.table.optout : SPEC.players.optout;
 
 	keys = optout ? arrMinus(getKeys(o), optout) : optin ? optin : getKeys(o);
 

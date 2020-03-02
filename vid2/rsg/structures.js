@@ -9,20 +9,20 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 	//if fieldColor is undefined, in getMemberColors the default colors will be set which are from board palette (board will inherit palette if not set!)
 	//same for nodeColor, edgeColor
 	let area = UIS[board.idParent];
-	let div = area.elem
-	let dim = getBounds(div); //TODO: take into account transform???? muss ich bei ***zoom
+	let div = area.elem;
+	let dim = getBounds(div); 
+
 	w=dim.width;
 	h=dim.height;
-	//console.log(dim,w,h);
-	let pal = getPalette('powderblue');
-	[fieldColor, nodeColor, edgeColor] = [pal[2], pal[3], pal[4]];
+
+	let pal = getTransPalette('silver');
+	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
 	let [fw, fh, nw, nh, ew] = getBoardScaleFactors(board, { factors: factors, opt: opt, f2nRatio: f2nRatio, w: w, h: h, margin: margin });
 
 	//console.log('---------------',w,h,fieldColor,fw,fh,nw,nh,ew)
 
 	for (const id of board.structInfo.fields) {
 		let o = getVisual(id);
-		//console.log(o)
 		makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.structInfo.wdef * fw - gap, board.structInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
 		o.attach();
 	}

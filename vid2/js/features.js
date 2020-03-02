@@ -75,9 +75,14 @@ var browserZoom = Math.round(window.devicePixelRatio * 100);
 var justExpand = false;
 //var countEvents = 0;
 function initZoomToFit() { justExpand = true; zoom_on_resize(...arguments);}
+function reset_zoom_on_resize(){
+	window.onresize = null;
+	bodyZoom = 1.0;
+	document.body.style.transform = 'none';
+}
 function zoom_on_resize() {
+	_zoomIfNeeded(arguments);
 	if (!window.onresize) {
-		_zoomIfNeeded(arguments);
 
 		window.onresize = () => {
 			console.log(bodyZoom)

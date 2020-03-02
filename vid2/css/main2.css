@@ -90,6 +90,7 @@ html,body{
 #table{
 	grid-area: b;
 	align-self: stretch;
+	/* position:absolute; */
 	/* box-sizing:border-box; */
 	/* flex:0 1 auto; 
 	text-align: center; */
@@ -101,7 +102,7 @@ html,body{
 	height: var(--hTable);
 	width: var(--wTable);
 	/* flex:0 1 auto; */
-	position:relative;
+	/* position:absolute; */
 }
 #logDiv{
 	grid-area: c;
@@ -113,6 +114,9 @@ html,body{
 #logDiv>div{
 	max-height:var(--hTable);
 	overflow-y:auto;
+}
+#status{
+	min-height:25px;
 }
 /* .actionPane {
 	max-height: var(--hTable);

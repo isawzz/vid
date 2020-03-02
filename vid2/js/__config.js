@@ -13,10 +13,9 @@ const CODE_VERSION = 1;
 const DATA_VERSION = 1;
 
 //used when NOT testing:
-var USERSPEC_FNAME = 'catan_2';
-var CODE_FNAME = 'catan_2';
+var VERSION = '_01'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
 var CACHE_DEFAULTSPEC = true;
-var CACHE_USERSPEC = true;
+var CACHE_USERSPEC = false;
 var CACHE_CODE = true;
 var CACHE_INITDATA = false;
 
@@ -26,7 +25,6 @@ var autoplayFunction = ()=>false;
 var AIThinkingTime = 30;
 
 var CLICK_TO_SELECT = true; //S.settings.clickToSelect = true;
-var TOOLTIPS = false; //S.settings.tooltips = document.getElementById('c_b_TTip').textContent.includes('ON');
 //var OPEN_TAB = 'Seattle'; //S.settings.openTab = S_openTab;
 var USE_SETTINGS = true; //S.settings.userSettings = S_userSettings;
 var USE_STRUCTURES = true; //S.settings.userStructures = S_userStructures;

@@ -1,4 +1,4 @@
-class MK{
+class MK {
 	constructor() {
 		this.children = [];
 		this.parts = {};
@@ -23,16 +23,16 @@ class MK{
 		//sollte eigentlich fuer beide gehen!
 		//zuerst als g
 		//console.log('_picto, type of iconChars is',getTypeOf(iconChars));
-		let ch = getTypeOf(iconChars)=='Object'?iconChars[key] : iconChars.get(key);
-		if (!ch) ch=iconChars.get('crow');
-		return this._pictoFromChar(ch,x,y,w,h,fg,bg);
+		let ch = getTypeOf(iconChars) == 'Object' ? iconChars[key] : iconChars.get(key);
+		if (!ch) ch = iconChars.get('crow');
+		return this._pictoFromChar(ch, x, y, w, h, fg, bg);
 	}
-	_pictoFromChar(ch,x,y,w,h,fg,bg){
+	_pictoFromChar(ch, x, y, w, h, fg, bg) {
 		let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
 		let text = String.fromCharCode('0x' + ch);
-		return this._pictoFromHexString(text,family,x,y,w,h,fg,bg);
+		return this._pictoFromHexString(text, family, x, y, w, h, fg, bg);
 	}
-	_pictoFromHexString(text,family,x,y,w,h,fg,bg){
+	_pictoFromHexString(text, family, x, y, w, h, fg, bg) {
 		//key="skiing-nordic";
 		if (this.cat == 'g') {
 			if (isdef(bg)) this.rect({ w: w, h: h, fill: bg, x: x, y: y });
@@ -817,104 +817,74 @@ class MK{
 	}
 	//#endregion
 
-	//#region tooltips
-	calcCenterPos(ev) {
-		//console.log('size', this.w, this.h)
-		let x, y;
-
-		if (isdef(this.w)) {
-
-			let rect = ev.target.getBoundingClientRect();
-			let dx = ev.clientX - rect.left; //x position within the element.
-			let dy = ev.clientY - rect.top;
-			x = ev.clientX - dx + this.w / 2;
-			y = ev.clientY - dy + this.h / 2;
-		} else {
-			x = ev.pageX;
-			y = ev.pageY;
-		}
-		return { x: x, y: y };
-	}
-	showTT(ev) {
-		let d = document.getElementById('tooltip');
-		clearElement(d);
-		//console.log(this.o)
-		let oid = getOidForMainId(this.id);
-		let oUpdated = oid in G.table ? G.table[oid] : G.playersAugmented[oid];
-		let titleDomel = document.createElement('div');
-		titleDomel.style.width = '100%';
-		titleDomel.style.textAlign = 'center';
-		titleDomel.innerHTML = ('obj_type' in oUpdated ? oUpdated.obj_type : 'player') + ('name' in oUpdated ? ':' + oUpdated.name : 'id' in oUpdated ? ':' + oUpdated.id : ' ' + oid);
-		d.appendChild(titleDomel);
-		let t = tableElemX(oUpdated);
-		d.appendChild(t.table);
-		let pos = this.calcCenterPos(ev);
-		$('div#tooltip').css({
-			display: 'inline-block',
-			left: pos.x,//ev.pageX, //clientX-dx+mk.w, //e.pageX, //clientX,
-			top: pos.y,//ev.pageY, //clientY-dy+mk.h,//e.pageY, //clientY,
-			//width: '300px',
-			//height: '300px'
-		});
-
-	}
-	ttHandling(ev, eventName) {
-		if (!this.o) return;
-		let oid = getOidForMainId(this.id);
-		if (!oid) return;
-		if (eventName == 'mouseenter') {
-			//console.log('tt', this.id);
-			this.TTTT = setTimeout(() => this.showTT(ev), 500);
-		}
-		else if (eventName == 'mouseleave') {
-			clearTimeout(this.TTTT); hideTooltip();
-		}
-
-	}
-	//#endregion
-
 	//#region events
+	extractAttr(part, attr = 'name') {
+		if (this.id == 'm_t_0') console.log('extractAttr', part, attr)
+		try {
+			let name = '';
+			if (this.id == 'm_t_0') console.log('1', name)
+			//console.log(part)
+			//if (this.id.includes('147')) {
+			let p = d3.select(part).node();
+			if (this.id == 'm_t_0') console.log('2', p)
+			let ou = p.outerHTML;
+			if (this.id == 'm_t_0') console.log('3', ou)
+			let s = stringAfter(ou, 'name=');
+			if (isEmpty(s)) return 'elem'
+			if (this.id == 'm_t_0') console.log('4', s)
+			let s1 = stringBefore(s, ' ');
+			let s2 = s1.substring(1, s1.length - 1);
+			name = s2;
+		} catch{
+			name = 'elem';
+		}
+		//console.log('p', p, 'ou', ou, 's', s, 's1', s1, '\ns2=name=' + s2);
+		// console.log('part',part,'\npartName',partName,'\nd3',p,'\nouterH',p.outerHTML,'\nname',p.outerHTML.name);
+		//}
+
+		return name;
+	}
 	_handler(ev) {
-		//if (this.isa.deck) console.log('event!',ev,this.handlers);
-		//console.log('event!',ev,this.id,this.handlers)
 		ev.stopPropagation();
-		let eventName = ev.type;// ev.handleObj.origType;
-		//console.log(eventName)
-		//if (SPEC.tooltips) this.ttHandling(ev, eventName);
-
+		let eventName = ev.type;
 		if (!this.isEnabled) return;
-		let part = ev.currentTarget; //$(ev.currentTarget);
-
+		let part = ev.target;
 		let partName;
 		if (this.isa.deck && this.parts.topmost) partName = 'topmost';
-		else if (part.id == this.elem.id) partName = 'elem';
-		// else { let props = $(part).attrs(); let name = props.name; if (nundef(name)) name = 'elem'; partName = name; }
-		else { let name = part.getAttribute('name'); if (nundef(name)) name = 'elem'; partName = name; }
-
-		//console.log('partName',partName)
+		else if (part == this.elem) { partName = 'elem'; }
+		else { let name = this.extractAttr(part, 'name'); if (nundef(name)) name = 'elem'; partName = name; }
 
 		let handler = this.handlers[eventName][partName];
-		//console.log('eventName',eventName,'partName',partName, 'handler',handler)
-		if (isdef(handler)) { handler(ev, this, partName); }// counters[eventName] += 1; counters.events += 1;  }
+		if (isdef(handler)) { handler(ev, this, partName); }
 	}
 	addHandler(evName, partName = 'elem', handler = null, autoEnable = true) {
 		//console.log('addHandler for',evName,partName,this.id)
+
+		//if (this.id == 'm_t_0') console.log('_______adding ocFilter', evName, partName, handler)
+
+
 		let part = this._getPart(partName); //this.parts[partName];
 		//if (this.isa.deck) console.log('added',evName,'handler to',part);
 		if (nundef(part) || part == this.elem) { part = this.elem; partName = 'elem'; }
 		else if (this.isa.deck) partName = 'topmost';
 
 
-		if (isdef(handler)) { 
+		if (isdef(handler)) {
 			//console.log('adding handler',evName,partName)
-			this.handlers[evName][partName] = handler; 
+			this.handlers[evName][partName] = handler;
 		}
 
+		//if (this.id == 'm_t_0') console.log('adding ocFilter', part, this.handlers)
+
 		//console.log(part)
-		if (evName == 'click') part.onclick=this._handler.bind(this);
-		else if (evName == 'mouseenter') part.onmouseenter=this._handler.bind(this);
-		else if (evName == 'mouseleave') part.onmouseleave=this._handler.bind(this);
+		if (evName == 'click') part.onclick = this._handler.bind(this);
+		else if (evName == 'mouseenter') part.onmouseenter = this._handler.bind(this);
+		else if (evName == 'mouseleave') part.onmouseleave = this._handler.bind(this);
 		// d3.select(part).on(evName, this._handler.bind(this)); //only this handler is on for that event!!!
+
+		// if (this.id.includes('147')) {
+		// 	console.log('__________event', evName, '\npartName', partName, '\npart', part, '\nhandler', part.onmouseenter, '\nhandlers', this.handlers[evName]);
+		// }
 
 		if (autoEnable) this.enable();
 	}
@@ -979,7 +949,7 @@ class MK{
 				this.setTextFill(this.picto, '#ccff00', 1);//.elem.addClass('high',this.ground); 
 				//console.log('high', this.id, this.ground);
 			} else addClass(this.overlay, 'high');
-		} else {part.style.backgroundColor = '#ccff00';part.style.color = '#000000';}
+		} else { part.style.backgroundColor = '#ccff00'; part.style.color = '#000000'; }
 
 		// if (this.isLine) {
 		// 	console.log('high', this.id, this.overlay);
@@ -1001,9 +971,9 @@ class MK{
 			}
 
 			//removeClass('high', this.overlay);
-		} else { 
-			let bg = part.bg; if (nundef(bg)) bg = null; part.style.backgroundColor = bg; 
-			let fg = part.fg; if (nundef(fg)) fg = null; part.style.color = fg; 
+		} else {
+			let bg = part.bg; if (nundef(bg)) bg = null; part.style.backgroundColor = bg;
+			let fg = part.fg; if (nundef(fg)) fg = null; part.style.color = fg;
 		}
 	}
 	highFrame(pname = 'elem', elIfMiss = true) {
@@ -1221,13 +1191,13 @@ class MK{
 			if (isdef(this.centerX)) {
 				this.elem.style.left = '' + (this.centerX + x) + 'px';
 				this.elem.style.top = '' + (this.centerY + y) + 'px';
-			// } else if (this.isa.card) {
-			// 	console.log('card pos set to',x,y)
-			// 	//this.elem.style.transform = `translate(${x},${y})`;
-			// 	this.elem.style.position = 'absolute';
-			// 	this.elem.style.left = x + 'px';
-			// 	this.elem.style.top = y + 'px';
-			}else {
+				// } else if (this.isa.card) {
+				// 	console.log('card pos set to',x,y)
+				// 	//this.elem.style.transform = `translate(${x},${y})`;
+				// 	this.elem.style.position = 'absolute';
+				// 	this.elem.style.left = x + 'px';
+				// 	this.elem.style.top = y + 'px';
+			} else {
 				this.elem.style.position = 'absolute';
 				this.elem.style.left = x + 'px';
 				this.elem.style.top = y + 'px';
@@ -1327,7 +1297,7 @@ class MK{
 	//#endregion
 
 	//#region parts
-	body(key='body',color){
+	body(key = 'body', color) {
 		if (this.parts[key]) return;
 		let t = document.createElement('div');
 		t.style.padding = '4px 8px';
@@ -1357,7 +1327,7 @@ class MK{
 		this.parts[key] = t;
 		//add these props to part:
 		//$(t).attrs({ name: key });//, bg: bg });
-		t.setAttribute('name',key);
+		t.setAttribute('name', key);
 		this.setBg(bg, { updateFg: (color != 'dimgray'), partName: key });
 		// t.name = key;
 		// t.bg = t.style.backgroundColor;
@@ -1375,7 +1345,7 @@ class MK{
 			this.attach();
 			this.parts[key] = t;
 			// t.name = key;
-			t.setAttribute('name',key);
+			t.setAttribute('name', key);
 
 		}
 
@@ -1447,34 +1417,34 @@ class MK{
 	//#region admin/general
 
 	//attach/detach does NOT remove or add to MS parent, just its domel! (for former, use: switchParent NOT_IMPL)
-	attach(partName) { 
-		if (!this.isAttached) { 
-			this.isAttached = true; 
+	attach(partName) {
+		if (!this.isAttached) {
+			this.isAttached = true;
 			let parentMS = UIS[this.idParent];
 			let parentElem;
 			if (!parentMS) parentElem = mById(this.idParent);
-			else{
-				parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
+			else {
+				parentElem = isdef(partName) && isdef(parentMS.parts[partName]) ? parentMS.parts[partName] : parentMS.elem;
 			}
-			parentElem.appendChild(this.elem); 
-		} 
-		return this; 
+			parentElem.appendChild(this.elem);
+		}
+		return this;
 	} //need to attach() elems that didnt exist OR are NOT g on div!!! in order fr them to appear on screen!
-	detach(partName) { 
-		if (this.isAttached) { 
-			this.isAttached = false; 
+	detach(partName) {
+		if (this.isAttached) {
+			this.isAttached = false;
 			let parentMS = UIS[this.idParent];
 			let parentElem;
 			if (!parentMS) parentElem = mById(this.idParent);
-			else{
-				parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
+			else {
+				parentElem = isdef(partName) && isdef(parentMS.parts[partName]) ? parentMS.parts[partName] : parentMS.elem;
 			}
 			// let parentMS = UIS[this.idParent];
 			// let parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
-			parentElem.removeChild(this.elem); 
+			parentElem.removeChild(this.elem);
 			// UIS[this.idParent].elem.removeChild(this.elem); 
-		} 
-		return this; 
+		}
+		return this;
 	}
 	clear(startProps = {}) {
 		//all children are destroyed: only destroys UI and removes from parent.children,
@@ -1496,8 +1466,8 @@ class MK{
 
 		mDestroy(this.elem);
 		//$(this.elem).remove(); // removes element and all its handlers from UI
-		
-		
+
+
 		this.elem = null;
 		this.isAttached = false;
 		let parent = UIS[this.idParent];
@@ -1512,7 +1482,7 @@ class MK{
 
 	toString() { return 'id: ' + this.id + ', ' + this.domType + ', ' + this.x + ', ' + this.y + ', ' + this.w + ', ' + this.h + ', ' + this.bg + ', ' + this.fg + ', ' + this.children; }
 	//#endregion
-	
+
 }
 
 

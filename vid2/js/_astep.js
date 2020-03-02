@@ -11,7 +11,7 @@ function clearStep() {
 	//TODO: better naming!!!
 	pageHeaderClearAll();
 	gamePlayerId=null;
-	for(const name of ['a_d_divSelect','status','tableTop','a_d_objects']) clearElement(name);
+	for(const name of ['a_d_divSelect','status','tableTop','a_d_objects','a_d_players']) clearElement(name);
 	mById('status').innerHTML='status';
 }
 

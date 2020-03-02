@@ -34,11 +34,11 @@ table:
   optin: [res, num, building, port] 
 pieceSizeRelativeToLoc:
   field: ['w', 30]
-symbols:
+symbol:
   city: 'castle'
   settlement: 'house'
-colors: #used for colorHintDetection
-  theme: 'blue'
+color: #used for colorHintDetection
+  theme: '#6B7A8F'
   wood: 'maroon'
   brick: 'salmon'
   wheat: 'yellow'

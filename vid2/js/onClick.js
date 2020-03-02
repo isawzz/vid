@@ -1,21 +1,22 @@
 async function onClickReloadAll() {
-	vidCache.invalidate('testCards','allGames','userSpec','serverData','userCode');
+	vidCache.invalidate('testCards', 'allGames', 'userSpec', 'serverData', 'userCode');
 	_startSession();
 }
 async function onClickResetLocal() {
 	_startSession(true);
 }
-
-
-//#region onClick vid0...
-function onClickCatan() {
-	GAME = S.settings.game = 'catan';
-	PLAYMODE = S.settings.playmode = 'hotseat'; // das wird in specAndDom gemacht! setPlaymode(currentPlaymode);
-	S.gameConfig = gcs[GAME];
-	_startNewGame('starter');
+function onClickNewColors(){
+	iTHEME=(iTHEME+1)%THEMES.length;
+	let color = THEMES[iTHEME];
+	document.body.style.backgroundColor = color;
+	let fg = colorIdealText(color)
+	document.body.style.color = fg;
 
 }
-function onClickCheat(code) { sendRoute('/cheat/' + code, null); }
+
+//#region onClick vid0...
+
+function onClickCheat(code) { route_server('/cheat/' + code); }
 
 function onClickFilterTuples(ev, mk, part) {
 	//hat auf irgendein object or player geclickt
@@ -45,7 +46,13 @@ function onClickFilterTuples(ev, mk, part) {
 		}
 	}
 }
-function onClickFilterOrInfobox(ev, mk, part) { if (!ev.ctrlKey) onClickFilterTuples(ev, mk, part); else openInfobox(ev, mk, part); }
+function onClickFilterOrInfobox(ev, mk, part) {
+	console.log('ocFilterOr')
+	if (!ev.ctrlKey) onClickFilterTuples(ev, mk, part);
+	else {
+		openInfobox(ev, mk, part);
+	}
+}
 
 function onClickFilterAndInfobox(ev, mk, part) { onClickFilterTuples(ev, mk, part); onClickPlusControlInfobox(ev, mk, part); }
 
@@ -54,7 +61,7 @@ function onClickPollStatus() {
 	//poll status for USERNAME, and if does not work, poll for waiting for if it belongs to me!
 
 	//pollStatusAs(USERNAME);
-	sendStatus(USERNAME,[gameStep]);
+	sendStatus(USERNAME, [gameStep]);
 
 }
 function onClickLobby() {
@@ -66,7 +73,7 @@ async function onClickRestart() {
 	unfreezeUI();
 	USERNAME = USERNAME_ORIG;
 	serverData = await route_restart(USERNAME);
-	_startStep();
+	_startGame();
 }
 function onClickRunToNextPlayer() {
 	let pl = gamePlayerId;
@@ -127,7 +134,7 @@ function onClickStep() {
 //#endregion game control flow: Restart, RunTo..., STOP, Step
 
 
-const INTERACTION={none:0,selected:1,stop:2,saveLoad:3,route:4};
+const INTERACTION = { none: 0, selected: 1, stop: 2, saveLoad: 3, route: 4 };
 function onClickSelectTuple(ev, mk, part) {
 	//console.log(ev,mk,part)
 	if (choiceCompleted) return;
@@ -137,7 +144,7 @@ function onClickSelectTuple(ev, mk, part) {
 	//console.log(counters.msg + ': ' + G.player + ' :', iTuple, mk.o.desc, mk.o.text, mk.id);
 	freezeUI();
 	stopAllHighlighting();
-	interaction(INTERACTION.selected,mk.o);//, [gameStep]);
+	interaction(INTERACTION.selected, mk.o);//, [gameStep]);
 }
 var startBoats = ['93', '99', '109', '121', '124', '116', '106', '111', '116', '129'];
 function getNextStartBoat() {
@@ -180,13 +187,6 @@ function onClickToggleButton(button, handlerList) {
 		button.textContent = handlerList[idxNew][0];
 		handlerList[idxNew][1]();
 	}
-}
-function onClickTTT() {
-	GAME = S.settings.game = 'ttt';
-	PLAYMODE = S.settings.playmode = 'hotseat'; // das wird in specAndDom gemacht! setPlaymode(currentPlaymode);
-	S.gameConfig = gcs[GAME];
-	_startNewGame('starter');
-
 }
 
 

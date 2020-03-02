@@ -5,7 +5,10 @@ function makeBoard(idBoard, o, areaName) {
 	if (isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }
 	let mk = new MK();
 	mk.id = id;
+	// let domel = addSvggViewbox(UIS[areaName].elem, id, { originInCenter: true });
 	let domel = addSvgg(UIS[areaName].elem, id, { originInCenter: true });
+
+
 	mk.elem = domel;
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(domel);
@@ -146,10 +149,10 @@ function makeInfobox(uid, oid, o) {
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
-	let idParent = 'a_d_game'; //wer soll parent von infobox sein? brauch div!
+	let idParent = 'tableTop'; //wer soll parent von infobox sein? brauch div!
 	mk.idParent = idParent;
-	let parent = UIS[idParent];
-	parent.children.push(id);
+	//let parent = UIS[idParent];
+	//parent.children.push(id);
 
 	let sTitle = oid + ': ' + o.obj_type;
 	mk.title(sTitle);
@@ -541,12 +544,12 @@ function makePictoPiece(mk, o, sz, color) {
 	let [w, h] = [sz, sz];
 
 	let sym = o.obj_type;
-	if (sym in SPEC.symbols) { sym = SPEC.symbols[sym]; }
+	if (sym in SPEC.symbol) { sym = SPEC.symbol[sym]; }
 	if (!(sym in iconChars)) {
 		//console.log("didn't find key", sym);
 		symNew = Object.keys(iconChars)[randomNumber(5, 120)]; //abstract symbols
 		//console.log('will rep', sym, 'by', symNew)
-		SPEC.symbols[sym] = symNew;
+		SPEC.symbol[sym] = symNew;
 		sym = symNew;
 	}
 	//console.log(iconChars,sym,iconChars[sym])

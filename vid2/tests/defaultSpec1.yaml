@@ -51,7 +51,7 @@ table:
   defaultArea: a_d_objects
   ignoreTypes: []
 
-player:
+players:
   createDefault: true #miss | true | false
   optin: null
   optout: [id, color, altName, index]

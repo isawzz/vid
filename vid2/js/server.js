@@ -55,7 +55,7 @@ async function route_userCode(game, fname) {
 	} catch{ return {}; }
 
 }
-async function route_initGame(game, gc, username,seed=SEED) {
+async function route_initGame(game, gc, username, seed = SEED) {
 	await fetch(SERVER + '/restart');
 	await fetch(SERVER + '/game/select/' + game);
 	let nPlayers = gc.numPlayers;
@@ -69,15 +69,15 @@ async function route_initGame(game, gc, username,seed=SEED) {
 		}
 		await fetch(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
 	}
-	return await route_restart(username,seed);
+	return await route_restart(username, seed);
 }
-async function route_restart(username,seed=SEED){
+async function route_restart(username, seed = SEED) {
 	await fetch(SERVER + '/begin/' + seed);
 	let data = await route_status(username);
-	console.log(data)
+	//console.log(data)
 	return data;
 }
-async function route_status(username){return await route_server_js('/status/' + username); }
+async function route_status(username) { return await route_server_js('/status/' + username); }
 async function route_rsg_asset(filename, ext = 'yml') {
 	let url = '/vid0/static/rsg/assets/' + filename + '.' + ext;
 	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
@@ -130,7 +130,7 @@ async function postData(url = '', data = {}) {
 	});
 	return await response.json(); // parses JSON response into native JavaScript objects
 }
-
+async function route_server(url) { await fetch(SERVER + url); }
 
 
 

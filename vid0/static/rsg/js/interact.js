@@ -110,11 +110,11 @@ function onClickFilterTuples(ev, mobj, part) {
 		}
 	}
 }
-function onClickFilterOrInfobox(ev, mobj, part) { if (!ev.ctrlKey) onClickFilterTuples(ev, mobj, part); else openInfobox(ev, mobj, part); }
+function onClickFilterOrInfobox(ev, mobj, part) { if (!ev.ctrlKey) onClickFilterTuples(ev, mobj, part); else {console.log('ocFci');  openInfobox(ev, mobj, part); }}
 
 function onClickFilterAndInfobox(ev, mobj, part) { onClickFilterTuples(ev, mobj, part); onClickPlusControlInfobox(ev, mobj, part); }
 
-function onClickPlusControlInfobox(ev, mobj, part) { if (ev.ctrlKey) { openInfobox(ev, mobj, part); } }
+function onClickPlusControlInfobox(ev, mobj, part) { if (ev.ctrlKey) { console.log('ocpci'); openInfobox(ev, mobj, part); } }
 function onClickPollStatus() {
 	//poll status for USERNAME, and if does not work, poll for waiting for if it belongs to me!
 

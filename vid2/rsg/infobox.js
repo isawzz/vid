@@ -1,3 +1,8 @@
+var maxZIndex = 110;
+var DELETED_IDS = [];
+var DELETED_THIS_ROUND = [];
+const IB_PARENT = 'table'; // tableTop | table
+
 function bringInfoboxToFront(mobj){
 	mobj.elem.style.zIndex = maxZIndex;
 	maxZIndex += 1;
@@ -9,10 +14,10 @@ function checkControlKey(ev) {
 		clearInfoboxes();
 	}
 }
-function openInfobox(ev, mobj, part) {
+function openInfobox(ev, mk, part) {
 	//von mobj hol ich mir oid
 
-	let oid = getOidForMainId(mobj.id);
+	let oid = getOidForMainId(mk.id);
 	if (!oid) return;
 
 	let id = makeIdInfobox(oid);
@@ -27,12 +32,24 @@ function openInfobox(ev, mobj, part) {
 			show(elem);
 		}
 	} else {
-		let msInfobox = makeInfobox(mobj.id, oid, G.table[oid]);
+		let msInfobox = makeInfobox(mk.id, oid, serverData.table[oid]);
+
+		console.log(msInfobox);
+		let bmk = getBounds(mk.elem);
+		console.log(bmk);
+		let el=msInfobox.elem;
+		el.style.position='fixed';
+		el.style.left=(bmk.left+bmk.width/2)+'px';
+		el.style.top=(bmk.top+bmk.height/2)+'px';
+		// let pos = calcMainVisualPosCenterInGameArea(mk)
+		// msInfobox.setPos(pos.x,pos.y); //mobj.x+area.w/2, mobj.y+area.h/2);
+
+
 		//von ev hol ich mir pos
 		//console.log('pos von mobj',mobj.x,mobj.y,mobj.w,mobj.h)
 		//let pos = mobj.calcCenterPos(ev); //mach hier ein posAtCenterOf(msOther)???
 		//msInfobox.setPos(pos.x, pos.y);
-		let area = UIS['a_d_game'];
+		//let area = UIS['a_d_game'];
 
 		//mobj parent could be someuser area inside but not fully covering a_d_game!
 		// //
@@ -51,25 +68,39 @@ function openInfobox(ev, mobj, part) {
 		// let defX=mobj.x+area.w/2;
 		// let defY=mobj.y+area.h/2;
 		// console.log('...using:',defX,defY);
-		let pos = calcMainVisualPosCenterInGameArea(mobj)
-		msInfobox.setPos(pos.x,pos.y); //mobj.x+area.w/2, mobj.y+area.h/2);
 	}
 
 }
-function calcMainVisualPosCenterInGameArea(mobj){
-	let area = UIS['a_d_game'];
+function calcMainVisualPosCenterInGameArea(mk){
+	//let area = UIS[IB_PARENT];
 
-	//mobj parent could be someuser area inside but not fully covering a_d_game!
-	let parent = UIS[mobj.idParent];
+	//mobj parent could be someuser area inside but not fully covering IB_PARENT
+	//let parent = UIS[mk.idParent];
 	//if this parent does not have coords, look at his parent
-	if (nundef(parent.x)) parent = UIS[parent.idParent];
+	//if (nundef(parent.x)) parent = UIS[parent.idParent];
+
+	let dInfobox = mById(IB_PARENT);
+	//dInfobox.style.position = 'absolute';
+
+	let parent = mById(mk.idParent);
+	let bParent = getBounds(parent);
+	let bIb=getBounds(dInfobox);
+	let bMK = getBounds(mk.elem);
+
+	console.log('__________parent',parent,'\ndiv ib',dInfobox);
+	console.log('bdsparent',bParent,'\nbds ib',bIb);
+	console.log('bds mk',bMK);
 
 	let offX=0;
 	let offY=0;
-	if (mobj.cat == 'g'){offX=parent.w/2;offY=parent.h/2;}
+	if (mk.cat == 'g'){
+		offX=bIb.bParent.width/2;
+		offY=parent.h/2;
+	}
+	//if (mk.cat == 'g'){offX=bParent.w/2;offY=parent.h/2;}
 
-	let x=offX+parent.x+mobj.x;
-	let y=offY+parent.y+mobj.y;
+	let x=offX+parent.x+mk.x;
+	let y=offY+parent.y+mk.y;
 
 	return {x:x,y:y};
 

@@ -5,7 +5,7 @@ SETTINGS:
     optin: [res, num, building, port]
   pieceSizeRelativeToLoc:
     field: ['w', 30]
-  symbols:
+  symbol:
     city: 'castle'
     settlement: 'house'
   dev:

@@ -39,7 +39,6 @@ function stopAllHighlighting() {
 	if (isdef(IdOwner.r)) IdOwner.r.map(x => _removeAllHighlighting(x));
 	if (isdef(IdOwner.s)) IdOwner.s.map(x => _removeAllHighlighting(x)); //anderen clickHandler
 	if (isdef(IdOwner.t)) IdOwner.t.map(x => _removeAllHighlighting(x)); //anderen clickHandler
-	setTimeout(hideTooltip, 500);
 }
 function stopInteraction() {
 	//remove all handlers
@@ -49,10 +48,10 @@ function stopInteraction() {
 	if (isdef(IdOwner.r)) IdOwner.r.map(x => _removeInteraction(x));
 	if (isdef(IdOwner.s)) IdOwner.s.map(x => _removeInteraction(x)); //anderen clickHandler
 	if (isdef(IdOwner.t)) IdOwner.t.map(x => _removeInteraction(x)); //anderen clickHandler
-	setTimeout(hideTooltip, 500);
 }
 
 function keyUpHandler(ev) {
+	console.log('key up!')
 	checkControlKey(ev); //infobox.js
 
 }
@@ -111,7 +110,6 @@ function unfreezeUI() {
 	frozen = false;
 	hide('tempFreezer');
 }
-function hideTooltip() { }//$('div#tooltip').css({ display: 'none' }); }
 
 //#region local helpers
 function _addFilterHighlight(mk) { mk.highC('green'); }
@@ -134,6 +132,7 @@ function _addStandardInteraction(id) {
 
 		case 't':
 			if (id[0] == 'm') { //main table objects!!!!!
+				
 				mk.addClickHandler('elem', onClickFilterOrInfobox);
 
 				// if (mk.isa.deck) {

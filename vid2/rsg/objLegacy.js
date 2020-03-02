@@ -2,6 +2,7 @@ const DOMCATS = { rect: 'g', g: 'g', circle: 'g', text: 'g', polygon: 'g', line:
 //#region legacy one liners / getters
 function getPlayer(id) { return serverData.players[id]; }
 function getUser(idPlayer) { return playerConfig[GAME].players[idPlayer].username; }
+function getUsername(idPlayer){return getUser(idPlayer);} //TODO: eliminate!
 function getUsernameForPlayer(idPlayer){return getUser(idPlayer);} //TODO: eliminate!
 function getPlid(username) {
 	console.log(playerConfig[GAME].players, username);
@@ -36,7 +37,7 @@ function _getChildrenOf(id) { let ui = UIS[id]; return ui.children; }
 function getList(lst) { return isdef(lst) ? lst : []; }
 function getDefaultObjectIds() { return _getChildrenOf(SPEC.table.defaultArea); }
 function getDefaultObjects() { return getDefaultObjectIds(x => UIS[x]); }
-function getDefaultPlayerIds() { return _getChildrenOf(SPEC.player.defaultArea); }
+function getDefaultPlayerIds() { return _getChildrenOf(SPEC.players.defaultArea); }
 function getDefaultPlayers() { return getDefaultPlayerIds(x => UIS[x]); }
 function getAuxIds() { return getList(IdOwner.l); }
 function getAux() { return getAuxIds.map(x => UIS[x]); }

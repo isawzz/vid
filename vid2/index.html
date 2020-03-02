@@ -58,8 +58,11 @@
 				<button class='button' onclick='onClickStep()'>STEP</button><br>
 				<button class='button' onclick='onClickRunToEnd()'>run to end</button><br>
 				<button class='button' onclick='onClickRestart()'>restart</button><br>
-				<!-- <button class='button' onclick='onClickResetLocal()'>reset local</button>
-						<button class='button' onclick='onClickResetLocal()'>reset local</button> -->
+				<br />
+				<br />
+				<button onclick="_startNewGame('aristocracy','starter')">aristocracy</button>
+				<button onclick="_startNewGame('catan','starter')">catan</button>
+				<button onclick="_startNewGame('ttt','starter')">ttt</button>
 				<div id='tempFreezer' style='display:none'>
 					processing...<br /><br />
 					<button id='bStop' class='buttonSpecial' onclick="onClickStop()">STOP!</button>
@@ -68,11 +71,15 @@
 			<div id='testing'>
 				<div id='tabs' class='tab'>
 					<button id='bObjects' onclick="openTab(this)" class='tablinks'>objects</button>
+					<button id='bPlayers' onclick="openTab(this)" class='tablinks'>players</button>
 					<button id='bSettings' onclick="openTab(this)" class='tablinks active'>settings</button>
 				</div>
 				<div id='tabPages' class='flex' style='margin-top:-4px;width:100%'>
 					<div id="objects" class="tabcontent">
 						<div id='a_d_objects' class='flexWrap'></div>
+					</div>
+					<div id="players" class="tabcontent">
+						<div id='a_d_players' class='flexWrap'></div>
 					</div>
 					<div id="settings" class="tabcontent" style="display:block">
 						<div id='a_d_settings'>
@@ -93,8 +100,7 @@
 							</fieldset>
 							<fieldset>
 								<legend>miscellaneous</legend>
-								<button id="c_b_TTip" onclick="toggleTooltips(this)">tooltips: OFF</button>
-								<button onclick="colorSystem()">new colors</button>
+								<button onclick="onClickNewColors()">new colors</button>
 							</fieldset>
 						</div>
 					</div>

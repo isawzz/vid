@@ -1,32 +1,18 @@
-var vidCache = null;
-//#region caches 
-// var vidSettingsC = null;
-// var rsgSettingsC = null;
-var allGamesC = null;
-var playerConfigC = null;
-var iconCharsC = null;
-var c52C = null;
-var testCardsC = null
-
-var defaultSpecC = null;
-var userSpecC = null;
-var userCodeC = null;
-var initialDataC = {};
-var serverDataC = null;
-//#endregion
-//dictionaries:
-// var vidSettings = null;
-// var rsgSettings = null;
-var allGames = null;
-var playerConfig = null;
-var iconChars = null;
-var c52 = null;
-var testCards = null
-
-var defaultSpec = null
-var userSpec = null;
-var userCode = null;
-var serverData = null;
+const playerColors = {
+	red: '#D01013',
+	blue: '#003399',
+	green: '#58A813',
+	orange: '#FF6600',
+	yellow: '#FAD302',
+	violet: '#55038C',
+	pink: '#ED527A',
+	beige: '#D99559',
+	sky: '#049DD9',
+	brown: '#A65F46',
+	white: '#FFFFFF',
+};
+const THEMES=['#c9af98', '#2F4F4F', '#6B7A8F','#00303F','rgb(3, 74, 166)','#458766','#7A9D96'];
+var iTHEME=0;
 
 async function loadAssets(resetLocalStorage) {
 	//loading assets
@@ -48,7 +34,8 @@ async function loadAssets(resetLocalStorage) {
 	// console.log('icons', iconChars.crow);
 	// console.log('allGames', allGames.catan);
 	// console.log(vidCache);
-
+}
+async function loadSpecAndCode(){
 	if (TESTING) {
 
 		let url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
@@ -65,13 +52,13 @@ async function loadAssets(resetLocalStorage) {
 		serverData = vidCache.asDict('_initial_' + GAME);
 
 	} else {
-		url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
+		url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml'; //always the same default spec!
 		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), !CACHE_DEFAULTSPEC, CACHE_DEFAULTSPEC);// last 2 params: reload, useLocal
 
-		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME,USERSPEC_FNAME), !CACHE_USERSPEC, CACHE_USERSPEC);// last 2 params: reload, useLocal
+		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME,GAME+VERSION), !CACHE_USERSPEC, CACHE_USERSPEC);// last 2 params: reload, useLocal
 		let fname = userSpecC['CODE'];
 
-		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME,CODE_FNAME), !CACHE_CODE, CACHE_CODE); // last 2 params: reload, useLocal
+		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME,GAME+VERSION), !CACHE_CODE, CACHE_CODE); // last 2 params: reload, useLocal
 
 		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME],USERNAME), !CACHE_INITDATA, CACHE_INITDATA); // last 2 params: reload, useLocal 
 	}
@@ -88,24 +75,10 @@ async function loadAssets(resetLocalStorage) {
 	//delete serverData.table.asText;
 	// document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
 	// document.getElementById("json-result").innerHTML = JSON.stringify(serverData.table, undefined, 2);
-	//#endregion
 
 
 }
 
-const playerColors = {
-	red: '#D01013',
-	blue: '#003399',
-	green: '#58A813',
-	orange: '#FF6600',
-	yellow: '#FAD302',
-	violet: '#55038C',
-	pink: '#ED527A',
-	beige: '#D99559',
-	sky: '#049DD9',
-	brown: '#A65F46',
-	white: '#FFFFFF',
-};
 
 
 

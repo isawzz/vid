@@ -2,27 +2,38 @@ window.onload = () => _startSession();
 
 async function _startSession(resetLocalStorage = false) {
 
-	timit = new TimeIt('*timer',true); // [true] | false (false fuer tacit)
+	timit = new TimeIt('*timer', true); // [true] | false (false fuer tacit)
 
 	//resetLocalStorage = true; //********** true for LOCALSTORAGE CLEAR!!!!! */
 	await loadAssets(resetLocalStorage);
 	timit.showTime('*load asset and server done!');
 
-	updatePlayerConfig();
+	addEventListener('keyup', keyUpHandler);
+	addEventListener('keydown', keyDownHandler);
 
-	_startNewGame();
+	await _startNewGame();
+
+	openTab(mById('bPlayers'));
 
 	//	makeCard52_test(1, null, { key: 'green2', area: 'decks' });
 }
-function _startNewGame(){_startGame();}
-function _startGame(){
+async function _startNewGame(game) { 
+	//need to reload spec & code!
+	if (isdef(game)) GAME = game;
+	await loadSpecAndCode();
+	updatePlayerConfig(); //sets colors for current players from initial serverData
+	_startGame(); 
+}
+function _startGame() {
 	//existing log divs are cleared or LOG is cleared
 	logClearAll();
+	scenarioQ = [];
 	_startStep();
 
 }
 
 function _startStep() {
+	reset_zoom_on_resize();
 	mkMan = new MKManager();
 	clearStep();
 
@@ -48,6 +59,7 @@ function _startStep() {
 
 	rPresentDefault();//???
 
+	rPresentStatus();
 	rPresentLog();
 
 	timit.showTime('*presentation done!');
@@ -59,57 +71,53 @@ function _startStep() {
 		presentWaitingFor(); //das ist async!!!
 	}
 
+	zoom_on_resize('actions', 'table', 'logDiv', 30);
 
-	//calcScreenSizeNeeded();
-	//if (firstTime) openTab(mById('bObjects'));
-	//zoom_on_resize('actions','table','logDiv',30);
-	//if (firstTime) {firstTime = false; initZoomToFit('actions','table','logDiv',30);}
 }
 
-function presentStatus() {
-	if (isdef(serverData.status)) {
-		let lineArr = serverData.status.line;
+function rPresentStatus() {
+	if (nundef(serverData.status)) { return; }
 
-		let areaName = isPlain() ? 'statusInHeaderText' : 'status';
-		let d = mById(areaName);
-		//TODO delete refs in status line! only have to do that if not clear everything anyway!
+	let lineArr = serverData.status.line;
 
-		clearElement(d);
+	let areaName = isPlain() ? 'statusInHeaderText' : 'status';
+	let d = mById(areaName);
+	//TODO delete refs in status line! only have to do that if not clear everything anyway!
 
-		//make aux for current player (TODO: could reuse these but maybe not necessary)
-		let pl = G.player;
-		let msStatus = makeAux(G.playersAugmented[pl].username + ' (' + pl + ')', pl, areaName);
-		let color = getPlayerColor(pl);
-		msStatus.setBg(color);
-		msStatus.setFg(colorIdealText(color));
+	clearElement(d);
 
-		d.appendChild(document.createTextNode(': '));
+	//make aux for current player (TODO: could reuse these but maybe not necessary)
+	let pl = gamePlayerId;
+	let msStatus = makeAux(getUsername(pl) + ' (' + pl + ')', pl, areaName);
+	let color = getPlayerColor(pl);
+	msStatus.setBg(color);
+	msStatus.setFg(colorIdealText(color));
 
-		for (const item of lineArr) {
-			if (isSimple(item)) {
-				let s = trim(item.toString());
-				if (!isEmpty(s)) {
-					//console.log('adding item:', s, 'to log');
-					d.appendChild(document.createTextNode(item)); //ausgabe+=item+' ';
-				}
-			} else if (isDict(item)) {
-				//console.log(item);
-				if (item.type == 'obj') {
-					let oid = item.ID;
-					let mobj = makeAux(item.val, oid, areaName);
-				} else if (item.type == 'player') {
-					let oid = item.val;
-					let mobj = makeAux(item.val, oid, areaName);
-				}
+	d.appendChild(document.createTextNode(': '));
+
+	for (const item of lineArr) {
+		if (isSimple(item)) {
+			let s = trim(item.toString());
+			if (!isEmpty(s)) {
+				//console.log('adding item:', s, 'to log');
+				d.appendChild(document.createTextNode(item)); //ausgabe+=item+' ';
+			}
+		} else if (isDict(item)) {
+			//console.log(item);
+			if (item.type == 'obj') {
+				let oid = item.ID;
+				let mobj = makeAux(item.val, oid, areaName);
+			} else if (item.type == 'player') {
+				let oid = item.val;
+				let mobj = makeAux(item.val, oid, areaName);
 			}
 		}
 	}
 }
 function setStatus(s) {
-	let areaName = isPlain() ? 'c_d_statusInHeaderText' : 'c_d_statusText';
+	let areaName = isPlain() ? 'statusInHeaderText' : 'status';
 	let d = document.getElementById(areaName);
-	let mobj = UIS[areaName];
-	mobj.clear(); clearElement(d);
+	//clearElement(d);
 	d.innerHTML = s;
 }
 
@@ -117,17 +125,11 @@ function rPresentLog() {
 	if (nundef(serverData.log)) return;
 	let pl = gamePlayerId;
 
-	let dLog=logGetDiv(pl);
+	let dLog = logGetDiv(pl);
 	let logId = dLog.id;
-	
-	// let dLog=mTextDiv('hallo','logDiv');
-	// mStyle(dLog,{'background-color':'red',color:'blue',width:100,height:100,position:'relative',left:0,top:0},'%');
-	// mFont(dLog,20);
-	// let logId = 'logDiv' + '_' + pl;
-	// dLog.id = logId;
+
 	logRenew();
 	let BASEMARGIN = 16;
-	//let lineDiv;
 	for (const logEntry of serverData.log) {
 		let lineArr = logEntry.line;
 		let lineDiv = document.createElement('div');
@@ -136,15 +138,8 @@ function rPresentLog() {
 		for (const item of lineArr) {
 			if (isSimple(item)) {
 				let s = trim(item.toString());
-				if (!isEmpty(s)) {
-					//console.log('adding item:', s, 'to log');
-					lineDiv.appendChild(document.createTextNode(item));
-					//let node=document.createElement('div');
-					//node.innerHTML = item;
-					//d.appendChild(node); //ausgabe+=item+' ';
-				}
+				if (!isEmpty(s)) { lineDiv.appendChild(document.createTextNode(item)); }
 			} else if (isDict(item)) {
-				//console.log(item);
 				if (item.type == 'obj') {
 					let oid = item.ID;
 					let mobj = makeAux(item.val, oid, logId, lineDiv);
@@ -157,30 +152,9 @@ function rPresentLog() {
 			}
 		}
 		dLog.appendChild(lineDiv);
-		
-		//lineDiv.scrollIntoView();
 	}
 	dLog.scrollTop = dLog.scrollHeight;
-	
+
 }
 
-function processLog(data) {
-	if (nundef(serverData.log)) return;
-	//if (!G.log) G.log = {};
-	let pl = gamePlayerId;// G.player;
-	//if (!G.log[pl]) G.log[pl] = {};
-	//let dict = G.log[pl];
-	//G.logUpdated = []; //keys to new logs
-	for (const logEntry of data.log) {
-
-		//save this log so it isnt created multiple times!!!
-		//let key = logEntry.line.map(x => isSimple(x) ? x : x.val).join(' ');
-		//	let key = '' + logCounter + '_' + logEntry.line.map(x => isSimple(x) ? x : x.val).join(' ');
-		//	logCounter += 1;
-
-		//	if (dict[key]) continue;
-		//	dict[key] = logEntry;
-		//	G.logUpdated.push(key);
-	}
-}
 

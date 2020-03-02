@@ -22,7 +22,7 @@ function rPresentSpec() {
 				if (mappingsInitialized[otype + '.' + oid]) continue;
 
 				executeMappings(otype, oid, o, pool);
-				mappingsInitialized[otype + '.' + oid]=true;
+				mappingsInitialized[otype + '.' + oid] = true;
 			}
 		}
 	}
@@ -36,9 +36,9 @@ function executeMappings(otype, oid, o, pool) {
 	for (const mapping of mm) {
 		//find object to map (this can be o itself or some [nested] property)
 		let mKey = mapping.id;
-		let omap = parsePropertyPath(o,stringAfter(mKey,'.'));
+		let omap = parsePropertyPath(o, stringAfter(mKey, '.'));
 		//console.log('object to be mapped is',omap);
-		let func = mapping.type; 
+		let func = mapping.type;
 		let loc = mapping.loc;
 		//console.log(func,loc,window[func]);
 		let structObject = window[func](serverData.table, loc, o, oid);
@@ -56,6 +56,9 @@ function rMergeSpec() {
 	delete SPEC.asText;
 	document.getElementById('mergedSpec').innerHTML = '<pre id="spec-result"></pre>';
 	document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
+
+
+	//console.log(defaultSpec.color,userSpec.color,SPEC.color)
 
 
 	_initAutoplayToActionButtons();
@@ -77,13 +80,20 @@ function _initAutoplayToActionButtons() {
 	let defaultIds = ['c_b_NextPlayer', 'c_b_NextTurn', 'c_b_NextPhase'];
 
 	let kws = lookup(SPEC, ['dev', 'run_to_buttons']);
-	if (!kws) kws = {};
-	let kwKeys = getKeys(kws);
-	let requiredButtonIds = kwKeys.map(x => 'c_b_RTA_' + x).concat(defaultIds);
-	let actualButtons = buttons.filter(x => x.id).map(x => x.id);
+	let requiredButtonIds;
+	if (!kws) {
+		kws = {};
+		requiredButtonIds = defaultIds;
+	}else {
+		let kwKeys = getKeys(kws);
+		requiredButtonIds = kwKeys.map(x => 'c_b_RTA_' + x).concat(defaultIds);
+	}
+	let actualButtonIds = buttons.filter(x => x.id).map(x => x.id);
 
-	for (const id of arrMinus(actualButtons, requiredButtonIds)) $('#' + id).remove();
-	for (const id of arrMinus(requiredButtonIds, actualButtons)) {
+	console.log(actualButtonIds,requiredButtonIds)
+
+	for (const id of arrMinus(actualButtonIds, requiredButtonIds)) mRemove(id);
+	for (const id of arrMinus(requiredButtonIds, actualButtonIds)) {
 		let b = document.createElement('button');
 		let key = id.substring(8);
 		b.innerHTML = kws[key];

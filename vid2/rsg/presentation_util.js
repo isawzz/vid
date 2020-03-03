@@ -297,7 +297,7 @@ function makeDrawingElement(id, idDrawingArea, addToUIS = false) {
 	}
 	return mk;
 }
-function makeCard(oid, o, areaName) {
+function makeCard_dep(oid, o, areaName) {
 	let idArea = getIdArea(areaName);
 	//console.log('***makeCard', oid, areaName);
 	let id = 'm_t_' + oid;

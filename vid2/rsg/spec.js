@@ -2,14 +2,22 @@ var mappings;
 var mappingsInitialized;
 var mappingTypes;
 
+//mapping keys are of the form: obj_type.prop1...propn
+//mappings is a list of mappings.
+// a mapping in this list has id=obj_type of structure in serverData
+//there is a setting ignoreStructureTypesInPresentation = [true] that refers to these obj_types
+function mappingsClear() {
+	mappingTypes = {};
+	mappingsInitialized = {};
+}
 function rMappings() {
 	//using initial serverData, setup structures to establish mappings
-	mappingTypes = {};
-	mappings = SPEC.mappings; 
+	//mappingTypes = {};
+	mappings = SPEC.mappings;
 	if (nundef(mappings)) return false;
 	mappings = dict2list(mappings, 'id').map(x => { let k = stringBefore(x.id, '.'); mappingTypes[k] = x[k] = true; return x; });
-	mappingsInitialized = {};
-	console.log('mappings',mappings);
+	//mappingsInitialized = {};
+	console.log('mappings', mappings, mappingTypes);
 }
 function rPresentSpec() {
 	// 	//look in table or in players for objects that map any of the mappings!
@@ -20,30 +28,34 @@ function rPresentSpec() {
 			let o = pool[oid];
 			let otype = o.obj_type;
 			if (mappingTypes[otype]) {
+				//there have been found mappings on this object type
+				//check all these mappings
+
 				if (mappingsInitialized[otype + '.' + oid]) continue;
 
-				executeMappings(otype, oid, o, pool);
-				mappingsInitialized[otype + '.' + oid] = true;
+				let mm = mappings.filter(x => x[otype]);
+				//console.log('matching mappings for object', oid, mm);
+				let onlyOnce = true;
+				for (const mapping of mm) {
+					if (!mapping.immutable) onlyOnce = false;
+					executeMapping(mapping, otype, oid, o, pool);
+				}
+				if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
 			}
 		}
 	}
 }
-function executeMappings(otype, oid, o, pool) {
-	//there have been found mappings on this object type
-	//check all these mappings
-	let mm = mappings.filter(x => x[otype]);
-	console.log('matching mappings for object', oid, mm);
-
-	for (const mapping of mm) {
-		//find object to map (this can be o itself or some [nested] property)
-		let mKey = mapping.id;
-		let omap = parsePropertyPath(o, stringAfter(mKey, '.'));
-		//console.log('object to be mapped is',omap);
-		let func = mapping.type;
-		let loc = mapping.loc;
-		console.log(func,loc,window[func]);
-		let structObject = window[func](serverData.table, loc, o, oid);
-	}
+function executeMapping(mapping, otype, oid, o, pool) {
+	//find object to map (this can be o itself or some [nested] property)
+	let mKey = mapping.id;
+	let path = stringAfter(mKey, '.');
+	let omap = parsePropertyPath(o, stringAfter(mKey, '.'));
+	//console.log('object to be mapped is',omap);
+	let func = mapping.type;
+	let loc = mapping.loc;
+	// console.log('mapping:',mapping);
+	console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
+	let structObject = window[func](serverData.table, loc, o, oid, path, omap);
 }
 
 function rMergeSpec() {
@@ -55,8 +67,10 @@ function rMergeSpec() {
 	//SPEC is merged userSpec!
 	//console.log(SPEC);
 	delete SPEC.asText;
-	document.getElementById('mergedSpec').innerHTML = '<pre id="spec-result"></pre>';
-	document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
+	// document.getElementById('SPEC').innerHTML = '<pre id="spec-result"></pre>';
+	// document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
+
+	mById('SPEC').innerHTML = '<pre>"' + jsonToYaml(SPEC) + '"</pre>';
 
 
 	//console.log(defaultSpec.color,userSpec.color,SPEC.color)
@@ -85,7 +99,7 @@ function _initAutoplayToActionButtons() {
 	if (!kws) {
 		kws = {};
 		requiredButtonIds = defaultIds;
-	}else {
+	} else {
 		let kwKeys = getKeys(kws);
 		requiredButtonIds = kwKeys.map(x => 'c_b_RTA_' + x).concat(defaultIds);
 	}

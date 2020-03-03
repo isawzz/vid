@@ -1,6 +1,6 @@
 COND = {
 	dummy: (o) => { if (o.someprop == 'x') return { f: 'some_key_in_FUNCS' }; },
-	//card: (o) => { if (o.generic_type == 'card') return { f: 'card' } }
+	card: (o) => { if (o.generic_type == 'card') return { f: 'card' } }
 };
 
 FUNCS = {

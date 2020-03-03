@@ -19,6 +19,10 @@ deckDetection: true
 useColorHintForProperties: true
 useColorHintForObjects: true
 onlySimpleValues: true
+ignoreStructureTypesInPresentation : true
+collapseEmptySmallLetterAreas: false
+shadeAreaBackgrounds: true
+showAreaNames: true
 extendedOptout:
   color: 1
   altName: 1
@@ -36,6 +40,8 @@ extendedOptout:
   corners: 1
   row: 1
   col: 1
+  rows: 1
+  cols: 1
 
 useExtendedOptout: true
 addSymbolToEdges: false

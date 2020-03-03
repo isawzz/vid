@@ -1323,6 +1323,16 @@ function saveFileAtClient(name, type, data) {
 	// 	a.remove();
 	// }, 500);
 }
+function jsonToYaml(o){
+	// this is your json object
+	//JSONObject jsonobject = new JSONObject(map);
+	// get json string
+	let y = jsyaml.dump(o);
+	return y;
+ //  let text= JSON.stringify(o); //o.toString(4);
+ //  let di = jsyaml.load(text);
+ //  let y = jsyaml.dump(di);
+}
 //#endregion
 
 //#region functions

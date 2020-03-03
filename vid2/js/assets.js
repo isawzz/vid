@@ -11,8 +11,8 @@ const playerColors = {
 	brown: '#A65F46',
 	white: '#FFFFFF',
 };
-const THEMES=['#c9af98', '#2F4F4F', '#6B7A8F','#00303F','rgb(3, 74, 166)','#458766','#7A9D96'];
-var iTHEME=0;
+const THEMES = ['#c9af98', '#2F4F4F', '#6B7A8F', '#00303F', 'rgb(3, 74, 166)', '#458766', '#7A9D96'];
+var iTHEME = 0;
 
 async function loadAssets(resetLocalStorage) {
 	//loading assets
@@ -35,47 +35,49 @@ async function loadAssets(resetLocalStorage) {
 	// console.log('allGames', allGames.catan);
 	// console.log(vidCache);
 }
-async function loadSpecAndCode(){
+async function loadSpecAndCode() {
+	let initialPath = GAME + (USE_MAX_PLAYER_NUM ? '_max' : '');
 	if (TESTING) {
 
 		let url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
 		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);// last 2 params: reload, useLocal
 
-		url = TEST_PATH+GAME+'/uspec' + USPEC_VERSION + '.yaml';
+		url = TEST_PATH + GAME + '/uspec' + USPEC_VERSION + '.yaml';
 		userSpecC = await vidCache.load('userSpec', async () => await route_test_userSpec(url), true, false);// last 2 params: reload, useLocal
 
-		url = TEST_PATH +GAME+'/code' + CODE_VERSION + '.js';
+		url = TEST_PATH + GAME + '/code' + CODE_VERSION + '.js';
 		userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);// last 2 params: reload, useLocal
 
-		url = TEST_PATH +GAME+'/data' + DATA_VERSION + '_' + GAME + '.yaml';
-		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_path_yaml_dict(url)); // last 2 params: reload, useLocal
-		serverData = vidCache.asDict('_initial_' + GAME);
+		url = TEST_PATH + GAME + '/data' + DATA_VERSION + '_' + initialPath + '.yaml';
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url)); // last 2 params: reload, useLocal
+		serverData = vidCache.asDict('_initial_' + initialPath);
 
 	} else {
 		url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml'; //always the same default spec!
 		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), !CACHE_DEFAULTSPEC, CACHE_DEFAULTSPEC);// last 2 params: reload, useLocal
 
-		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME,GAME+VERSION), !CACHE_USERSPEC, CACHE_USERSPEC);// last 2 params: reload, useLocal
+		userSpecC = await vidCache.load('userSpec', async () => await route_userSpec(GAME, GAME + VERSION), !CACHE_USERSPEC, CACHE_USERSPEC);// last 2 params: reload, useLocal
 		let fname = userSpecC['CODE'];
 
-		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME,GAME+VERSION), !CACHE_CODE, CACHE_CODE); // last 2 params: reload, useLocal
+		userCodeC = await vidCache.load('userCode', async () => await route_userCode(GAME, GAME + VERSION), !CACHE_CODE, CACHE_CODE); // last 2 params: reload, useLocal
 
-		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + GAME, async () => await route_initGame(GAME, playerConfig[GAME],USERNAME), !CACHE_INITDATA, CACHE_INITDATA); // last 2 params: reload, useLocal 
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_initGame(GAME, playerConfig[GAME], USERNAME), !CACHE_INITDATA, CACHE_INITDATA); // last 2 params: reload, useLocal 
 	}
 	defaultSpec = vidCache.asDict('defaultSpec');
 	userSpec = vidCache.asDict('userSpec');
 	userCode = vidCache.asDict('userCode');
 	loadCode(userCode.asText);
-	serverData = vidCache.asDict('_initial_' + GAME);
+	serverData = vidCache.asDict('_initial_' + initialPath);
 
 	//timit.showTime('*** DONE ***');
 	document.getElementById('userSpec').innerHTML = '<pre>' + userSpec.asText + '</pre>'; //PERFECT!!!!!!!!!!
 	document.getElementById('code').innerHTML = '<pre>"' + userCode.asText + '"</pre>'; //PERFECT!!!!!!!!!!
 
 	//delete serverData.table.asText;
-	// document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
-	// document.getElementById("json-result").innerHTML = JSON.stringify(serverData.table, undefined, 2);
+	document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
+	document.getElementById("json-result").innerHTML = JSON.stringify(serverData, undefined, 2);
 
+	mById('serverData').innerHTML = '<pre>"' + jsonToYaml(serverData.table) + '"</pre>';
 
 }
 

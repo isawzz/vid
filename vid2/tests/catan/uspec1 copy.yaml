@@ -20,7 +20,6 @@ mappings: #form: obj_type.property1.property2...
     corner_type: Corner
     edge_type: Edge
     loc: board
-    mutable: false #speeds up presentation
   # GamePlayer.devcards: 
   #   type: cardHand
   #   loc: player
@@ -39,7 +38,7 @@ symbol:
   city: 'castle'
   settlement: 'house'
 color: #used for colorHintDetection
-  theme: '#6B7A8F'
+  theme: '#3d7c47'
   wood: 'maroon'
   brick: 'salmon'
   wheat: 'yellow'

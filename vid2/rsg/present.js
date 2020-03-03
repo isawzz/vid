@@ -26,6 +26,8 @@ function rPresentDefault() {
 			if (mk) {
 				if (o.loc) _presentLocationChange(oid, o, mk, isTable);
 				//console.log('presenting main!',oid)
+				if (otype in mappingTypes && SPEC.ignoreStructureTypesInPresentation) continue;
+				//console.log(otype,otype in mappingTypes, SPEC.ignoreStructureTypesInPresentation)
 				presentMain(oid, o, mk);
 			}
 			if (mkDefault) {

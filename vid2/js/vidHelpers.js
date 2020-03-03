@@ -46,6 +46,7 @@ function stubPlayerConfig(gameInfo) {
 		let info = gameInfo[gName]
 		//console.log(gName, info);
 		let nPlayers = info.num_players[0]; // min player number, info.num_players.length - 1]; // max player number
+		if (USE_MAX_PLAYER_NUM) nPlayers = info.num_players[info.num_players.length - 1]; // max player number
 		let pls = {};
 		for (let i = 0; i < nPlayers; i++) {
 			let id = info.player_names[i];

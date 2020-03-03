@@ -1,4 +1,41 @@
 //********************************************/
+//* RSG types                              */
+//********************************************/
+function hexGrid(soDict, loc, sBoard, idBoard) {
+	//timit.showTime(getFunctionCallerName());
+	//let [idBoard, sBoard] = findMatch(soDict, condList);
+
+	return _hexGrid(loc, idBoard, sBoard, soDict);
+}
+function quadGrid(soDict, loc, sBoard, idBoard) {
+	//timit.showTime(getFunctionCallerName());
+	//let [idBoard, sBoard] = findMatch(soDict, condList);
+	console.log('quadGrid call')
+	return _quadGrid(loc, idBoard, sBoard, soDict);
+}
+function cardHand(objectPool, loc, o, oid, path, oHand) {
+	//console.log('_______cardHand')
+	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
+	// return _hexGrid(loc, path, oHand, objectPool);
+	let ids = getElements(oHand);
+	console.log('have to present',ids,'in area',loc)
+}
+
+function cardHandCompact(objectPool, loc, o, oid, path, oHand) {
+	//console.log('_______cardHand')
+	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
+	// return _hexGrid(loc, path, oHand, objectPool);
+	let ids = getElements(oHand);
+	console.log('have to present',ids,'in area',loc)
+}
+
+
+
+
+
+
+//#region old code still used!
+//********************************************/
 //* main functions                           */
 //********************************************/
 function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 20, edgeColor, fieldColor, nodeColor, iPalette = 1, nodeShape = 'circle', factors, w, h } = {}) {
@@ -10,10 +47,10 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 	//same for nodeColor, edgeColor
 	let area = UIS[board.idParent];
 	let div = area.elem;
-	let dim = getBounds(div); 
+	let dim = getBounds(div);
 
-	w=dim.width;
-	h=dim.height;
+	w = dim.width;
+	h = dim.height;
 
 	let pal = getTransPalette('silver');
 	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
@@ -30,7 +67,7 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 		for (const id of board.structInfo.corners) {
 			let mk = getVisual(id);
 			makeVisual(mk, mk.memInfo.x * fw, mk.memInfo.y * fh, Math.max(board.structInfo.wdef * nw, ew), Math.max(board.structInfo.hdef * nh, ew), nodeColor, nodeShape);
-			
+
 		}
 	}
 	if (isdef(board.structInfo.edges)) {
@@ -45,7 +82,7 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 
 			makeVisual(mk, mk.memInfo.x * fw, mk.memInfo.y * fh, mk.memInfo.thickness * ew, 0, edgeColor, 'line', { x1: mk.memInfo.x1 * fw, y1: mk.memInfo.y1 * fh, x2: mk.memInfo.x2 * fw, y2: mk.memInfo.y2 * fh });
 			//set length of line!
-			mk.length = mk.h = mk.distance-nodeSize;
+			mk.length = mk.h = mk.distance - nodeSize;
 			mk.attach();
 			//break;
 		}
@@ -73,10 +110,6 @@ function createGrid(areaName, idBoard, sBoard, sMemberPool, shape) {
 
 	return board;
 }
-
-//********************************************/
-//* RSG types                              */
-//********************************************/
 function areaRows(soDict, loc) {
 	//for each object in soDict makes a row div
 	let area = getVisual(loc);
@@ -104,18 +137,6 @@ function areaRows(soDict, loc) {
 		ipal = (ipal + 1) % pal.length;
 	}
 }
-function hexGrid(soDict, loc, sBoard, idBoard) {
-	//timit.showTime(getFunctionCallerName());
-	//let [idBoard, sBoard] = findMatch(soDict, condList);
-
-	return _hexGrid(loc, idBoard, sBoard, soDict);
-}
-function quadGrid(soDict, loc, sBoard, idBoard) {
-	//timit.showTime(getFunctionCallerName());
-	//let [idBoard, sBoard] = findMatch(soDict, condList);
-	console.log('quadGrid call')
-	return _quadGrid(loc, idBoard, sBoard, soDict);
-}
 function detectBoard(soDict, loc) {
 	timit.showTime('*** board start ***')
 	let idBoard = firstCondDict(soDict, x => isBoardObject(x)); // isdef(x.map) && isdef(x.fields));
@@ -137,6 +158,8 @@ function detectBoard(soDict, loc) {
 // 	let [idBoard, sBoard] = findMatch(soDict, condList);
 // 	return _quadGrid(loc, idBoard, sBoard, soDict);
 // }
+//#endregion
+
 
 //#region helpers
 function _quadGrid(loc, idBoard, sBoard, soDict) {
@@ -249,7 +272,7 @@ function getBoardScaleFactors(board, { factors, opt, f2nRatio, w, h, margin } = 
 		}
 		nw = Math.floor(fw / f2nRatio);
 		nh = Math.floor(fh / f2nRatio);
-		if (ew > nw) ew=nw*1.2;
+		if (ew > nw) ew = nw * 1.2;
 	}
 	return [fw, fh, nw, nh, ew];
 }

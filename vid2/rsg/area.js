@@ -30,7 +30,8 @@ function rAreas() {
 		let d1 = document.createElement('div');
 		d1.id = areaName;
 		d1.style.gridArea = k;
-		d1.style.backgroundColor = palette[ipal]; console.log(d1.style.backgroundColor);
+		d1.style.backgroundColor = palette[ipal]; 
+		//console.log(d1.style.backgroundColor);
 		ipal = (ipal+1)%palette.length;
 		d1.innerHTML = areaName;
 		d1.classList.add('area');

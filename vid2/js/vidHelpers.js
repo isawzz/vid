@@ -100,6 +100,9 @@ function openTab(button) {
 
 //#endregion
 
+//#region blinking
+function areaBlink(id) { mById(id).classList.add('blink'); }
+function stopBlinking(id) { mById(id).classList.remove('blink'); }
 
 
 

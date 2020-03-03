@@ -285,7 +285,7 @@ function _pickStringForAction(x) {
 	if (x.type == 'player') return x.val;
 }
 function checkPlayerChange() {
-	if (!serverData.players) { alert('no players in serverData!!!'); }
+	if (!serverData.players) { return;} //alert('no players in serverData!!!'); }
 	let plid = firstCondDict(serverData.players, x => x.obj_type == 'GamePlayer');
 	if (plid != gamePlayerId) {
 		//player changed!!!

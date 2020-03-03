@@ -1,6 +1,6 @@
 var USERNAME = 'felix';
 const USERNAME_ORIG = USERNAME;
-var GAME = 'catan'; // catan | aristocracy | ttt | game01
+var GAME = 'ttt'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 

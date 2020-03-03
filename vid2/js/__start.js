@@ -17,24 +17,35 @@ async function _startSession(resetLocalStorage = false) {
 
 	//	makeCard52_test(1, null, { key: 'green2', area: 'decks' });
 }
-async function _startNewGame(game) { 
+async function _startNewGame(game) {
 	//need to reload spec & code!
 	if (isdef(game)) GAME = game;
+
 	await loadSpecAndCode();
+
 	updatePlayerConfig(); //sets colors for current players from initial serverData
-	_startGame(); 
+
+	_startGame();
 }
 function _startGame() {
-	//existing log divs are cleared or LOG is cleared
+
+	stopBlinking('status');
+	// hide('passToNextPlayerUI');
+	// hide('freezer');
+
 	logClearAll();
 	scenarioQ = [];
+
 	_startStep();
 
 }
 
 function _startStep() {
+
 	reset_zoom_on_resize();
+
 	mkMan = new MKManager();
+
 	clearStep();
 
 	pageHeaderInit();
@@ -64,12 +75,9 @@ function _startStep() {
 
 	timit.showTime('*presentation done!');
 
-	if (serverData.options) {
-		presentActions();
-		getReadyForInteraction();
-	} else if (serverData.waiting_for) {
-		presentWaitingFor(); //das ist async!!!
-	}
+	if (serverData.options) { presentActions(); getReadyForInteraction(); }
+	else if (serverData.waiting_for) { presentWaitingFor(); }
+	else if (serverData.end) { rPresentEnd(); }
 
 	zoom_on_resize('actions', 'table', 'logDiv', 30);
 
@@ -157,4 +165,21 @@ function rPresentLog() {
 
 }
 
+function rPresentEnd() {
+	let winner = serverData.end.winner;
+	//console.log('game over! winner', winner)
+
+	let plWinner = playerConfig[GAME].players[winner];
+	let msg = winner == null ? 'Both players win!' : 'Winner is ' + plWinner.username;
+	setStatus('GAME OVER! ' + msg);
+	if (winner) { setCSSVariable('--bgWinner', plWinner.color); areaBlink('status'); }
+
+	//UI update
+	setAutoplayFunctionForMode(); 
+	unfreezeUI();
+
+	//clear action div
+	let d = mById('a_d_divSelect'); clearElement(d); d.scrollTop = 0;
+	return true;
+}
 

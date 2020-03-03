@@ -1,20 +1,18 @@
-SETTINGS:
-  gameAreaSize: [600, 600]
-  table:
-    optin: [symbol]
-  color:
-    theme: "#668dff"
+tableSize: [400, 300]
+layout: [
+  " m ",
+]
+areas:
+  m: board
 
-STRUCTURES:
-  P:
-    location: a_d_game
-    bounds: [0, 0, 600, 100, px]
-    color: '#0000000D'
-  M:
-    location: a_d_game
-    bounds: [0, 100, 600, 500, px]
-    structure: 
-      type: detectBoard
+#mappings generate structures or lists, or can be used as a shortcut for simple behaviors
+mappings: #form: obj_type.property1.property2...
+  Board:
+    type: quadGrid
+    loc: board
 
-CODE: ttt_ui
+color:
+  theme: "#668dff"
 
+table:
+  optin: [symbol]

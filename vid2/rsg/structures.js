@@ -110,6 +110,12 @@ function hexGrid(soDict, loc, sBoard, idBoard) {
 
 	return _hexGrid(loc, idBoard, sBoard, soDict);
 }
+function quadGrid(soDict, loc, sBoard, idBoard) {
+	//timit.showTime(getFunctionCallerName());
+	//let [idBoard, sBoard] = findMatch(soDict, condList);
+	console.log('quadGrid call')
+	return _quadGrid(loc, idBoard, sBoard, soDict);
+}
 function detectBoard(soDict, loc) {
 	timit.showTime('*** board start ***')
 	let idBoard = firstCondDict(soDict, x => isBoardObject(x)); // isdef(x.map) && isdef(x.fields));
@@ -126,11 +132,11 @@ function detectBoard(soDict, loc) {
 	return null;
 
 }
-function quadGrid(soDict, loc, condList) {
-	//timit.showTime(getFunctionCallerName());
-	let [idBoard, sBoard] = findMatch(soDict, condList);
-	return _quadGrid(loc, idBoard, sBoard, soDict);
-}
+// function quadGrid(soDict, loc, condList) {
+// 	//timit.showTime(getFunctionCallerName());
+// 	let [idBoard, sBoard] = findMatch(soDict, condList);
+// 	return _quadGrid(loc, idBoard, sBoard, soDict);
+// }
 
 //#region helpers
 function _quadGrid(loc, idBoard, sBoard, soDict) {
@@ -160,7 +166,7 @@ function findMatch(odict, condList) {
 function getQuadGridInfo(rows, cols) {
 	[wdef, hdef] = [4, 4];
 	let info = {
-		structType: 'grid',
+		structType: 'quadGrid',
 		rows: rows,
 		cols: cols,
 		wdef: 4,

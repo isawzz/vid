@@ -5,10 +5,11 @@ var mappingTypes;
 function rMappings() {
 	//using initial serverData, setup structures to establish mappings
 	mappingTypes = {};
-	mappings = SPEC.mappings; if (nundef(mappings)) return false;
+	mappings = SPEC.mappings; 
+	if (nundef(mappings)) return false;
 	mappings = dict2list(mappings, 'id').map(x => { let k = stringBefore(x.id, '.'); mappingTypes[k] = x[k] = true; return x; });
 	mappingsInitialized = {};
-	//console.log('mappings',mappings);
+	console.log('mappings',mappings);
 }
 function rPresentSpec() {
 	// 	//look in table or in players for objects that map any of the mappings!
@@ -31,7 +32,7 @@ function executeMappings(otype, oid, o, pool) {
 	//there have been found mappings on this object type
 	//check all these mappings
 	let mm = mappings.filter(x => x[otype]);
-	//console.log('matching mappings for object', oid, mm);
+	console.log('matching mappings for object', oid, mm);
 
 	for (const mapping of mm) {
 		//find object to map (this can be o itself or some [nested] property)
@@ -40,7 +41,7 @@ function executeMappings(otype, oid, o, pool) {
 		//console.log('object to be mapped is',omap);
 		let func = mapping.type;
 		let loc = mapping.loc;
-		//console.log(func,loc,window[func]);
+		console.log(func,loc,window[func]);
 		let structObject = window[func](serverData.table, loc, o, oid);
 	}
 }
@@ -90,7 +91,7 @@ function _initAutoplayToActionButtons() {
 	}
 	let actualButtonIds = buttons.filter(x => x.id).map(x => x.id);
 
-	console.log(actualButtonIds,requiredButtonIds)
+	//console.log(actualButtonIds,requiredButtonIds)
 
 	for (const id of arrMinus(actualButtonIds, requiredButtonIds)) mRemove(id);
 	for (const id of arrMinus(requiredButtonIds, actualButtonIds)) {

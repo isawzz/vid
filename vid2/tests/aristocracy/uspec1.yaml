@@ -3,8 +3,8 @@ tableSize: [700, 500]
 layout: [
   'd Z Z o',
   'd Z Z o',
-  'd P P a',
-  'h h h h'
+  'd P P o',
+  'h h h o'
   ]
 
 areas: 
@@ -15,10 +15,14 @@ areas:
   P: player
   o: others
 
+playerStatsAreas:  #standard setting
+  type: columnGrid
+  loc: others
+  
 mappings:
   GamePlayer.hand:
     type: cardHand
-    loc: hand
+    loc: player
   opponent.hand:
-    type: cardHandCompact
-    loc: others
+    type: cardHand
+    loc: this.name

@@ -20,10 +20,13 @@ mappings: #form: obj_type.property1.property2...
     corner_type: Corner
     edge_type: Edge
     loc: board
-    immutable: true
-  # GamePlayer.devcards: 
-  #   type: cardHand
-  #   loc: player
+    immutable: true #not implemented!
+  GamePlayer.devcards: 
+    type: cardHand
+    loc: player
+  opponent.hand:
+    type: cardHand
+    loc: player
   # GamePlayer.resources: 
   #   type: valueByKey
   #   loc: player

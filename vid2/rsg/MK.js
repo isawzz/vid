@@ -1301,12 +1301,11 @@ class MK {
 		if (this.parts[key]) return;
 		let t = document.createElement('div');
 		t.style.padding = '4px 8px';
-		let bg = color;
 		this.elem.appendChild(t);
 		this.parts[key] = t;
 		//add these props to part:
-		$(t).attrs({ name: key });
-		if (isdef(bg)) this.setBg(bg, { updateFg: (color != 'dimgray'), partName: key });
+		t.setAttribute('name', key);
+		if (isdef(color)) this.setBg(color, { updateFg: (color != 'dimgray'), partName: key });
 		return this;
 
 	}

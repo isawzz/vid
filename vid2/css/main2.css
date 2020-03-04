@@ -72,7 +72,7 @@ html,body{
 }
 #actions{
 	grid-area: a;
-	min-width: 200px;
+	/* min-width: 200px; */
 }
 #a_d_divSelect{
 	display: grid;

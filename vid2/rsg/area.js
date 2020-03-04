@@ -1,3 +1,30 @@
+
+function rPlayerStatsAreas(){
+
+	if (nundef(SPEC.playerStatsAreas)) return;
+	console.log('hallooooooooooooo')
+	let loc = SPEC.playerStatsAreas.loc; 
+	//loc has to be existing area in layout!
+	let dOthers = mById(loc);
+	if (nundef(dOthers)) return;
+	//console.log('object to be mapped is',omap);
+	let func = SPEC.playerStatsAreas.type;
+
+	let objects=[];
+	for(const plid in serverData.players){
+		let o=serverData.players[plid];
+		if (plid != gamePlayerId) {
+			o.id=plid;
+			objects.push(o)
+		}
+	}
+	let areaNames = objects.map(x=>x.name);
+	console.log('objects',objects,'\nareaNames',areaNames);
+	console.log('func',window[func].name,'\nloc',loc);
+	let structObject = window[func](areaNames, loc);
+
+}
+
 function setTableSize(w, h, unit = 'px') {
 	//console.log(w,h);
 	setCSSVariable('--hTable', h + unit);
@@ -56,15 +83,16 @@ function rAreas() {
 	let m = [];
 	for (const line of SPEC.layout) {
 		s += '"' + line + '" ';
-		let letters=line.split(' ');
-		let arr=[];
-		for(const l of letters){if (!isEmpty(l)) 	arr.push(l);}
+		let letters = line.split(' ');
+		let arr = [];
+		for (const l of letters) { if (!isEmpty(l)) arr.push(l); }
 		m.push(arr);
 	}
 	//console.log(m);
 	d.style.gridTemplateAreas = s;// eg. '"z z z" "a b c" "d e f"';
 
 	if (SPEC.collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
+	else fixedSizeGrid(m, d);
 
 	for (const k in SPEC.areas) {
 		let areaName = SPEC.areas[k];
@@ -79,6 +107,12 @@ function rAreas() {
 	}
 }
 
+function fixedSizeGrid(m, d) {
+	let rows = m.length;
+	let cols = m[0].length;
+	d.style.gridTemplateColumns = 'repeat(' + cols + ',1fr)'; // gtc.join(' '); //'min-content 1fr 1fr min-content';// 'min-content'.repeat(rows);
+	d.style.gridTemplateRows = 'repeat(' + rows + ',1fr)'; // //'min-content 1fr 1fr min-content';// 'min-content'.repeat(rows);
+}
 function collapseSmallLetterAreas(m, d) {
 	//how many columns does this grid have?
 	let rows = m.length;

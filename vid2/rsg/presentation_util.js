@@ -214,7 +214,7 @@ function makeDomArea(domel) {
 }
 function makeArea(areaName, idParent) {
 	let mk = new MK();
-	let id = 'm_A_' + areaName;
+	let id = getAreaId(areaName);
 	mk.id = id;
 	let domel = document.createElement('div');
 	//el.innerHTML='hallo!';
@@ -231,6 +231,7 @@ function makeArea(areaName, idParent) {
 	mk.cat = DOMCATS[mk.domType];
 	mk.idParent = idParent;
 	let parent = UIS[idParent];
+	console.log('>>>>>>>>parent of hand:',parent)
 	parent.children.push(id);
 	mk.attach();
 	UIS[id] = mk;

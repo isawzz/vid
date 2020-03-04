@@ -5,7 +5,7 @@ var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
-const TIMIT_SHOW = true; // true | false
+const TIMIT_SHOW = false; // true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
 const TESTING = true; // true | false

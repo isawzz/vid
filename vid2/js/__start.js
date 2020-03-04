@@ -23,6 +23,7 @@ async function _startNewGame(game) {
 	if (isdef(game)) GAME = game;
 	USERNAME = USERNAME_ORIG;
 	mappingsClear();
+	mById('actions').style.setProperty('min-width',null);
 
 	await loadSpecAndCode();
 
@@ -44,7 +45,7 @@ function _startGame() {
 }
 function _startStep() {
 
-	reset_zoom_on_resize();
+	//reset_zoom_on_resize();
 
 	mkMan = new MKManager();
 
@@ -57,6 +58,7 @@ function _startStep() {
 	rMergeSpec();
 
 	rAreas();
+	rPlayerStatsAreas();
 
 	//preProcess
 	rPreProcessPlayers(); //adds obj_type='opponent' to all players that do not have an obj_type
@@ -67,7 +69,7 @@ function _startStep() {
 
 	//present
 	mkMan.presentationStart();
-	rPresentSpec();
+	rPresentMappings();
 	timit.showTime('mappings done...')
 
 	rPresentBehaviors(); //should enter completed oids in DONE dict
@@ -83,7 +85,7 @@ function _startStep() {
 	else if (serverData.waiting_for) { presentWaitingFor(); }
 	else if (serverData.end) { rPresentEnd(); }
 
-	zoom_on_resize('actions', 'table', 'logDiv', 30);
+	//zoom_on_resize('actions', 'table', 'logDiv', 30);
 
 }
 
@@ -126,6 +128,12 @@ function fillActions(areaName, boats, availHeight) {
 		// d1.innerHTML =html+i; //`<a>hallo ${i}</a>`;
 		// d.appendChild(d1);
 	}
+	//check if width of 200px erreicht ist
+	// wenn ja, immediately set min-width
+	//nein: set minWidth as long as it is <=200px
+	let bds = getBounds('actions');
+	//console.log('action bounds',bds);
+	if (bds.width<200) mById('actions').style.setProperty('min-width',Math.ceil(bds.width)+'px');
 }
 function getReadyForInteraction() { startInteraction(); }
 async function interaction(action, data) {

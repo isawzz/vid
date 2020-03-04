@@ -93,3 +93,77 @@ function showCard(card, { size = 90, area, hand, layout } = {}) {//sz=80,{area,l
 }
 //#endregion
 
+//#region hand of cards
+function getAreaId(key) { return 'm_A_' + key; }
+function getCollectionArea(key, idParent) {
+	console.log('getCollectionArea', key)
+	let a = UIS[getAreaId(key)];
+	//console.log(a)
+	if (nundef(a)) {
+
+		a = makeCollectionArea(key, idParent);
+
+	}
+	return a;
+}
+
+const MAX_CARD_HEIGHT=100;
+function makeCollectionArea(key, idParent, padding = 4, margin = 4) {
+
+	let idHand = key;
+
+	let dParent = mById(idParent);
+	let bParent = getBounds(dParent);
+	let clearBoth = bParent.height > bParent.width;
+	let hParent = Math.floor(bParent.height);
+	dParent.style.setProperty('max-height',hParent);
+
+	let hTotal=hParent - 2*(padding + margin)+1;//bParent.height-16;
+	h = hTotal-2*padding;
+	if (h>MAX_CARD_HEIGHT){
+		h=MAX_CARD_HEIGHT;
+		hTotal = h+2*padding;
+	}
+
+	let mk = makeArea(idHand, idParent);
+	mk.setBg(randomColor());
+
+	mk.title(stringAfter(key, '.'));
+	let bTitle = getBounds(mk.parts.title);
+	console.log('---------title bounds:', bTitle); //getBounds(mobj.parts.title));
+
+	let hBody = h - bTitle.height;
+	mk.body();
+	let bBody = getBounds(mk.parts.body);
+	let dBody = mk.parts.body;
+	dBody.style.setProperty('background-color', colorTrans('black',.3));
+	dBody.style.setProperty('height', hBody + 'px');
+
+	console.log('---------body bounds:', bBody); //getBounds(mobj.parts.title));
+	let d = mk.elem;
+	d.style.setProperty('padding', padding+'px');
+	d.style.setProperty('border-radius', padding+'px');
+	//d.style.setProperty('margin', '12px');
+	d.style.setProperty('margin', '4px');
+	d.style.setProperty('position', 'relative');
+	//d.style.setProperty('margin', '12px');
+	d.style.setProperty('height', hTotal + 'px');
+	d.style.setProperty('float', 'left');
+	if (clearBoth) d.style.setProperty('clear', 'both');
+	// d.style.position = 'relative';
+	// d.style.left = '10px';
+	// d.style.top = '10px';
+	// d.style.minWidth = '100px';
+	// d.style.minHeight = '50px';
+	// div.style.boxSizing = 'border-box';
+	// div.style.margin='12px';
+	mk.collectionKey = key;
+	mk.adjustSize = true;
+	// let divCollection = mk.elem;
+	// divCollection.style.position = null;
+
+	return mk;
+
+
+}
+

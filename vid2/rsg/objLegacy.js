@@ -13,6 +13,7 @@ function getPlid(username) {
 function getPlayerColor(id) { return playerConfig[GAME].players[id].color; }
 function getPlayerColorString(id) { return playerConfig[GAME].players[id].altName; }
 function getColorHint(o) {
+	if (o.name && serverData.players[o.name]) return getPlayerColor(o.name);
 	for (const k in o) {
 		if (k.toLowerCase() == 'color') return o[k];
 		if (isDict(o[k]) && isdef(o[k]._player)) return getPlayerColor(o[k]._player);

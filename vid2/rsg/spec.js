@@ -19,7 +19,7 @@ function rMappings() {
 	//mappingsInitialized = {};
 	console.log('mappings', mappings, mappingTypes);
 }
-function rPresentSpec() {
+function rPresentMappings() {
 	// 	//look in table or in players for objects that map any of the mappings!
 	for (const kPool of ['table', 'players']) {
 		let pool = serverData[kPool];
@@ -35,9 +35,9 @@ function rPresentSpec() {
 
 				let mm = mappings.filter(x => x[otype]);
 				//console.log('matching mappings for object', oid, mm);
-				let onlyOnce = true;
+				let onlyOnce = false; //immutable need to implement other structure uis!!!
 				for (const mapping of mm) {
-					if (!mapping.immutable) onlyOnce = false;
+					// if (!mapping.immutable) onlyOnce = false;
 					executeMapping(mapping, otype, oid, o, pool);
 				}
 				if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
@@ -53,8 +53,12 @@ function executeMapping(mapping, otype, oid, o, pool) {
 	//console.log('object to be mapped is',omap);
 	let func = mapping.type;
 	let loc = mapping.loc;
+	if (stringBefore(loc,'.') == 'this'){
+		loc =  parsePropertyPath(o, stringAfter(loc, '.'));
+		console.log(loc)
+	}
 	// console.log('mapping:',mapping);
-	console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
+	//console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
 	let structObject = window[func](serverData.table, loc, o, oid, path, omap);
 }
 

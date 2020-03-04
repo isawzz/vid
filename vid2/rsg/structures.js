@@ -17,16 +17,51 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 	//console.log('_______cardHand')
 	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
 	// return _hexGrid(loc, path, oHand, objectPool);
-	let ids = getElements(oHand);
-	console.log('have to present',ids,'in area',loc)
+	//return;
+	console.log('oHand',oHand)
+	let ids = oHand? getElements(oHand):[];
+	console.log('have to present',ids,'in area',loc);
+
+	//make a div for hand, dim it acc to max(areaHeightIfSet,140)
+	//reuse old code!
+
+	let mkHand = getCollectionArea(oid+'.'+path,loc);
+	let color = getColorHint(o);
+	console.log(color);
+	if (isdef(color)) mkHand.setBg(color);
+	
+
+
 }
+function columnGrid(areaNames, loc) {
+	console.log('griiiiiiiiiiiiiidhallooooooooooooo')
+
+	//transforms loc into equal-sized flex grid of columns or rows
+	//each cell gets name from areaNames and is a div, usable as area
+	let dLoc = mById(loc);
+	clearElement(dLoc);
+	dLoc.style.display='grid';
+	dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + ',1fr)'; 
+	dLoc.style.gridTemplateColumns = '1fr'; 
+	//dLoc.style.gridTemplateRows='1fr'.repeat();
+	console.log(dLoc)
+	let palette = getTransPalette9('white');
+	for(let i=0;i<areaNames.length;i++){
+		let a=mDiv(dLoc);
+		console.log(a)
+		a.id=areaNames[i];
+		a.style.backgroundColor = palette[i];
+		a.innerHTML = areaNames[i];
+	}
+}
+
 
 function cardHandCompact(objectPool, loc, o, oid, path, oHand) {
 	//console.log('_______cardHand')
 	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
 	// return _hexGrid(loc, path, oHand, objectPool);
 	let ids = getElements(oHand);
-	console.log('have to present',ids,'in area',loc)
+	//console.log('have to present',ids,'in area',loc)
 }
 
 

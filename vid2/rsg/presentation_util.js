@@ -217,13 +217,7 @@ function makeArea(areaName, idParent) {
 	let id = getAreaId(areaName);
 	mk.id = id;
 	let domel = document.createElement('div');
-	//el.innerHTML='hallo!';
-	// el.style.backgroundColor = randomColor();
 	domel.style.position = 'absolute';
-	// el.style.left='0px';
-	// el.style.top=''+testPosY+'px'; testPosY+=100;
-	// el.style.width='100%';
-	// el.style.height='50%';
 	mk.elem = domel;
 	mk.elem.id = id;
 	mk.parts.elem = mk.elem;
@@ -231,12 +225,10 @@ function makeArea(areaName, idParent) {
 	mk.cat = DOMCATS[mk.domType];
 	mk.idParent = idParent;
 	let parent = UIS[idParent];
-	console.log('>>>>>>>>parent of hand:',parent)
 	parent.children.push(id);
 	mk.attach();
 	UIS[id] = mk;
 	linkObjects(id, areaName);
-	//console.log(oid2ids[areaName]);
 	listKey(IdOwner, id[2], id);
 	return mk;
 }

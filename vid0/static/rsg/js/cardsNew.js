@@ -15,7 +15,8 @@ function updateTableCardCollections() {
 				let coll = colls[key];
 				if (!coll.tbd) continue;
 				let idCollection = getCollectionArea(key, msTableArea);
-				//console.log('collection area id', idCollection);
+				console.log('collection area id', idCollection);
+
 				showCollection(coll, idCollection);
 				coll.tbd = null;
 			}
@@ -28,7 +29,7 @@ function updateGameplayerCardCollections(pid, oPlayer) {
 
 	let msPlayerArea = getPlayerArea(pid);
 
-	//console.log('***updateGameplayerCardCollections', 'pid', pid, 'oPlayer', oPlayer, 'player area id', msPlayerArea.id);
+	console.log('***updateGameplayerCardCollections', 'pid', pid, 'oPlayer', oPlayer, 'player area id', msPlayerArea.id);
 	for (const propName in oPlayer) {
 		let plColls = getCollections(pid, propName);
 		if (nundef(plColls)) continue;
@@ -36,6 +37,7 @@ function updateGameplayerCardCollections(pid, oPlayer) {
 		//console.log('player collections to update for',propName, plColls)
 		for (const key in plColls) {
 			let coll = plColls[key];
+			console.log(coll)
 			if (!coll.tbd) continue;
 			let idCollection = getCollectionArea(key, msPlayerArea);
 			//console.log('collection area id', idCollection);
@@ -45,6 +47,7 @@ function updateGameplayerCardCollections(pid, oPlayer) {
 
 	}
 }
+//for behaviors
 function showPlayerHand(oid, propName, cardFunc, areaName) { showCollections(collections, oid, [propName], cardFunc, areaName); }
 function showCollections(pool, oid, keys, cardFunc, areaName) {
 	//assumes that areaName area exists!
@@ -86,6 +89,8 @@ function showCollections(pool, oid, keys, cardFunc, areaName) {
 
 
 }
+
+
 function showCollection(coll, idCollection) {
 	//console.log('***showCollection', coll);
 	if (coll.tbd == 'add' || coll.tbd == 'update') {

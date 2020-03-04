@@ -27,8 +27,10 @@ function getStandardAreaNameForPlayerProp(pid, propName) { return 'area_' + pid 
 function getStandardAreaNameForKey(key) { return 'm_A_' + key; }
 function getOidForMainId(id) { return id[0] == 'm' ? id.substring(4) : null; }
 function getAreaName(id) { return startsWith(id, 'm_A') ? id.substring(4) : id; }
+function getAreaId(key) { return 'm_A_' + key; }
 function getIdArea(areaName) { if (startsWith(areaName, 'a_d_')) { return areaName; } else if (startsWith(areaName, 'm_A_')) { return areaName; } else { return 'm_A_' + areaName; } }
 function getMainId(oid) { return firstCond(oid2ids[oid], x => x[0] == 'm'); }
+function getIdForOid(oid){return 'm_t_'+oid;}
 function getVisual(oid) { return UIS[getMainId(oid)]; }
 function getDefId(oid) { return firstCond(oid2ids[oid], x => x[0] == 'd'); }
 function getDefVisual(oid) { return UIS[getDefId(oid)]; }

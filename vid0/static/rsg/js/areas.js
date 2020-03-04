@@ -140,10 +140,10 @@ function initDom() {
 	measureMSTree(ROOT); //each div is measured: x,y,w,h
 	// timit.showTime('...measure tree');
 
-	if (!firstDomLoad) {
-		zoom_on_resize('a_d_header');
-		firstDomLoad = true;
-	}
+	// if (!firstDomLoad) {
+	// 	zoom_on_resize('a_d_header');
+	// 	firstDomLoad = true;
+	// }
 }
 function createMSTree(mobj) {
 	let areas = mobj.elem.children;

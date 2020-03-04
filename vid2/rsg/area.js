@@ -2,7 +2,7 @@
 function rPlayerStatsAreas(){
 
 	if (nundef(SPEC.playerStatsAreas)) return;
-	console.log('hallooooooooooooo')
+	//console.log('hallooooooooooooo')
 	let loc = SPEC.playerStatsAreas.loc; 
 	//loc has to be existing area in layout!
 	let dOthers = mById(loc);
@@ -19,8 +19,8 @@ function rPlayerStatsAreas(){
 		}
 	}
 	let areaNames = objects.map(x=>x.name);
-	console.log('objects',objects,'\nareaNames',areaNames);
-	console.log('func',window[func].name,'\nloc',loc);
+	//console.log('objects',objects,'\nareaNames',areaNames);
+	//console.log('func',window[func].name,'\nloc',loc);
 	let structObject = window[func](areaNames, loc);
 
 }

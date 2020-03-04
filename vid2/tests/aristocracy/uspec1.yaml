@@ -23,6 +23,14 @@ mappings:
   GamePlayer.hand:
     type: cardHand
     loc: player
-  opponent.hand:
-    type: cardHand
-    loc: this.name
+  # opponent.hand:
+  #   type: cardHand
+  #   loc: this.name
+
+typeMappings:
+  card: #standard rsg type
+    short_name: rank #rank is standard rsg to identify c52 card rank
+
+
+
+

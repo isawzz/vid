@@ -43,6 +43,7 @@ function columnGrid(areaNames, loc) {
 	dLoc.style.display='grid';
 	dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + ',1fr)'; 
 	dLoc.style.gridTemplateColumns = '1fr'; 
+	let bds = getBounds(dLoc);
 	//dLoc.style.gridTemplateRows='1fr'.repeat();
 	console.log(dLoc)
 	let palette = getTransPalette9('white');
@@ -50,8 +51,11 @@ function columnGrid(areaNames, loc) {
 		let a=mDiv(dLoc);
 		console.log(a)
 		a.id=areaNames[i];
+		a.style.maxHeight=bds.height/areaNames.length+'px';
 		a.style.backgroundColor = palette[i];
 		a.innerHTML = areaNames[i];
+		UIS[areaNames[i]] = { elem: a, children: [] };
+
 	}
 }
 
@@ -151,7 +155,7 @@ function areaRows(soDict, loc) {
 	let [w, areaH] = area.getSize();
 	let keys = getKeys(soDict);
 	let n = keys.length;
-	let h = Math.floor(areaH / n);
+	let h = areaH / n;
 	let extra = areaH - n * h;
 	let x = 0;
 	let y = 0;

@@ -1,4 +1,4 @@
-tableSize: [600, 500]
+tableSize: [600, 600]
 layout: [
   " M M M M M o ",
   " M M M M M o ",
@@ -12,6 +12,10 @@ areas:
   p: player
   a: playerStats
 
+playerStatsAreas:  #standard setting
+  type: columnGrid
+  loc: others
+
 #mappings generate structures or lists, or can be used as a shortcut for simple behaviors
 mappings: #form: obj_type.property1.property2...
   board: 
@@ -24,9 +28,9 @@ mappings: #form: obj_type.property1.property2...
   GamePlayer.devcards: 
     type: cardHand
     loc: player
-  opponent.hand:
+  opponent.num_res:
     type: cardHand
-    loc: player
+    loc: this.name
   # GamePlayer.resources: 
   #   type: valueByKey
   #   loc: player

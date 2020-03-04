@@ -115,15 +115,16 @@ function makeCollectionArea(key, idParent, padding = 4, margin = 4) {
 	let dParent = mById(idParent);
 	let bParent = getBounds(dParent);
 	let clearBoth = bParent.height > bParent.width;
-	let hParent = Math.floor(bParent.height);
-	dParent.style.setProperty('max-height',hParent);
+	let hParent = bParent.height;
+	dParent.style.setProperty('max-height',hParent+'px');
 
-	let hTotal=hParent - 2*(padding + margin)+1;//bParent.height-16;
+	let hTotal=hParent - 2*(padding + margin) - 15;//wegen title of area!!!!
 	h = hTotal-2*padding;
 	if (h>MAX_CARD_HEIGHT){
 		h=MAX_CARD_HEIGHT;
 		hTotal = h+2*padding;
 	}
+	console.log('_________________hParent',hParent,'\nhTotal',hTotal,'\nhCard',h)
 
 	let mk = makeArea(idHand, idParent);
 	mk.setBg(randomColor());
@@ -144,10 +145,11 @@ function makeCollectionArea(key, idParent, padding = 4, margin = 4) {
 	d.style.setProperty('padding', padding+'px');
 	d.style.setProperty('border-radius', padding+'px');
 	//d.style.setProperty('margin', '12px');
-	d.style.setProperty('margin', '4px');
+	d.style.setProperty('margin', margin+'px');
+	d.style.setProperty('margin-top','15px');
 	d.style.setProperty('position', 'relative');
 	//d.style.setProperty('margin', '12px');
-	d.style.setProperty('height', hTotal + 'px');
+	d.style.setProperty('max-height', hTotal + 'px');
 	d.style.setProperty('float', 'left');
 	if (clearBoth) d.style.setProperty('clear', 'both');
 	// d.style.position = 'relative';

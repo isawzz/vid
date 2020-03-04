@@ -50,12 +50,13 @@ function executeMapping(mapping, otype, oid, o, pool) {
 	let mKey = mapping.id;
 	let path = stringAfter(mKey, '.');
 	let omap = parsePropertyPath(o, stringAfter(mKey, '.'));
-	//console.log('object to be mapped is',omap);
+	console.log('object to be mapped is',omap);
+	if (nundef(omap)) return;
 	let func = mapping.type;
 	let loc = mapping.loc;
 	if (stringBefore(loc,'.') == 'this'){
 		loc =  parsePropertyPath(o, stringAfter(loc, '.'));
-		console.log(loc)
+		console.log('------------------',loc)
 	}
 	// console.log('mapping:',mapping);
 	//console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);

@@ -49,24 +49,6 @@ function cardContent(card, { topLeft, topRight, bottomLeft, bottomRight, reverse
 
 	// }
 }
-function cardFace({ rank, suit, key } = {}) {
-	let cardKey, svgCode;
-	if (isdef(key)) {
-		cardKey = key;
-		svgCode = testCards[cardKey];
-		if (!svgCode) svgCode = vidCache.getRandom('c52');
-	} else {
-		if (nundef(rank)) { rank = '2'; suit = 'B'; } if (rank == '10') rank = 'T'; if (nundef(suit)) suit = 'H';//joker:J1,J2, back:1B,2B
-		cardKey = 'card_' + rank + suit;
-		svgCode = c52[cardKey]; //c52 is cached asset loaded in _start
-	}
-
-	svgCode = '<div>' + svgCode + '</div>';
-
-	let el = createElementFromHTML(svgCode);
-	return el;
-
-}
 function emptyCard() {
 	return cardFace({ key: 'empty' });
 }

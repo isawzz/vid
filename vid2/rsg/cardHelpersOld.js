@@ -784,7 +784,7 @@ function _makeCardDivCatan(oid, o) {
 	`;
 	return d;
 }
-function magnifyFront(id) {
+function magnifyFront_orig(id) {
 	//console.log('magnify!')
 	let card = UIS[id];
 	let hand = UIS[card.hand];
@@ -795,7 +795,7 @@ function magnifyFront(id) {
 	_bringCardToFront(id)
 
 }
-function minifyBack(id) {
+function minifyBack_orig(id) {
 	//console.log('minify!')
 	let card = UIS[id];
 	let hand = UIS[card.hand];

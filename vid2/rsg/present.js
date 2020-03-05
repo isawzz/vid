@@ -7,6 +7,8 @@ function rPresentDefault() {
 			let o = pool[oid];
 			let otype = o.obj_type;
 
+			if (o.generic_type == 'card') continue;//TODO: geschummelt!!!!!
+
 			//if no main visual has been created for this oid, try creating one
 			let mk = getVisual(oid);
 			let mkDefault = getDefaultVisual(oid);

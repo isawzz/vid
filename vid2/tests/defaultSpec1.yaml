@@ -21,8 +21,10 @@ useColorHintForObjects: true
 onlySimpleValues: true
 ignoreStructureTypesInPresentation : true
 collapseEmptySmallLetterAreas: false
-shadeAreaBackgrounds: true
-showAreaNames: true
+shadeAreaBackgrounds: false
+showAreaNames: false
+showCardHandNames: false
+showCardHandBackground: false
 extendedOptout:
   color: 1
   altName: 1

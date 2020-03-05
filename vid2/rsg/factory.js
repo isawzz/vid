@@ -1,27 +1,38 @@
-//#region hand of cards
-function getCollectionArea(key, idParent) {
-	//console.log('getCollectionArea', key)
-	let a = UIS[getAreaId(key)];
-	//console.log(a)
-	if (nundef(a)) {
-
-		a = makeCollectionArea(key, idParent);
-
-	}
-	return a;
-}
 const MAX_CARD_HEIGHT = 100;
-function makeCollectionArea(key, idParent, padding = 4, margin = 4) {
+var CARD_HEIGHT = 0;
 
-	let idHand = key;
+//#region make...MK
+function makeArea(areaName, idParent) {
+	let mk = new MK();
+	let id = getAreaId(areaName);
+	mk.id = id;
+	let domel = document.createElement('div');
+	domel.style.position = 'absolute';
+	mk.elem = domel;
+	mk.elem.id = id;
+	mk.parts.elem = mk.elem;
+	mk.domType = getTypeOf(mk.elem);
+	mk.cat = DOMCATS[mk.domType];
+	mk.idParent = idParent;
+	let parent = UIS[idParent];
+	parent.children.push(id);
+	mk.attach();
+	UIS[id] = mk;
+	linkObjects(id, areaName);
+	listKey(IdOwner, id[2], id);
+	return mk;
+}
+//#region hand of cards
 
+function makeHand(key, idParent, color, padding = 4, margin = 4) {
 	let dParent = mById(idParent);
 	let bParent = getBounds(dParent);
 	let clearBoth = bParent.height > bParent.width;
 	let hParent = bParent.height;
 	dParent.style.setProperty('max-height', hParent + 'px');
-
-	let hTotal = hParent - 2 * (padding + margin) - 15;//wegen title of area!!!!
+	let areaTitleHeight = SPEC.showAreaNames ? getTextSize('happy', dParent).h : 0;
+	console.log('areaTitleHeight',areaTitleHeight);
+	let hTotal = hParent - 2 * (padding + margin) - areaTitleHeight;//wegen title of area!!!!
 	h = hTotal - 2 * padding;
 	if (h > MAX_CARD_HEIGHT) {
 		h = MAX_CARD_HEIGHT;
@@ -29,257 +40,175 @@ function makeCollectionArea(key, idParent, padding = 4, margin = 4) {
 	}
 	//console.log('_________________hParent', hParent, '\nhTotal', hTotal, '\nhCard', h)
 
-	let mk = makeArea(idHand, idParent);
-	mk.setBg(randomColor());
+	let mk = makeArea(key, idParent);
+	if (SPEC.showCardHandBackground) mk.setBg(isdef(color) ? color : randomColor());
 
-	mk.title(stringAfter(key, '.'));
-	let bTitle = getBounds(mk.parts.title);
-	//console.log('---------title bounds:', bTitle); //getBounds(mobj.parts.title));
-
+	let bTitle = { height: 0 };
+	if (SPEC.showCardHandName) {
+		mk.title(stringAfter(key, '.'));
+		bTitle = getBounds(mk.parts.title);
+		mk.parts.title.style.setProperty('width', bTitle.width + 'px');
+	}
 	let hBody = h - bTitle.height;
 	mk.body();
-	let bBody = getBounds(mk.parts.body);
 	let dBody = mk.parts.body;
-	dBody.style.setProperty('background-color', colorTrans('black', .3));
 	dBody.style.setProperty('height', hBody + 'px');
-
-	//console.log('---------body bounds:', bBody); //getBounds(mobj.parts.title));
 	let d = mk.elem;
 	d.style.setProperty('padding', padding + 'px');
 	d.style.setProperty('border-radius', padding + 'px');
-	//d.style.setProperty('margin', '12px');
 	d.style.setProperty('margin', margin + 'px');
-	d.style.setProperty('margin-top', '15px');
+	//d.style.setProperty('margin-top', '15px');
 	d.style.setProperty('position', 'relative');
-	//d.style.setProperty('margin', '12px');
 	d.style.setProperty('max-height', hTotal + 'px');
 	d.style.setProperty('float', 'left');
 	if (clearBoth) d.style.setProperty('clear', 'both');
-	// d.style.position = 'relative';
-	// d.style.left = '10px';
-	// d.style.top = '10px';
-	// d.style.minWidth = '100px';
-	// d.style.minHeight = '50px';
-	// div.style.boxSizing = 'border-box';
-	// div.style.margin='12px';
+
 	mk.collectionKey = key;
 	mk.adjustSize = true;
-	// let divCollection = mk.elem;
-	// divCollection.style.position = null;
 
 	return mk;
-
-
 }
-function makeCardDomel(oCard){
+//#region single card
+function cardFace({ rank, suit, key } = {}) {
+	let cardKey, svgCode;
+	//console.log('cardFace',rank,suit,key)
+	if (isdef(key)) {
+		cardKey = key;
+		svgCode = testCards[cardKey];
+		if (!svgCode) svgCode = vidCache.getRandom('c52');
+	} else {
+		if (nundef(rank)) { rank = '2'; suit = 'B'; }
+		if (rank == '10') rank = 'T';
+		if (rank == '1') rank = 'A';
+		if (nundef(suit)) suit = 'H';//joker:J1,J2, back:1B,2B
+		cardKey = 'card_' + rank + suit;
+		svgCode = c52[cardKey]; //c52 is cached asset loaded in _start
+		//console.log(cardKey,c52[cardKey])
+	}
+	svgCode = '<div>' + svgCode + '</div>';
+	let el = createElementFromHTML(svgCode);
+	return el;
+}
+function makeCardDomel(oCard) {
 	//look at card typeMappings
-	if (lookup(SPEC,['typeMappings','card'])){
-		for(const k in SPEC.typeMappings.card) {
-			oCard[SPEC.typeMappings.card[k]]=oCard[k];
+	if (lookup(SPEC, ['typeMappings', 'card'])) {
+		for (const k in SPEC.typeMappings.card) {
+			oCard[k] = oCard[SPEC.typeMappings.card[k]];
 		}
 	}
-	//console.log(oCard);
 	let el = cardFace(oCard);
 	return el;
 }
-function makeCardNithya(oid,o) {
+function _bringCardToFront(id) { let elem = document.getElementById(id); maxZIndex += 1; elem.style.zIndex = maxZIndex; }
+function _sendCardToBack(id) { let c = UIS[id]; let elem = document.getElementById(id); elem.style.zIndex = c.zIndex; }
+
+function magnifyFront(id) {
+	//ev.stopPropagation();
+	//console.log(arguments,'\nthis',this)
+
+	id = id;
+	magCounter += 1;
+	let card = UIS[id];
+	card.setScaleLT(1.5);
+	//card.elem.onmouseover = null;
+	//card.elem.onmouseout = ev => { minifyBack(ev, id); };
+	//console.log('magnify!', card.o.short_name, magCounter)
+	maxZIndex += 1;
+	card.elem.style.zIndex = maxZIndex;
+}
+function minifyBack(id) {
+	//console.log(arguments,'this',this)
+	//ev.stopPropagation();
+	magCounter += 1;
+	let card = UIS[id];
+	//card.elem.onmouseout = null;
+	//card.elem.onmouseover = ev => { magnifyFront(ev, id); };
+
+	card.setScale(1);//resetMKTransform();
+	card.elem.style.zIndex = card.zIndex;
+	//console.log('minify!', card.o.short_name,  magCounter)
+}
+var magCounter = 0;
+var evAddCounter = 0;
+function makeCard123(oid, o) {
 	let mk = new MK();
 	let id = getIdForOid(oid);
 	mk.id = id;
-
 	let domel = makeCardDomel(o);
+	evAddCounter += 1;
+	//console.log('adding events:', evAddCounter);
+
+	// d3.select(domel).on('mouseenter',magnifyFront);
+	// d3.select(domel).on('mouseleave',minifyBack);
+
+
+
+	//domel.onmouseover = ev => { magnifyFront(ev, domel.id); };
+	// domel.onmouseout=ev=> {minifyBack(ev,domel.id); };
+
+	// domel.addEventListener('mouseenter', ev=> {magnifyFront(ev,domel.id); },true);
+	// domel.addEventListener('mouseleave', ev=> {minifyBack(ev,domel.id); }, true);
+	// $(d).on("mouseenter", function () { magnifyFront(this.id); });// bringCardToFront(this.id); }); //this.parentNode.appendChild(this);})
+	// $(d).on("mouseleave", function () { minifyBack(this.id); });// { sendCardToBack(this.id); })
+
 	domel.style.position = 'absolute';
-	
 	mk.elem = domel;
 	mk.elem.id = id;
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(mk.elem);
 	mk.cat = DOMCATS[mk.domType];
+	mk.o=o;
+	mk.isa.card=true;
 	UIS[id] = mk;
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
 	return mk;
 }
-
-
-
-
-
-
-
-
-
-
-//NONONONONO--------------------------------------
-function showCollection(oCollection, mkHand) {
-	idCollection = mkHand.id;
-	console.log('***showCollection', oCollection);
-	let collectionAreaName = getAreaName(idCollection);
-	// console.log('areaName for', idCollection, 'is', collectionAreaName, '\nmsHand', mkCollection);
-	let els = getElements(oCollection);
-	for (const oid of els) {
-		let mkCard = getVisual(oid);
-		if (nundef(mkCard)) {
-			let oCard = serverData.table[oid];
-			mkCard = makeCardMK(oid, oCard, idCollection);
-			console.log('created card:', oid, mkCard.id, collectionAreaName);
-			console.log('>>card MK',mkCard);
-			let testCard = makeCard({rank:oCard.short_name});
-			console.log('------------>>>',testCard)
-			showCardSimple(testCard,'zone');
-		}
-		break;
-	}
-	//repositionCards(mkHand);
-}
-function repositionCards(mkHand) {
-	console.log('mkHand',mkHand);//,'cards',hand.cards)
-
-	mkHand.cards = mkHand.children;
-	mkHand.numCards = mkHand.cards.length;
-
-	if (mkHand.numCards == 0) return;
-	// let el = hand.elem;
-	//console.log(msHand)
-
-
-
-	let dTitle = mkHand.parts.title;
-	let dBody = mkHand.parts.body;
+//#region layout of collections
+function layoutCardsOverlapping(mkHand, mkCardList) {
+	//both mkHand and mkCards exist!
 	let dHand = mkHand.elem;
-	let bTitle = getBounds(dTitle);
-	let bBody = getBounds(dBody, true);
-	let bHand = getBounds(dHand); mkHand.hHand = bHand.height;
-	let yBody = bTitle.height;
-	let hHand = mkHand.hHand;
-	let hAvailable = hHand - yBody;
-	let wHand = bHand.width;
-	console.log('hHand',hHand,'wHand',wHand,'yBody',yBody,'hAvailable',hAvailable)
+	let cardContainer = mkHand.parts.body;
+	let bds = getBounds(cardContainer);
+	let hhNet = bds.height;
+	let whNet = bds.width;
+	let gap = 2;
+	// let hCard = CARD_HEIGHT? CARD_HEIGHT: hhNet - 2 * gap;
+	// CARD_HEIGHT=hCard;
+	let hCard = hhNet - 2 * gap;
+	let wCard = hCard * .7;
+	mkCardList.map(x => mStyle(x.elem, { height: hCard, width: wCard, position: 'absolute' }, 'px'));
 
-	let W = wHand;
-	let H = hHand;
-	// let W = msHand.w;
-	// let H = msHand.H;
-	let w = mkHand.wCard;
-	let h = mkHand.hCard;
-	let n = mkHand.numCards;
-
-	//kann entweder: adjust hand size oder adjust card size!
-	//vielleicht sollte ich bei cardSize: adjust height und bei handSize: adjust width
-	if (nundef(w) || nundef(h)){
-		h=hAvailable-2;
-		w=h*.7;
-		mkHand.adjustSize=false;
+	let ovl = wCard / 4;
+	let numCards = mkCardList.length;
+	let wHand = (numCards - 1) * ovl + wCard + gap;
+	let hHand = hhNet;
+	//console.log('wCard', wCard, 'hCard', hCard, 'wHand', wHand, 'hHand', hHand)
+	cardContainer.style.setProperty('width', wHand + 'px');
+	cardContainer.style.setProperty('position', 'relative');
+	// console.log(dHand);
+	let x = gap; let y = gap;
+	for (const card of mkCardList) {
+		card.setPos(x, y);
+		x += ovl;
 	}
-	console.log('W',W,'H',H,'wCard',w,'hCard',h);
-
-
-
-	let x, y, dx, padding;
-	// let offset = isdef(msHand.cardOffsetXY) ? msHand.cardOffsetXY : { x: 0, y: 0 };
-	let offset = { x: 0, y: 0 };
-	if (mkHand.adjustSize) {
-		//hand has not been given a specific width, so adjust width to content and parent!!!
-		//same as height!!!
-		W = w + (n) * w / 4;
-		H = h; // + 20;
-		padding = 0;//10;
-		let hWidth=W + 2 * padding + yBody;
-		let hHeight=H;
-		mkHand.setSize(hWidth, hHeight); //w + n * w / 4 + 20, h + 20);
-		console.log('called hand.setSize',hWidth,hHeight)
-		//		dx = w / 4;
-		x = padding + offset.x;
-		y = padding + offset.y;
-
-	} else {
-		padding = x = y = 0;//x = 10;
-		//y = 10;
-	}
-	dx = n > 1 ? (W - w) / (n - 1) : 0;
-	if (dx > w) dx = w;
-	// let mobj=UIS[idHand];
-	// mobj.setSize(300,140);
-
-	// if (nundef(W)||nundef(H)){
-	// 	dx=w/4;
-	// }else{
-	// 	dx = n > 1 ? (W - w) / (n - 1) : 0;
-	// } 
-	let i = 0;
-	//console.log('---', 'W', W, 'H', H, 'w', w, 'h', h, 'n', n, 'padding', padding, 'x', x, 'y', y, 'dx', dx)
-	for (const oidCard of mkHand.cards) {
-		let id = oidCard;// getMainId(oidCard);
-		let mkCard = UIS[id];
-		mkCard.attach();
-		console.log('.......card',oidCard,id,'\nmkCard',mkCard,'\npos',x,y)
-		mkCard.zIndex = mkCard.elem.style.zIndex = i;
-		i += 1;
-		mkCard.setPos(x, y);
-		x += dx;
-
+	//now have to attach cards to hand!
+	let iz = 10;
+	for (const card of mkCardList) {
+		card.idParent = mkHand.id;
+		card.attach('body');
+		card.zIndex = card.elem.style.zIndex = iz;
+		iz += 1;
+		// console.log(card)
 	}
 }
-function addCardToCollectionArea(oid, collectionAreaName) {
-	//idHand = isdef(idHand)?idHand:getMainId(areaName);
-	//areaName = idHand[0]=='a'?idHand:getAreaName(idHand);
-	let idCollection = getIdArea(collectionAreaName);
-	let isCard = getMainId(oid);
-	//console.log('....addCardToHand','oid',oid,'id',id,'areaName',areaName,'idHand',idHand);
-	let msCard = UIS[isCard];
-	let msCollection = UIS[idCollection];
-	msCard.hand = idCollection;
-	msCard.collectionKey = msCollection.collectionKey;
-	if (nundef(msCollection.numCards)) {
-		msCollection.numCards = 1;
-		msCollection.dx = 0;
-		msCollection.cards = [oid];
-	} else {
-		msCollection.numCards += 1;
-		msCollection.cards.push(oid);
-	}
-	let n = msCollection.numCards;
-	msCard.zIndex = n;
-	//console.log('addCardToHand: isAttached=',mobj.isAttached, 'hand.numCards',n);
-	msCard.attach('hand');
-	//console.log('...isAttached=',mobj.isAttached)
-
-	//calc card height
-	let hCard = msCard.elem.offsetHeight;
-	let bounds = getBounds(msCard.elem);
-	let hCard1 = bounds.height;
-	//console.log(hCard);
-	//console.log('height of card: offsetHeight:',hCard,'bounds.height',hCard1)
-
-	//calc hand height:
-	let hHand = getBounds(msCollection.elem).height;
-	let partHand = msCollection.parts['hand'];
-	if (isdef(partHand)) hHand -= getBounds(partHand, true).y;
-	//console.log('height of hand (part)',hHand);
-	msCollection.hHand = hHand;
-
-	//let hHand = bounds.height;// !!!!!
-	//let hHand = hand.elem.offsetHeight;
-	//console.log(hHand);
-	let wCard = msCard.elem.offsetWidth;
-	//console.log('w1',wCard);
-	let scale = 1;
-	if (hCard >= hHand) {
-		scale = hHand / hCard;
-		msCard.elem.style.transform = `scale(${scale})`;
-		msCard.elem.style.transformOrigin = '0% 0%';
-	}
-	msCollection.scale = scale;
-
-	wCard = msCard.elem.offsetWidth;
-	//console.log('w2',wCard);
-	let wReal = wCard * scale;
-	let hReal = hCard * scale;
-	msCollection.wCard = wReal;
-	msCollection.hCard = hReal;
 
 
-	repositionCards(msCollection);
-}
+
+
+
+
+
+
 
 

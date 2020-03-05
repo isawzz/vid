@@ -1244,12 +1244,34 @@ class MK {
 
 
 	}
+	resetMKTransform(partName = 'elem'){
+		let el = this.parts[partName];
+		el.style.transform='none';
+	}
+	setMKTransform(x,y,scale,rot=0, partName = 'elem') {
+
+		//transform: rotate(15deg) translate(-20px,0px);
+		let el = this.parts[partName];
+		if (!el) return;
+		//console.log(el);
+		if (this.cat == 'd') el.style.transform = `scale(${scale}) translate(${x}px,${y}px) rotate(${rot}deg)`;
+		else this._setTransform(el, { x: this.x, y: this.y, scaleX: scale, scaleY: scale });
+	}
 	setScale(scale, partName = 'elem') {
 		let el = this.parts[partName];
 		if (!el) return;
 		//console.log(el);
 		if (this.cat == 'd') el.style.transform = `scale(${scale})`;
 		else this._setTransform(el, { x: this.x, y: this.y, scaleX: scale, scaleY: scale });
+	}
+	setScaleLT(scale, partName = 'elem') {
+		let el = this.parts[partName];
+		if (!el) return;
+		//console.log(el);
+		if (this.cat == 'd') {
+			el.style.transformOrigin = '0% 0%';//`scale(${scale})`;
+			el.style.transform = `scale(${scale})`;
+		}else this._setTransform(el, { x: this.x, y: this.y, scaleX: scale, scaleY: scale });
 	}
 	setShape(shape) {
 		//replaces ground and overlay!

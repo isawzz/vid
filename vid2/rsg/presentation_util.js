@@ -212,26 +212,6 @@ function makeDomArea(domel) {
 	listKey(IdOwner, id[2], id);
 	return mk;
 }
-function makeArea(areaName, idParent) {
-	let mk = new MK();
-	let id = getAreaId(areaName);
-	mk.id = id;
-	let domel = document.createElement('div');
-	domel.style.position = 'absolute';
-	mk.elem = domel;
-	mk.elem.id = id;
-	mk.parts.elem = mk.elem;
-	mk.domType = getTypeOf(mk.elem);
-	mk.cat = DOMCATS[mk.domType];
-	mk.idParent = idParent;
-	let parent = UIS[idParent];
-	parent.children.push(id);
-	mk.attach();
-	UIS[id] = mk;
-	linkObjects(id, areaName);
-	listKey(IdOwner, id[2], id);
-	return mk;
-}
 function makeDrawingArea(id, idArea, addToUIS = false) {
 
 	if (addToUIS && isdef(UIS[id])) { error('CANNOT create ' + id + ' TWICE!!!!!!!!!'); return; }

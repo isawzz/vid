@@ -14,52 +14,26 @@ function quadGrid(soDict, loc, sBoard, idBoard) {
 	return _quadGrid(loc, idBoard, sBoard, soDict);
 }
 function cardHand(objectPool, loc, o, oid, path, oHand) {
-	//#region make a hand in loc
 	//console.log('_______cardHand')
 	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
-	// return _hexGrid(loc, path, oHand, objectPool);
-	//return;
-	console.log('oHand', oHand)
-	//make a div for hand, dim it acc to max(areaHeightIfSet,140)
-	//reuse old code!
+	let key = oid + '.' + path;
+	let mkHand = getVisual(key);
+	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o));
+	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
-	let mkHand = getCollectionArea(oid + '.' + path, loc);
-	let color = getColorHint(o);
-	//console.log(color);
-	if (isdef(color)) mkHand.setBg(color);
-	//#endregion make a hand in loc
-	console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
-
-	//#region make card mks
 	let ids = oHand ? getElements(oHand) : [];
 	let oCardDict = {};
 	for (const id of ids) { oCardDict[id] = serverData.table[id]; }
-	let oCardList = dict2list(oCardDict,'id');
-
-	console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
+	let oCardList = dict2list(oCardDict, 'id');
+	// console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
 
 	let mkCardList = [];
-	for (const oCard of oCardList) {
-		let mkCard = makeCardNithya(oCard.id,oCard); // each card now has a property 'id'
-		mkCardList.push(mkCard);
-	}
-	//#endregion
-	console.log('cards',mkCardList);
+	for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
+	// console.log('cards',mkCardList);
 
-
-
-
-
-
-	return;
-	//ids is array of ids of cards
-	showCollection(oHand, mkHand);
-
-
+	layoutCardsOverlapping(mkHand, mkCardList);
 }
 function columnGrid(areaNames, loc) {
-	//console.log('griiiiiiiiiiiiiidhallooooooooooooo')
-
 	//transforms loc into equal-sized flex grid of columns or rows
 	//each cell gets name from areaNames and is a div, usable as area
 	let dLoc = mById(loc);
@@ -68,18 +42,14 @@ function columnGrid(areaNames, loc) {
 	dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + ',1fr)';
 	dLoc.style.gridTemplateColumns = '1fr';
 	let bds = getBounds(dLoc);
-	//dLoc.style.gridTemplateRows='1fr'.repeat();
-	//console.log(dLoc)
 	let palette = getTransPalette9('white');
 	for (let i = 0; i < areaNames.length; i++) {
 		let a = mDiv(dLoc);
-		//console.log(a)
 		a.id = areaNames[i];
 		a.style.maxHeight = bds.height / areaNames.length + 'px';
-		a.style.backgroundColor = palette[i];
-		a.innerHTML = areaNames[i];
+		if (SPEC.shadeAreaBackgrounds) a.style.backgroundColor = palette[i];
+		if (SPEC.showAreaNames) a.innerHTML = areaNames[i];
 		UIS[areaNames[i]] = { elem: a, children: [] };
-
 	}
 }
 

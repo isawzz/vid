@@ -48,6 +48,7 @@ function _startStep() {
 	//reset_zoom_on_resize();
 
 	mkMan = new MKManager();
+	CARD_HEIGHT=0;
 
 	clearStep();
 
@@ -71,10 +72,10 @@ function _startStep() {
 	mkMan.presentationStart();
 	rPresentMappings();
 	timit.showTime('mappings done...')
-
 	rPresentBehaviors(); //should enter completed oids in DONE dict
 
 	rPresentDefault();//???
+	//return;
 
 	rPresentStatus();
 	rPresentLog();

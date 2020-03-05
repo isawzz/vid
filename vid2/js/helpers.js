@@ -844,10 +844,12 @@ function addDivPosTo(dParent, x = 0, y = 0, w = 100, h = 100, unit = '%', bg = '
 	return addDivU({ dParent: dParent, x: x, y: y, w: w, h: h, unit: unit, position: position, bg: bg });
 }
 function createElementFromHTML(htmlString) {
+	//console.log('---------------',htmlString)
 	var div = document.createElement('div');
-	div.innerHTML = htmlString.trim();
+	div.innerHTML = htmlString.trim();// '<div>halloooooooooooooo</div>';// htmlString.trim();
 
 	// Change this to div.childNodes to support multiple top-level nodes
+	//console.log(div.firstChild)
 	return div.firstChild;
 }
 function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
@@ -1323,15 +1325,15 @@ function saveFileAtClient(name, type, data) {
 	// 	a.remove();
 	// }, 500);
 }
-function jsonToYaml(o){
+function jsonToYaml(o) {
 	// this is your json object
 	//JSONObject jsonobject = new JSONObject(map);
 	// get json string
 	let y = jsyaml.dump(o);
 	return y;
- //  let text= JSON.stringify(o); //o.toString(4);
- //  let di = jsyaml.load(text);
- //  let y = jsyaml.dump(di);
+	//  let text= JSON.stringify(o); //o.toString(4);
+	//  let di = jsyaml.load(text);
+	//  let y = jsyaml.dump(di);
 }
 //#endregion
 

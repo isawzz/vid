@@ -40,40 +40,10 @@ function _addRelatives(id, oid) {
 	}
 }
 function linkObjects(id, oid) {
-	// if (isdef(UIS[id])) {
-	// 	console.log('linkObjects: ui', id, 'exists and CANNOT be overriden!!!!!');
-	// }
+	// if (HALLO) console.log('linkObjects',id,oid)
 	_addRelatives(id, oid);
 	listKey(id2oids, id, oid);
 	listKey(oid2ids, oid, id);
-
-	//#region testcode
-	// if (oid == '0' && id[0]=='m'){
-	// 	console.log('link',id,'to',oid)
-	// 	console.log(id2oids)
-	// 	console.log(oid2ids)
-	// }
-	// if (isdef(UIS[id])) {
-	// 	console.log('linkObjects: ui', id, 'exists and CANNOT be overriden!!!!!');
-	// } else {
-	// 	//console.log('*** created ***', id)
-	// }
-	// _addRelatives(id, oid);
-	// listKey(id2oids, id, oid);
-	// if (oid == '0') console.log('...................',oid2ids[oid], typeof oid, id, typeof id)
-	// if (nundef(oid2ids[oid])) oid2ids[oid]=[];
-	// if (oid == '0') console.log('...................',oid2ids[oid], typeof oid)
-	// oid2ids[oid].push(id);
-	// if (oid == '0') console.log('...................',oid2ids[oid], typeof oid)
-	// //listKey(oid2ids, oid, id);
-	// if (isdef(Number(oid))&& id[0]=='m'){
-	// 	console.log('linked',id,'to',oid)
-	// 	console.log(id2oids)
-	// 	console.log(oid2ids)
-	// 	console.log('__________________')
-	// }
-	// //console.log('after linking:',id2oids[id],oid2ids[oid]);
-	//#endregion
 }
 function unlink(id) {
 	let oids = id2oids[id];

@@ -8,7 +8,7 @@ const USE_MAX_PLAYER_NUM = true; // true | false
 const TIMIT_SHOW = false; // true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
-const TESTING = true; // true | false
+const TESTING = false; // true | false
 const TEST_PATH = '/vid2/tests/';
 const DSPEC_VERSION = 1;
 const USPEC_VERSION = 1;
@@ -16,7 +16,7 @@ const CODE_VERSION = 1;
 const DATA_VERSION = 1;
 
 //used when NOT testing:
-var VERSION = '_01'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
+var VERSION = '_02'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
 var CACHE_DEFAULTSPEC = false;
 var CACHE_USERSPEC = false;
 var CACHE_CODE = true;

@@ -1,11 +1,11 @@
 var USERNAME = 'felix';
 const USERNAME_ORIG = USERNAME;
-var GAME = 'aristocracy'; // catan | aristocracy | ttt | game01
+var GAME = 'catan'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
-const TIMIT_SHOW = false; // true | false
+const TIMIT_SHOW = true; // true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
 const TESTING = false; // true | false

@@ -63,12 +63,12 @@ function rAreas() {
 		d1.id = areaName;
 		d1.style.gridArea = k;
 		if (SPEC.shadeAreaBackgrounds) { d1.style.backgroundColor = palette[ipal]; ipal = (ipal + 1) % palette.length; }
-		if (SPEC.showAreaNames) { d1.innerHTML = areaName; }
+		if (SPEC.showAreaNames) { d1.innerHTML = makeAreaNameDomel(areaName); }
 		UIS[areaName] = { elem: d1, children: [] };
 		d.appendChild(d1);
 	}
 }
-
+function makeAreaNameDomel(areaName){return `<div style='width:100%'>${areaName}</div>`;}
 function fixedSizeGrid(m, d) {
 	let rows = m.length;
 	let cols = m[0].length;

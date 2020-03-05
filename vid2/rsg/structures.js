@@ -48,7 +48,7 @@ function columnGrid(areaNames, loc) {
 		a.id = areaNames[i];
 		a.style.maxHeight = bds.height / areaNames.length + 'px';
 		if (SPEC.shadeAreaBackgrounds) a.style.backgroundColor = palette[i];
-		if (SPEC.showAreaNames) a.innerHTML = areaNames[i];
+		if (SPEC.showAreaNames) a.innerHTML = makeAreaNameDomel(areaNames[i]);
 		UIS[areaNames[i]] = { elem: a, children: [] };
 	}
 }

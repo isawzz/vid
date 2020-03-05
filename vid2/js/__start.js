@@ -46,10 +46,6 @@ function _startGame() {
 function _startStep() {
 
 	//reset_zoom_on_resize();
-
-	mkMan = new MKManager();
-	CARD_HEIGHT=0;
-
 	clearStep();
 
 	pageHeaderInit();

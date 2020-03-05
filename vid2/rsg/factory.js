@@ -1,5 +1,5 @@
 const MAX_CARD_HEIGHT = 100;
-var CARD_HEIGHT = 0;
+var PREFERRED_CARD_HEIGHT = 0;
 
 //#region make...MK
 function makeArea(areaName, idParent) {
@@ -31,7 +31,7 @@ function makeHand(key, idParent, color, padding = 4, margin = 4) {
 	let hParent = bParent.height;
 	dParent.style.setProperty('max-height', hParent + 'px');
 	let areaTitleHeight = SPEC.showAreaNames ? getTextSize('happy', dParent).h : 0;
-	console.log('areaTitleHeight',areaTitleHeight);
+	//console.log('areaTitleHeight', areaTitleHeight);
 	let hTotal = hParent - 2 * (padding + margin) - areaTitleHeight;//wegen title of area!!!!
 	h = hTotal - 2 * padding;
 	if (h > MAX_CARD_HEIGHT) {
@@ -102,17 +102,13 @@ function makeCardDomel(oCard) {
 function _bringCardToFront(id) { let elem = document.getElementById(id); maxZIndex += 1; elem.style.zIndex = maxZIndex; }
 function _sendCardToBack(id) { let c = UIS[id]; let elem = document.getElementById(id); elem.style.zIndex = c.zIndex; }
 
-function magnifyFront(id) {
-	//ev.stopPropagation();
-	//console.log(arguments,'\nthis',this)
+function isFaceUp(oCard) { return oCard.obj_type; }
 
+function magnifyFront(id) {
 	id = id;
 	magCounter += 1;
 	let card = UIS[id];
-	card.setScaleLT(1.5);
-	//card.elem.onmouseover = null;
-	//card.elem.onmouseout = ev => { minifyBack(ev, id); };
-	//console.log('magnify!', card.o.short_name, magCounter)
+	if (isFaceUp(card.o)) card.setScaleLT(1.5); //TODO!!! achtung! wie kann herausfinden ob visible?
 	maxZIndex += 1;
 	card.elem.style.zIndex = maxZIndex;
 }
@@ -157,8 +153,8 @@ function makeCard123(oid, o) {
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(mk.elem);
 	mk.cat = DOMCATS[mk.domType];
-	mk.o=o;
-	mk.isa.card=true;
+	mk.o = o;
+	mk.isa.card = true;
 	UIS[id] = mk;
 	linkObjects(id, oid);
 	listKey(IdOwner, id[2], id);
@@ -173,9 +169,15 @@ function layoutCardsOverlapping(mkHand, mkCardList) {
 	let hhNet = bds.height;
 	let whNet = bds.width;
 	let gap = 2;
-	// let hCard = CARD_HEIGHT? CARD_HEIGHT: hhNet - 2 * gap;
-	// CARD_HEIGHT=hCard;
 	let hCard = hhNet - 2 * gap;
+	if (PREFERRED_CARD_HEIGHT && hCard > PREFERRED_CARD_HEIGHT) {
+		hCard=PREFERRED_CARD_HEIGHT;
+		console.log('correcting card height for',gamePlayerId);
+	} else{
+		PREFERRED_CARD_HEIGHT = hCard;
+	}
+
+	//ab hier soll alles nur noch von hCard abhaengen!
 	let wCard = hCard * .7;
 	mkCardList.map(x => mStyle(x.elem, { height: hCard, width: wCard, position: 'absolute' }, 'px'));
 

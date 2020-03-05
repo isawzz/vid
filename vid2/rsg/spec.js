@@ -19,14 +19,71 @@ function rMappings() {
 	//mappingsInitialized = {};
 	//console.log('mappings', mappings, mappingTypes);
 }
+function rPresentMappings1() {
+	let pool = serverData.players;
+	presentMappings(pool, gamePlayerId);
+	// for (const plid in pool) {
+	// 	if (plid == gamePlayerId) continue;
+	// 	presentMappings(pool, plid);
+	// }
+	// for (const oid in serverData.table) {
+	// 	presentMappings(pool, oid);
+	// }
+}
+
+function presentMappings(pool, oid) {
+	let o = pool[oid];
+	let otype = o.obj_type;
+
+	if (mappingTypes[otype]) {
+		//there have been found mappings on this object type
+		//check all these mappings
+
+		if (mappingsInitialized[otype + '.' + oid]) continue;
+
+		let mm = mappings.filter(x => x[otype]);
+		//console.log('matching mappings for object', oid, mm);
+		let onlyOnce = false; //immutable need to implement other structure uis!!!
+		for (const mapping of mm) {
+			// if (!mapping.immutable) onlyOnce = false;
+			executeMapping(mapping, otype, oid, o, pool);
+		}
+		if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
+	}
+}
+
 function rPresentMappings() {
 	// 	//look in table or in players for objects that map any of the mappings!
+
+
+
+
 	for (const kPool of ['table', 'players']) {
 		let pool = serverData[kPool];
+
+		// timit.showTime('vor keys');
+		// if (pool) {
+		// 	let keys = Object.keys(pool);
+		// 	if (kPool == 'players') {
+		// 		let keysSorted = [];
+		// 		keysSorted.push(gamePlayerId);
+		// 		for (const plid of keys) {
+		// 			if (plid != gamePlayerId) keysSorted.push(plid);
+		// 		}
+		// 		keys = keysSorted;
+		// 	}
+		// }
+		// timit.showTime('nach keys');
+
+		console.log('_________')
 		for (const oid in pool) {
 
 			let o = pool[oid];
 			let otype = o.obj_type;
+
+
+			if (otype == 'GamePlayer' || otype == 'opponent') console.log(otype);
+
 			if (mappingTypes[otype]) {
 				//there have been found mappings on this object type
 				//check all these mappings
@@ -54,8 +111,8 @@ function executeMapping(mapping, otype, oid, o, pool) {
 	if (nundef(omap)) return;
 	let func = mapping.type;
 	let loc = mapping.loc;
-	if (stringBefore(loc,'.') == 'this'){
-		loc =  parsePropertyPath(o, stringAfter(loc, '.'));
+	if (stringBefore(loc, '.') == 'this') {
+		loc = parsePropertyPath(o, stringAfter(loc, '.'));
 		//console.log('------------------',loc)
 	}
 	// console.log('mapping:',mapping);

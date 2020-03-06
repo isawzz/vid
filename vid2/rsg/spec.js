@@ -23,7 +23,7 @@ function rPresentMappings() {
 	//let bds=getBounds('others');
 	//console.log('---------------------------',bds.height);
 	
-	presentMappings(gamePlayerId, serverData.players[gamePlayerId]);
+	if (isdef(serverData.players)) presentMappings(gamePlayerId, serverData.players[gamePlayerId]);
 
 	//bds=getBounds('others');
 	//console.log('---------------------------',bds.height);

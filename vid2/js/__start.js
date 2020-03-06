@@ -57,6 +57,13 @@ function _startStep() {
 	//reset_zoom_on_resize();
 	clearStep();
 
+	if (serverData.error){
+		alert(serverData.error.type + ' ' + serverData.error.msg);
+		console.log(serverData.error);
+		onClickRestart();
+		return;
+	}
+
 	pageHeaderInit();
 
 	checkPlayerChange();

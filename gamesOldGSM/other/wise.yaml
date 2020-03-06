@@ -1,0 +1,13 @@
+tableSize: [800, 500]
+layout: [
+  's s s s s', 
+  'w w w w w',
+  'r r r r sc',
+  'r r r r sc',
+  'r r r r sc',
+  ]
+areas: 
+  s: saying
+  w: writing
+  r: results
+  sc: scores

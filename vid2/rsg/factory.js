@@ -46,7 +46,7 @@ function makeHand(key, idParent, color, padding = 4, margin = 4) {
 	// 		: bParent.height ? bParent.height : 100;
 	
 	//dParent.style.setProperty('max-height', hParent + 'px');
-	console.log('>>>>>>>hParent',hParent)
+	//console.log('>>>>>>>hParent',hParent)
 	
 	let hTotal = hParent - 2 * (padding + margin) - areaTitleHeight;//wegen title of area!!!!
 	h = hTotal - 2 * padding;
@@ -54,7 +54,7 @@ function makeHand(key, idParent, color, padding = 4, margin = 4) {
 		h = MAX_CARD_HEIGHT;
 		hTotal = h + 2 * padding;
 	}
-	console.log('_________________makeHand key,',key,'\narea width',bParent.width,'\narea height',bParent.height,'\nhParent', hParent, '\nhTotal', hTotal, '\nhCard', h)
+	//console.log('_________________makeHand key,',key,'\narea width',bParent.width,'\narea height',bParent.height,'\nhParent', hParent, '\nhTotal', hTotal, '\nhCard', h)
 	
 
 	let bTitle = { height: 0 };
@@ -182,7 +182,7 @@ function layoutCardsOverlapping(mkHand, mkCardList) {
 	let cardContainer = mkHand.parts.body;
 	let bds = getBounds(cardContainer);
 
-	console.log('layoutCardsOverlapping',bds);
+	//console.log('layoutCardsOverlapping',bds);
 	if (bds.height < 10) {
 		console.log('>>')
 		//mkHand.setSize(100, 100);
@@ -205,7 +205,7 @@ function layoutCardsOverlapping(mkHand, mkCardList) {
 	//ab hier soll alles nur noch von hCard abhaengen!
 	let gap = 2;
 	let hCard = mkHand.hCard;
-	console.log('>>>>>',getBounds(mkHand.parts.body).height);
+	//console.log('>>>>>',getBounds(mkHand.parts.body).height);
 	if (!PREFERRED_CARD_HEIGHT) PREFERRED_CARD_HEIGHT = hCard; //*.9;
 	let wCard = hCard * .7;
 	mkCardList.map(x => mStyle(x.elem, { height: hCard, width: wCard, position: 'absolute' }, 'px'));

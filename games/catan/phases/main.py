@@ -56,13 +56,10 @@ class MainPhase(TurnPhase):
 							gain_res(hex.res, C.state.bank, c.building.player, gain, C.log)
 		
 			return
-
-		if action is None:
-			return		
-
+		
 		obj, *rest = action
 		
-		if obj == 'pass' or obj == ('pass',):
+		if obj == 'pass':
 			raise SwitchPhase('main', stack=False)
 		
 		if obj == 'cancel':
@@ -147,7 +144,6 @@ class MainPhase(TurnPhase):
 				
 		elif obj_type == 'devdeck':
 			card = C.state.dev_deck.draw()
-			card.visible = tset([player])
 			self.player.devcards.add(card)
 			self.bought_devcards.add(card)
 			C.log.writef('{} buys a development card', self.player)

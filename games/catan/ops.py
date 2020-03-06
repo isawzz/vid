@@ -187,7 +187,7 @@ def build(C, bldname, player, loc, silent=False):
 		if reward == 1:
 			msg = ' (gaining 1 victory point)'
 		if reward > 1:
-			msg = ' (gaining {} victory points)'.format(reward)
+			msg = ' (gaining {} victory points)'.format(msg)
 		C.log.writef('{} builds a {}{}', player, bld, '' if msg is None else msg)
 	return bld
 

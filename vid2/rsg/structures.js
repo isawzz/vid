@@ -10,7 +10,7 @@ function hexGrid(soDict, loc, sBoard, idBoard) {
 function quadGrid(soDict, loc, sBoard, idBoard) {
 	//timit.showTime(getFunctionCallerName());
 	//let [idBoard, sBoard] = findMatch(soDict, condList);
-	console.log('quadGrid call')
+	//console.log('quadGrid call')
 	return _quadGrid(loc, idBoard, sBoard, soDict);
 }
 function cardHand(objectPool, loc, o, oid, path, oHand) {

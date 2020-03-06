@@ -963,7 +963,7 @@ function actualCenter(elem, relToParent = false, elRelTo) {
 function calcNumRowsFitting(dParent, maxHeight, html) {
 	let sz = getTextSize(html, dParent);
 	//console.log('line height as per calcNumRowsFitting',sz.h);
-	return maxHeight / sz.h;
+	return maxHeight / (sz.h+2);
 }
 function getRelBounds(elem, elRel) {
 	let b1 = elem.getBoundingClientRect();

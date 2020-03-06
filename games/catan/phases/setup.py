@@ -5,7 +5,6 @@ from gsm import tset, tdict, tlist
 
 from ..ops import build, gain_res
 
-# comment
 class SetupPhase(GamePhase):
 	
 	def __init__(self, player_order):

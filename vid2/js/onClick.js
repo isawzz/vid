@@ -47,7 +47,7 @@ function onClickFilterTuples(ev, mk, part) {
 	}
 }
 function onClickFilterOrInfobox(ev, mk, part) {
-	console.log('ocFilterOr')
+	//console.log('ocFilterOr')
 	if (!ev.ctrlKey) onClickFilterTuples(ev, mk, part);
 	else {
 		openInfobox(ev, mk, part);

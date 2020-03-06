@@ -1,6 +1,8 @@
 
 function rPlayerStatsAreas(){
 
+	if (nundef(serverData.players)) return;
+
 	if (nundef(SPEC.playerStatsAreas)) return;
 	let loc = SPEC.playerStatsAreas.loc; 
 	//loc has to be existing area in layout!

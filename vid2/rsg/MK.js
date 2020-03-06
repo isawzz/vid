@@ -45,7 +45,7 @@ class MK {
 
 		}
 	}
-
+	
 	//#endregion
 
 	//#region text
@@ -819,32 +819,38 @@ class MK {
 
 	//#region events
 	extractAttr(part, attr = 'name') {
-		if (this.id == 'm_t_0') console.log('extractAttr', part, attr)
+		//console.log('___________extract')
+		//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('extractAttr', part, attr)
 		try {
 			let name = '';
-			if (this.id == 'm_t_0') console.log('1', name)
-			//console.log(part)
+			//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('1', name)
+			//console.log('part',part)
 			//if (this.id.includes('147')) {
 			let p = d3.select(part).node();
-			if (this.id == 'm_t_0') console.log('2', p)
+			//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('2', p)
 			let ou = p.outerHTML;
-			if (this.id == 'm_t_0') console.log('3', ou)
+			//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('3', ou)
 			let s = stringAfter(ou, 'name=');
-			if (isEmpty(s)) return 'elem'
-			if (this.id == 'm_t_0') console.log('4', s)
+			//if (isEmpty(s)) return 'elem'
+			//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('4', s)
 			let s1 = stringBefore(s, ' ');
 			let s2 = s1.substring(1, s1.length - 1);
 			name = s2;
+			//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('5', name);
+			//console.log('name',name,isdef(name),isEmpty(name))
+			return isEmpty(name)? 'elem':name;
 		} catch{
 			name = 'elem';
+			return name;
 		}
 		//console.log('p', p, 'ou', ou, 's', s, 's1', s1, '\ns2=name=' + s2);
 		// console.log('part',part,'\npartName',partName,'\nd3',p,'\nouterH',p.outerHTML,'\nname',p.outerHTML.name);
 		//}
 
-		return name;
+		return name; //this is not executed! name out of scope!!!!!!!
 	}
 	_handler(ev) {
+		//console.log(ev)
 		ev.stopPropagation();
 		let eventName = ev.type;
 		if (!this.isEnabled) return;
@@ -855,10 +861,11 @@ class MK {
 		else { let name = this.extractAttr(part, 'name'); if (nundef(name)) name = 'elem'; partName = name; }
 
 		let handler = this.handlers[eventName][partName];
+		//console.log('part',part,'\nevName',eventName,'\npartName',partName,handler)
 		if (isdef(handler)) { handler(ev, this, partName); }
 	}
 	addHandler(evName, partName = 'elem', handler = null, autoEnable = true) {
-		//console.log('addHandler for',evName,partName,this.id)
+		//if (partName == 'title') console.log('addHandler for',evName,partName,this.id)
 
 		//if (this.id == 'm_t_0') console.log('_______adding ocFilter', evName, partName, handler)
 
@@ -870,7 +877,7 @@ class MK {
 
 
 		if (isdef(handler)) {
-			//console.log('adding handler',evName,partName)
+			//console.log('adding handler',evName,partName,part)
 			this.handlers[evName][partName] = handler;
 		}
 

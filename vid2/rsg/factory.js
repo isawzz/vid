@@ -196,7 +196,7 @@ function layoutCardsOverlapping(mkHand, mkCardList) {
 	// let hCard = hhNet - 2 * gap;
 	// if (PREFERRED_CARD_HEIGHT && hCard > PREFERRED_CARD_HEIGHT) {
 	// 	hCard = PREFERRED_CARD_HEIGHT;
-	// 	console.log('correcting card height for', gamePlayerId);
+	// 	console.log('correcting card height for', GAMEPLID);
 	// } else {
 	// 	PREFERRED_CARD_HEIGHT = hCard;
 	// 	console.log('set PREFERRED_CARD_HEIGHT to',hCard)

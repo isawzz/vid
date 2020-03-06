@@ -14,7 +14,7 @@ function rPlayerStatsAreas(){
 	let objects=[];
 	for(const plid in serverData.players){
 		let o=serverData.players[plid];
-		if (plid != gamePlayerId) {
+		if (plid != GAMEPLID) {
 			o.id=plid;
 			objects.push(o)
 		}

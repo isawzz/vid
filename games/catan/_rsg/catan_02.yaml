@@ -18,11 +18,8 @@ playerStatsAreas:  #standard setting
 
 #mappings generate structures or lists, or can be used as a shortcut for simple behaviors
 mappings: #form: obj_type.property1.property2...
-  board: 
+  Grid: 
     type: hexGrid
-    field_type: hex
-    corner_type: Corner
-    edge_type: Edge
     loc: board
   GamePlayer.devcards: 
     type: cardHand

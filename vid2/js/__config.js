@@ -1,14 +1,15 @@
 var USERNAME = 'felix';
+var GAMEPLID=null;
 const USERNAME_ORIG = USERNAME;
 var GAME = 'catan'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
-const TIMIT_SHOW = false; // true | false
+const TIMIT_SHOW = true; // true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
-const TESTING = false; // true | false
+const TESTING = true; // true | false
 const TEST_PATH = '/vid2/tests/';
 const DSPEC_VERSION = 1;
 const USPEC_VERSION = 1;

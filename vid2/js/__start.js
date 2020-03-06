@@ -1,9 +1,20 @@
+var prevGamePlid=null;
+var prevWaitingFor=null; //needed to update header info when waiting for several players in a row
+var RUNTEST=true;
 window.onload = () => _startSession();
 
 //#region testing
 function runTest(){
 	console.log('ah');
-	
+	//showPictoDivCentered('crow','board');
+	//showPicLabel('crow','hallo','board');
+	let keyList = ['female','male','spy','frog','fairy'];
+	let olist = [];
+	for(const k of keyList){
+		olist.push({key:k,label:k});
+	}
+	picLabelList(olist,'board')
+
 }
 
 
@@ -28,7 +39,7 @@ async function _startSession(resetLocalStorage = false) {
 async function _startNewGame(game) {
 	//need to reload spec & code!
 	if (isdef(game)) GAME = game;
-	USERNAME = USERNAME_ORIG;
+	setGamePlayer(USERNAME_ORIG);
 	mappingsClear();
 	mById('actions').style.setProperty('min-width', null);
 
@@ -63,22 +74,23 @@ function _startStep() {
 		onClickRestart();
 		return;
 	}
+	//preProcess
+	rPreProcessPlayers(); //adds obj_type='opponent' | 'GamePlayer' to all players that do not have an obj_type
+	rPreProcessActions();
 
 	pageHeaderInit();
-
-	checkPlayerChange();
+	if (GAMEPLID != prevGamePlid){
+		pageHeaderUpdatePlayer(GAMEPLID);
+		logUpdateVisibility(GAMEPLID, serverData.players);
+		prevGamePlid = GAMEPLID;
+	}
 
 	rMergeSpec();
 
 	rAreas();
 	rPlayerStatsAreas();
 
-	//preProcess
-	rPreProcessPlayers(); //adds obj_type='opponent' to all players that do not have an obj_type
-	rPreProcessActions();
-
-	//runTest();
-
+	if (RUNTEST){runTest();return;}
 
 	timit.showTime('*mappings')
 	rMappings();
@@ -106,22 +118,14 @@ function _startStep() {
 
 }
 
-//#region helpers
-function checkPlayerChange() {
-	if (!serverData.players) { return; } //alert('no players in serverData!!!'); }
-	let plid = firstCondDict(serverData.players, x => x.obj_type == 'GamePlayer');
-	if (plid != gamePlayerId) {
-		//player changed!!!
-		//console.log('player changing to:', plid)
-		prevPlayerId = gamePlayerId;
-		gamePlayerId = plid;
-		//console.log(playerConfig[GAME].players)
-		pageHeaderUpdatePlayer(plid);
-		//hide logs of other players!
-		logUpdateVisibility(plid, serverData.players);
-	}
-
+function findGamePlayer(){
+	if (serverData.options) {
+		let plid = firstCondDict(playerConfig[GAME].players, x => x.username == USERNAME);
+		return plid;
+	}else return null;
 }
+
+//#region helpers
 function fillActions(areaName, boats, availHeight) {
 	let nActions = boats.length;
 	//console.log(areaName, nActions, availHeight)
@@ -158,7 +162,7 @@ async function interaction(action, data) {
 	if (action == INTERACTION.selected) {
 		timit.init('*send action');
 		if (TESTING) {
-			let pl = serverData.players[gamePlayerId];
+			let pl = serverData.players[GAMEPLID];
 			let o = GAME == 'catan' ? pl.devcards : pl.hand;
 			if (!o){
 				for(const plid in serverData.players){
@@ -235,9 +239,10 @@ async function presentWaitingFor() {
 		//console.log('presenting waiting for', pl)
 		pageHeaderUpdatePlayer(pl);
 	}
-	if (PLAYMODE != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(gamePlayerId))) {
+	if (PLAYMODE != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(GAMEPLID))) {
 		USERNAME = playerConfig[GAME].players[pl].username;
-		//console.log('just switching username to', user)
+		GAMEPLID = pl;
+		console.log('switching player to', GAMEPLID,USERNAME)
 		let data = await route_status(USERNAME);
 		serverData = data;
 		_startStep();
@@ -251,12 +256,15 @@ async function presentWaitingFor() {
 
 }
 function rPreProcessPlayers() {
+	//console.log(serverData)
+	//let gplid=findGamePlayer();
 	for (const plid in serverData.players) {
 		let pl = serverData.players[plid];
-		if (nundef(pl.obj_type)) {
-			//console.log('.......CORRECTING!!!!',plid)
-			pl.obj_type = 'opponent';
-		}
+		pl.obj_type = plid == GAMEPLID?'GamePlayer':'opponent';
+		// if (nundef(pl.obj_type)) {
+		// 	//console.log('.......CORRECTING!!!!',plid)
+		// 	pl.obj_type = 'opponent';
+		// }
 		//console.log(serverData.players[plid].obj_type)
 	}
 	//console.log(serverData.players)
@@ -283,7 +291,7 @@ function rPresentEnd() {
 }
 function rPresentLog() {
 	if (nundef(serverData.log)) return;
-	let pl = gamePlayerId;
+	let pl = GAMEPLID;
 
 	let dLog = logGetDiv(pl);
 	let logId = dLog.id;
@@ -328,7 +336,7 @@ function rPresentStatus() {
 	clearElement(d);
 
 	//make aux for current player (TODO: could reuse these but maybe not necessary)
-	let pl = gamePlayerId;
+	let pl = GAMEPLID;
 	let msStatus = makeAux(getUsername(pl) + ' (' + pl + ')', pl, areaName);
 	let color = getPlayerColor(pl);
 	msStatus.setBg(color);

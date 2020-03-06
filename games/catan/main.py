@@ -2,13 +2,15 @@ import sys, os
 import numpy as np
 import gsm
 from gsm import tdict, tlist, tset, tdeque, tstack, containerify
-from gsm.common.elements import Card, Deck
+from gsm.errors import InvalidPlayerError
 from gsm.common.world import grid
 from gsm.common import TurnPhaseStack
 
+from .phases import MainPhase, RobberPhase, SetupPhase, TradePhase
+from . import objects
+from . import players
+
 from .ops import build_catan_map, gain_res
-from .phases import *
-from .objects import Hex, Board, DevCard
 
 MY_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -16,97 +18,47 @@ MY_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class Catan(gsm.GameController):
 	
-	def __init__(self, player_names, debug=False,
-	             shuffle_order=False):
-		
-		# create player manager
-		manager = gsm.GameManager(open={'num_res', 'color', 'devcards', 'buildings',
-		                                'reserve', 'ports', 'past_devcards'},
-		                          )
-		
-		stack = TurnPhaseStack()
-		
-		log = gsm.GameLogger(indent_level=0)
-		
-		super().__init__(debug=debug,
-		                 manager=manager,
-		                 stack=stack,
-		                 log=log,
-		                 info_path=os.path.join(MY_PATH, 'info.yaml'),
-		                 # settings
-		                 shuffle_order=shuffle_order, player_names=player_names)
-		
-		# register config files
-		self.register_config('rules', os.path.join(MY_PATH, 'config/rules.yaml'))
-		self.register_config('dev', os.path.join(MY_PATH,'config/dev_cards.yaml'))
-		self.register_config('map', os.path.join(MY_PATH,'config/map.yaml'))
-		self.register_config('msgs', os.path.join(MY_PATH, 'config/msgs.yaml'))
-		
-		# register game object types
-		self.register_obj_type(name='board', obj_cls=Board)
-		self.register_obj_type(name='hex', obj_cls=Hex)
-		
-		self.register_obj_type(name='devcard', obj_cls=DevCard,
-		                       req={'name', 'desc'},)
-		self.register_obj_type(name='devdeck', obj_cls=Deck)
-		self.register_obj_type(name='robber', open={'loc'})
-		
-		self.register_obj_type(name='road', open={'loc', 'player'})
-		self.register_obj_type(name='settlement', open={'loc', 'player'})
-		self.register_obj_type(name='city', open={'loc', 'player'})
-		
-		# register possible phases
-		self.register_phase(name='setup', cls=SetupPhase)
-		self.register_phase(name='main', cls=MainPhase)
-		self.register_phase(name='trade', cls=TradePhase)
-		self.register_phase(name='robber', cls=RobberPhase)
+	def _create_start_phase(self, C, config, settings, **kwargs):
+		super()._create_start_phase(C, config, settings,
+		                            player_order=tlist(C.players),
+		                            real_estate=C.state.world.corners,
+		                            **kwargs)
 	
-	def _pre_setup(self, config, info=None):
-		# register players
-		assert len(self.player_names) in {3,4}, 'Not the right number of players: {}'.format(self.player_names)
-		for name in self.player_names:
-			if name not in info.player_names:
-				raise gsm.signals.InvalidPlayerError(name)
-			self.register_player(name, num_res=0, color=name)
-	
-	def _set_phase_stack(self, config):
-		self.stack.set_player_order(tlist(self.players))
-		return tlist([self.create_phase('setup', player_order=tlist(self.players))])
-	
-	def _init_game(self, config):
+	def _init_game(self, C, config, settings):
 		
 		res_names = config.rules.res_names
 		
 		# update player props
-		for player in self.players.values():
+		for player in C.players.values():
 			player.reserve = tdict(config.rules.building_limits)
 			player.buildings = tdict(road=tset(), settlement=tset(), city=tset())
 			player.resources = tdict({res:0 for res in res_names})
+			player.num_res = 0
 			player.devcards = tset()
 			player.past_devcards = tset()
 			player.vps = 0
 			player.ports = tset()
 			
-		self.state.costs = config.rules.building_costs
+		C.state.costs = config.rules.building_costs
 		
 		bank = tdict()
 		for res in res_names:
 			bank[res] = config.rules.num_res
-		self.state.bank = bank
+		C.state.bank = bank
 		
-		self.state.rewards = config.rules.victory_points
-		self.state.production = config.rules.resource_pays
-		self.state.reqs = config.rules.reqs
-		self.state.victory_condition = config.rules.victory_condition
-		self.state.hand_limit = config.rules.hand_limit
+		C.state.rewards = config.rules.victory_points
+		C.state.production = config.rules.resource_pays
+		C.state.reqs = config.rules.reqs
+		C.state.victory_condition = config.rules.victory_condition
+		C.state.hand_limit = config.rules.hand_limit
 		# init map
-		G = grid.make_hexgrid(config.map.map, table=self.table,
+		G = grid.make_hexgrid(config.map.map, table=C.table,
 		                      enable_corners=True, enable_edges=True,
-		                      
-		                      field_obj_type='hex', grid_obj_type='board')
+		                      field_obj_type='Field', grid_obj_type='Grid',
+		                      )
 		
-		build_catan_map(G, config.map.fields, config.map.ports, config.rules.numbers, self.RNG)
-		self.state.world = G
+		build_catan_map(G, config.map.fields, config.map.ports, config.rules.numbers, C.RNG)
+		C.state.world = G
 		
 		# robber and numbers
 		numbers = tdict()
@@ -119,32 +71,32 @@ class Catan(gsm.GameController):
 					numbers[f.num] = tset()
 				numbers[f.num].add(f)
 		assert loc is not None, 'couldnt find the desert'
-		self.state.robber = self.table.create('robber', loc=loc)
-		self.state.desert = loc
-		self.state.numbers = numbers
-		loc.robber = self.state.robber
+		C.state.robber = C.table.create('robber', loc=loc)
+		C.state.desert = loc
+		C.state.numbers = numbers
+		loc.robber = C.state.robber
 		
 		# setup dev card deck
 		cards = tlist()
 		
-		for name, info in config.dev.items():
+		for name, info in config.dev_cards.items():
 			cards.extend([tdict(name=name, desc=info.desc)]*info.num)
 		
-		self.state.dev_deck = self.table.create(obj_type='devdeck', cards=cards,
-		                                        seed=self.RNG.getrandbits(64),
-		                                        default='devcard')
-		self.state.dev_deck.shuffle()
+		C.state.dev_deck = C.table.create(obj_type='Deck', cards=cards,
+		                                        seed=C.RNG.getrandbits(64),
+		                                        default='Card')
+		C.state.dev_deck.shuffle()
 		
-		self.state.bank_trading = config.rules.bank_trading
-		self.state.msgs = config.msgs
+		C.state.bank_trading = config.rules.bank_trading
+		C.state.msgs = config.msgs
 		
-		self.state.rolls = tstack()
+		C.state.rolls = tstack()
 		
-	def _end_game(self):
+	def _end_game(self, C):
 		
 		out = tdict()
 		
-		vps = tdict({player.name:player.vps for player in self.players})
+		vps = tdict({player.name:player.vps for player in C.players})
 		out.vps = vps
 		
 		mx = max(vps.values())
@@ -160,31 +112,33 @@ class Catan(gsm.GameController):
 		out.winners = winners
 		return out
 	
+	
+	
 	def cheat(self, code=None):
 		
 		self.log.writef('Cheat code activated: {}', code)
 		self.log.iindent()
 		
 		if code == 'devcard':
-			for player in self.players:
+			for player in self.manager:
 				gain_res('wheat', self.state.bank, player, 1, log=self.log)
 				gain_res('ore', self.state.bank, player, 1, log=self.log)
 				gain_res('sheep', self.state.bank, player, 1, log=self.log)
 
 		if code == 'road':
-			for player in self.players:
+			for player in self.manager:
 				gain_res('wood', self.state.bank, player, 1, log=self.log)
 				gain_res('brick', self.state.bank, player, 1, log=self.log)
 				
 		if code == 'settlement':
-			for player in self.players:
+			for player in self.manager:
 				gain_res('wood', self.state.bank, player, 1, log=self.log)
 				gain_res('brick', self.state.bank, player, 1, log=self.log)
 				gain_res('wheat', self.state.bank, player, 1, log=self.log)
 				gain_res('sheep', self.state.bank, player, 1, log=self.log)
 				
 		if code == 'city':
-			for player in self.players:
+			for player in self.manager:
 				gain_res('wheat', self.state.bank, player, 2, log=self.log)
 				gain_res('ore', self.state.bank, player, 3, log=self.log)
 		
@@ -196,10 +150,7 @@ class Catan(gsm.GameController):
 		if code == 'gain8':
 			self.log.write('White gains 8 resources')
 			
-			for res in self.players['White'].resources.keys():
-				gain_res(res, self.state.bank, self.players['White'], 3, log=self.log)
+			for res in self.manager['White'].resources.keys():
+				gain_res(res, self.state.bank, self.manager['White'], 3, log=self.log)
 		
 		self.log.dindent()
-
-
-gsm.register_game(Catan, os.path.join(MY_PATH, 'info.yaml'))

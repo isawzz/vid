@@ -331,7 +331,7 @@ button:active {
 .gamePlayer{
 	padding: 13px 15px;
 	font-weight: bold;
-	/* color: black; */
+	color: black;
 	font-size:110%;
 	/* background-color:yellow; */
 }

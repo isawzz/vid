@@ -23,12 +23,12 @@ function rPresentMappings() {
 	//let bds=getBounds('others');
 	//console.log('---------------------------',bds.height);
 	
-	if (isdef(serverData.players)) presentMappings(gamePlayerId, serverData.players[gamePlayerId]);
+	if (isdef(serverData.players)) presentMappings(GAMEPLID, serverData.players[GAMEPLID]);
 
 	//bds=getBounds('others');
 	//console.log('---------------------------',bds.height);
 
-	for (const plid in serverData.players) { if (plid != gamePlayerId) presentMappings(plid, serverData.players[plid]); }
+	for (const plid in serverData.players) { if (plid != GAMEPLID) presentMappings(plid, serverData.players[plid]); }
 	for (const oid in serverData.table) { presentMappings(oid, serverData.table[oid]); }
 }
 function presentMappings(oid, o) {

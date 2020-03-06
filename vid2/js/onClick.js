@@ -71,21 +71,21 @@ function onClickLobby() {
 //#region game control flow: Restart, RunTo..., STOP, Step
 async function onClickRestart() {
 	unfreezeUI();
-	USERNAME = USERNAME_ORIG;
+	setGamePlayer(USERNAME_ORIG);
 	serverData = await route_restart(USERNAME);
 	_startGame();
 }
 function onClickRunToNextPlayer() {
-	let pl = gamePlayerId;
-	autoplayFunction = (win) => win.gamePlayerId == pl;
+	let pl = GAMEPLID;
+	autoplayFunction = (win) => win.GAMEPLID == pl;
 
 	onClickStep();
 }
 function onClickRunToNextTurn() {
-	let pl = gamePlayerId;
+	let pl = GAMEPLID;
 	autoplayFunction = (win) => {
-		if (win.gamePlayerId != pl) {
-			autoplayFunction = (win1) => win1.gamePlayerId != pl;
+		if (win.GAMEPLID != pl) {
+			autoplayFunction = (win1) => win1.GAMEPLID != pl;
 		};
 		return true;
 	};

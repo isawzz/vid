@@ -770,19 +770,35 @@ function setCSSVariable(varName, val) {
 
 //#DOM 1 liners
 function asList(x) { return isList(x) ? x : [x]; }
-function mAppend(d, child) { if (isString(d)) d = mById(d); if (d) d.appendChild(child); }
+function mEnsure(d){return isString(d)?mById(d):d;}
+function mAppend(d, child) { d=mEnsure(d); if (d) d.appendChild(child); }
+function mAppendText(d,text){	let dText = document.createTextNode(text);	d.appendChild(dText);	return dText;}
+function mAppPos(d, child) { return mAppend(mPosRel(d), child); }
 function mById(id) { return document.getElementById(id); }
+function mColor(d, bg, fg = 'white') { return mStyle(d, { 'background-color': bg, 'color': fg }); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
 function mRemove(elem) { mDestroy(elem); }
-function mDiv(dParent = null) { let d = mCreate('div'); mAppend(dParent, d); return d; }
-function onMouseEnter(d, handler = null) { d3.on('mouse') }
+function mDiv(dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); return d; }
+//function onMouseEnter(d, handler = null) { d3.on('mouse') }
 function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
 function mGap(d, gap) { d.style.setProperty('margin', gap + 'px'); }
+function mPic(key) {
+	let ch = iconChars[key];
+	let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
+	let text = String.fromCharCode('0x' + ch);
+	let d = mTextDiv(text);
+	mStyle(d, { 'font-family': family });
+	return d;
+}
 function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
+function mPosRel(d) { return mStyle(d, { position: 'relative' }); }
+function mPosAbs(d) { return mStyle(d, { position: 'absolute' }); }
 function mRot(d, angle) { mStyle(d, { transform: 'rotate(' + angle + 'deg)' }); }
 function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
-function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
+function mSizePic(d, w, h, unit = 'px') { return mStyle(d, { 'font-size': h / 2, 'font-weight': 900, 'padding-top': h / 4, 'text-align': 'center', 'box-sizing': 'border-box', width: w, height: h }); }
+function mSzPic(d, sz, unit = 'px') { return mSizePic(d, sz, sz, unit); }
+function mStyle(elem, styles, unit = 'px') { elem=mEnsure(elem);for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } return elem; }
 function mTextDiv(text, dParent = null) { let d = mCreate('div'); mAppend(dParent, d); d.innerHTML = text; return d; }
 function posTL(d) { mPos(d, 0, 0) }
 function posTR(d) { mStyle(d, { right: 0, top: 0, position: 'absolute' }); }
@@ -790,9 +806,9 @@ function posBL(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); }
 function posBLR(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
 function posBR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); }
 function posBRR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
-function posCIC(d) { d.classList.add('centerCentered'); }
-function posCICT(d) { d.classList.add('centerCenteredTopHalf'); }
-function posCICB(d) { d.classList.add('centerCenteredBottomHalf'); }
+function posCIC(d) { d=mEnsure(d); d.classList.add('centerCentered'); }
+function posCICT(d) { d=mEnsure(d); d.classList.add('centerCenteredTopHalf'); }
+function posCICB(d) { d=mEnsure(d); d.classList.add('centerCenteredBottomHalf'); }
 
 //#region DOM: creating divs: 2020
 function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, className, styleStr, border, rounding, gap, margin, padding, float, textAlign, fz }) {

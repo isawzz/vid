@@ -39,6 +39,11 @@ function pageHeaderGetPlayerHtml(username, playerId, color) {
 //#endregion
 
 //#region playerConfig (stub)
+function setGamePlayer(username){
+	USERNAME = username;
+	GAMEPLID = firstCondDict(playerConfig[GAME].players,p=>p.username == username);
+
+}
 function stubPlayerConfig(gameInfo) {
 	//automatically set a player configuration when starting in game view
 	gcs = {};

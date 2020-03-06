@@ -21,7 +21,7 @@ useColorHintForObjects: true
 onlySimpleValues: true
 ignoreStructureTypesInPresentation : true
 collapseEmptySmallLetterAreas: false
-shadeAreaBackgrounds: false
+shadeAreaBackgrounds: true
 showAreaNames: false
 showCardHandNames: false
 showCardHandBackground: false

@@ -1,16 +1,20 @@
 tableSize: [600, 500]
 layout: [
-  " m m m m m o ",
-  " m m m m m o ",
-  " m m m m m o ",
-  " m m m m m o ",
+  " M M M M M o ",
+  " M M M M M o ",
+  " M M M M M o ",
+  " M M M M M o ",
   " p p p p p a ",
 ]
 areas:
-  m: board
+  M: board
   o: others
   p: player
   a: playerStats
+
+playerStatsAreas:  #standard setting
+  type: columnGrid
+  loc: others
 
 #mappings generate structures or lists, or can be used as a shortcut for simple behaviors
 mappings: #form: obj_type.property1.property2...
@@ -20,7 +24,15 @@ mappings: #form: obj_type.property1.property2...
     corner_type: Corner
     edge_type: Edge
     loc: board
-    mutable: false #speeds up presentation
+  GamePlayer.devcards: 
+    type: cardHand
+    loc: player
+  opponent.devcards:
+    type: cardHand
+    loc: this.name
+  # opponent.num_res:
+  #   type: cardHand
+  #   loc: this.name
   # GamePlayer.devcards: 
   #   type: cardHand
   #   loc: player

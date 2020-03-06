@@ -16,12 +16,19 @@ function quadGrid(soDict, loc, sBoard, idBoard) {
 function cardHand(objectPool, loc, o, oid, path, oHand) {
 	//console.log('_______cardHand')
 	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
+
+	//do NOT present empty hands!
+	let ids = oHand ? getElements(oHand) : [];
+	if (isEmpty(ids)) return;
+
+
 	let key = oid + '.' + path;
 	let mkHand = getVisual(key);
-	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o));
+	let hPadding=4;
+	let hMargin=4;
+	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o),hMargin,hPadding);
 	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
-	let ids = oHand ? getElements(oHand) : [];
 	let oCardDict = {};
 	for (const id of ids) { oCardDict[id] = serverData.table[id]; }
 	let oCardList = dict2list(oCardDict, 'id');
@@ -33,23 +40,67 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 
 	layoutCardsOverlapping(mkHand, mkCardList);
 }
+function pictoHand(objectPool, loc, o, oid, path, oDict) {
+	//console.log('_______cardHand')
+	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
+
+	let key = oid + '.' + path;
+	let mkHand = getVisual(key);
+	let hPadding=4;
+	let hMargin=4;
+	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o),hMargin,hPadding);
+	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
+
+	//let ores={wood: 2, brick: 0, sheep: 2, ore: 0, wheat: 0};
+	//let oCardDict = oDict;
+	let oCardList = [];
+	for(const k in oDict){
+		let card={name:k,desc:oDict[k]};
+		oCardList.push(card);
+	}
+	//let oCardList = dict2list(oCardDict, 'id');
+	console.log('_______________\ncardList', oCardList, oDict);
+	return;
+
+	let mkCardList = [];
+	for (const oCard of oCardList) { mkCardList.push(makePictoCard(oCard.id, oCard)); }
+	// console.log('cards',mkCardList);
+
+	layoutCardsOverlapping(mkHand, mkCardList);
+}
 function columnGrid(areaNames, loc) {
 	//transforms loc into equal-sized flex grid of columns or rows
 	//each cell gets name from areaNames and is a div, usable as area
 	let dLoc = mById(loc);
+	
 	clearElement(dLoc);
 	dLoc.style.display = 'grid';
-	dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + ',1fr)';
-	dLoc.style.gridTemplateColumns = '1fr';
+
+	if (SPEC.collapseEmptySmallLetterAreas) {
+		dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + 'fit-content)'; //',min-max(0,min-content))';
+		dLoc.style.gridTemplateColumns = 'fit-content';// 'min-max(0,min-content)';
+	} else {
+		dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + ',1fr)';
+		dLoc.style.gridTemplateColumns = '1fr';
+	}
+
 	let bds = getBounds(dLoc);
+	//let maxHeight = bds.height / areaNames.length;
+	//console.log(dLoc, bds,maxHeight);return;
 	let palette = getTransPalette9('white');
 	for (let i = 0; i < areaNames.length; i++) {
 		let a = mDiv(dLoc);
 		a.id = areaNames[i];
-		a.style.maxHeight = bds.height / areaNames.length + 'px';
+
+		//a.style.setProperty('max-height',maxHeight+'px');
+		//console.log('settings max-height of',areaNames[i],'to',maxHeight);
+
+		//a.style.maxHeight = '100px'; // bds.height / areaNames.length + 'px';
+		//a.style.minWidth='fit-content';//min-max(0px,min-content)';
+		//a.style.width='auto';
 		if (SPEC.shadeAreaBackgrounds) a.style.backgroundColor = palette[i];
 		if (SPEC.showAreaNames) a.innerHTML = makeAreaNameDomel(areaNames[i]);
-		UIS[areaNames[i]] = { elem: a, children: [] };
+		UIS[areaNames[i]] = { elem: a, children: [], maxHeightFunc:()=>getBounds(loc).height/areaNames.length };
 	}
 }
 

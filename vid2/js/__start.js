@@ -1,5 +1,12 @@
 window.onload = () => _startSession();
 
+//#region testing
+function runTest(){
+	console.log('ah');
+	
+}
+
+
 //#region control flow
 async function _startSession(resetLocalStorage = false) {
 
@@ -23,7 +30,7 @@ async function _startNewGame(game) {
 	if (isdef(game)) GAME = game;
 	USERNAME = USERNAME_ORIG;
 	mappingsClear();
-	mById('actions').style.setProperty('min-width',null);
+	mById('actions').style.setProperty('min-width', null);
 
 	await loadSpecAndCode();
 
@@ -45,6 +52,8 @@ function _startGame() {
 }
 function _startStep() {
 
+	//addCardsToPlayers();
+
 	//reset_zoom_on_resize();
 	clearStep();
 
@@ -61,12 +70,16 @@ function _startStep() {
 	rPreProcessPlayers(); //adds obj_type='opponent' to all players that do not have an obj_type
 	rPreProcessActions();
 
+	//runTest();
+
+
 	timit.showTime('*mappings')
 	rMappings();
 
 	//present
 	mkMan.presentationStart();
 	rPresentMappings();
+	//return;
 	timit.showTime('mappings done...')
 	rPresentBehaviors(); //should enter completed oids in DONE dict
 
@@ -130,25 +143,35 @@ function fillActions(areaName, boats, availHeight) {
 	//nein: set minWidth as long as it is <=200px
 	let bds = getBounds('actions');
 	//console.log('action bounds',bds);
-	if (bds.width<200) mById('actions').style.setProperty('min-width',Math.ceil(bds.width)+'px');
+	if (bds.width < 200) mById('actions').style.setProperty('min-width', Math.ceil(bds.width) + 'px');
 }
 function getReadyForInteraction() { startInteraction(); }
+
 async function interaction(action, data) {
 	if (action == INTERACTION.selected) {
-		timit.showTime('*send action');
-		//send option to server and come back at _startStep
-		let boat = data;
-		//console.log('selected', data);
-		let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
-		let t = boat.tuple;
-		//console.log('tuple is:', t);
-		route += t.map(x => _pickStringForAction(x)).join('+');
-		//console.log('sending action...', route);
-		// /action/felix/91b7584a2265b1f5/loc-settlement/96
-		// /action/felix/91b7584a2265b1f5/loc-settlement/95
-		let result = await route_server_js(route);
-		//console.log('server returned', result);
-		serverData = result;
+		timit.init('*send action');
+		if (TESTING) {
+			let pl = serverData.players[gamePlayerId];
+			let o = GAME == 'catan' ? pl.devcards : pl.hand;
+			if (!o){
+				for(const plid in serverData.players){
+					serverData.players[plid].hand = {_set:[]};
+				}
+				o=pl.hand;
+			}
+			let cards = getElements(o);
+			if (cards.length > 5) resetPlayerCards(); else addCardsToPlayers();
+		} else {
+			let boat = data;
+			let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
+			let t = boat.tuple;
+			//console.log('tuple is:', t);
+			route += t.map(x => _pickStringForAction(x)).join('+');// /action/felix/91b7584a2265b1f5/loc-settlement/96
+			//console.log('sending action...', route);
+			let result = await route_server_js(route);
+			//console.log('server returned', result);
+			serverData = result;
+		}
 		_startStep();
 
 	} else if (action == INTERACTION.stop) {

@@ -19,90 +19,39 @@ function rMappings() {
 	//mappingsInitialized = {};
 	//console.log('mappings', mappings, mappingTypes);
 }
-function rPresentMappings1() {
-	let pool = serverData.players;
-	presentMappings(pool, gamePlayerId);
-	// for (const plid in pool) {
-	// 	if (plid == gamePlayerId) continue;
-	// 	presentMappings(pool, plid);
-	// }
-	// for (const oid in serverData.table) {
-	// 	presentMappings(pool, oid);
-	// }
-}
+function rPresentMappings() {
+	//let bds=getBounds('others');
+	//console.log('---------------------------',bds.height);
+	
+	presentMappings(gamePlayerId, serverData.players[gamePlayerId]);
 
-function presentMappings(pool, oid) {
-	let o = pool[oid];
+	//bds=getBounds('others');
+	//console.log('---------------------------',bds.height);
+
+	for (const plid in serverData.players) { if (plid != gamePlayerId) presentMappings(plid, serverData.players[plid]); }
+	for (const oid in serverData.table) { presentMappings(oid, serverData.table[oid]); }
+}
+function presentMappings(oid, o) {
 	let otype = o.obj_type;
 
 	if (mappingTypes[otype]) {
 		//there have been found mappings on this object type
 		//check all these mappings
 
-		if (mappingsInitialized[otype + '.' + oid]) continue;
+		if (mappingsInitialized[otype + '.' + oid]) return;
 
 		let mm = mappings.filter(x => x[otype]);
 		//console.log('matching mappings for object', oid, mm);
 		let onlyOnce = false; //immutable need to implement other structure uis!!!
 		for (const mapping of mm) {
 			// if (!mapping.immutable) onlyOnce = false;
-			executeMapping(mapping, otype, oid, o, pool);
+
+			executeMapping(mapping, otype, oid, o);
 		}
 		if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
 	}
 }
-
-function rPresentMappings() {
-	// 	//look in table or in players for objects that map any of the mappings!
-
-
-
-
-	for (const kPool of ['table', 'players']) {
-		let pool = serverData[kPool];
-
-		// timit.showTime('vor keys');
-		// if (pool) {
-		// 	let keys = Object.keys(pool);
-		// 	if (kPool == 'players') {
-		// 		let keysSorted = [];
-		// 		keysSorted.push(gamePlayerId);
-		// 		for (const plid of keys) {
-		// 			if (plid != gamePlayerId) keysSorted.push(plid);
-		// 		}
-		// 		keys = keysSorted;
-		// 	}
-		// }
-		// timit.showTime('nach keys');
-
-		console.log('_________')
-		for (const oid in pool) {
-
-			let o = pool[oid];
-			let otype = o.obj_type;
-
-
-			if (otype == 'GamePlayer' || otype == 'opponent') console.log(otype);
-
-			if (mappingTypes[otype]) {
-				//there have been found mappings on this object type
-				//check all these mappings
-
-				if (mappingsInitialized[otype + '.' + oid]) continue;
-
-				let mm = mappings.filter(x => x[otype]);
-				//console.log('matching mappings for object', oid, mm);
-				let onlyOnce = false; //immutable need to implement other structure uis!!!
-				for (const mapping of mm) {
-					// if (!mapping.immutable) onlyOnce = false;
-					executeMapping(mapping, otype, oid, o, pool);
-				}
-				if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
-			}
-		}
-	}
-}
-function executeMapping(mapping, otype, oid, o, pool) {
+function executeMapping(mapping, otype, oid, o) {
 	//find object to map (this can be o itself or some [nested] property)
 	let mKey = mapping.id;
 	let path = stringAfter(mKey, '.');
@@ -114,6 +63,16 @@ function executeMapping(mapping, otype, oid, o, pool) {
 	if (stringBefore(loc, '.') == 'this') {
 		loc = parsePropertyPath(o, stringAfter(loc, '.'));
 		//console.log('------------------',loc)
+	}
+
+	//dynamic max-height settings for loc!
+	let mkLoc = UIS[loc];
+	if (mkLoc && mkLoc.maxHeightFunc) {
+		let hMax = mkLoc.maxHeightFunc();
+		mkLoc.elem.style.setProperty('height',hMax+'px');
+		//console.log(loc,'max-height set to',hMax);
+		//console.log('call',func)
+		//return;
 	}
 	// console.log('mapping:',mapping);
 	//console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
@@ -222,4 +181,37 @@ function _initScenarioButtons() {
 		d.appendChild(b);
 	}
 }
+
+//#region unused
+function rPresentMappings_WORKS() {
+	for (const kPool of ['table', 'players']) {
+		let pool = serverData[kPool];
+		console.log('_________')
+		for (const oid in pool) {
+
+			let o = pool[oid];
+			let otype = o.obj_type;
+
+			if (otype == 'GamePlayer' || otype == 'opponent') console.log(otype);
+
+			if (mappingTypes[otype]) {
+				//there have been found mappings on this object type
+				//check all these mappings
+
+				if (mappingsInitialized[otype + '.' + oid]) continue;
+
+				let mm = mappings.filter(x => x[otype]);
+				//console.log('matching mappings for object', oid, mm);
+				let onlyOnce = false; //immutable need to implement other structure uis!!!
+				for (const mapping of mm) {
+					// if (!mapping.immutable) onlyOnce = false;
+					executeMapping(mapping, otype, oid, o, pool);
+				}
+				if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
+			}
+		}
+	}
+}
+
+//#endregion
 //#endregion

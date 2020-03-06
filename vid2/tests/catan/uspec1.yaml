@@ -28,14 +28,17 @@ mappings: #form: obj_type.property1.property2...
   GamePlayer.devcards: 
     type: cardHand
     loc: player
-  opponent.num_res:
+  GamePlayer.resources: 
+    type: pictoHand
+    loc: player
+  opponent.devcards:
     type: cardHand
     loc: this.name
-  # GamePlayer.resources: 
-  #   type: valueByKey
-  #   loc: player
-  # GamePlayer.buildings:
-  #   type: countByKey
+
+typeMappings:
+  card: #standard rsg type
+    rank: short_name #rank is standard rsg to identify c52 card rank
+
 
 #the following are used for automatic presentation if no behavior:
 table:

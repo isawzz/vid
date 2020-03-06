@@ -79,7 +79,7 @@ function collapseSmallLetterAreas(m, d) {
 	//how many columns does this grid have?
 	let rows = m.length;
 	let cols = m[0].length;
-	console.log(m);
+	//console.log(m);
 
 	let gtc = [];
 	for (let c = 0; c < cols; c++) {

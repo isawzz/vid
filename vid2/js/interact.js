@@ -51,7 +51,7 @@ function stopInteraction() {
 }
 
 function keyUpHandler(ev) {
-	console.log('key up!')
+	//console.log('key up!')
 	checkControlKey(ev); //infobox.js
 
 }

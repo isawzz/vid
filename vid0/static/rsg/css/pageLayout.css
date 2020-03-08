@@ -120,7 +120,7 @@
 	display: grid;
 	grid-template-columns: var(--wActions) var(--wGame) minmax(var(--wPlayers),auto) minmax(var(--wActions),auto);
 	grid-template-rows:calc(2*var(--hTabs)) var(--hTabs)  var(--hGame) minmax(800px, auto);
-	grid-template-areas:
+	grid-template-layout_alias:
 		'h h h h'
 		'ah s hp hh'
 		'a g p l'

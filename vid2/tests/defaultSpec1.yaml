@@ -7,7 +7,7 @@ layout: [
   'p p p a',
   ]
 
-areas: 
+layout_alias: 
   z: zone
   a: extra
   p: player

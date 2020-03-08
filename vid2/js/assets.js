@@ -24,9 +24,10 @@ async function loadAssets(resetLocalStorage) {
 	iconChars = vidCache.asDict('iconChars');
 	c52C = await vidCache.load('c52', route_c52);
 	c52 = vidCache.asDict('c52');
+
 	allGamesC = await vidCache.load('allGames', route_allGames);
 	allGames = vidCache.asDict('allGames');
-
+	//console.log(allGames)
 	playerConfig = stubPlayerConfig(allGames); //stub to get player info
 
 	// console.log('testCards', testCards['green2']);

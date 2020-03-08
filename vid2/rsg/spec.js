@@ -76,6 +76,7 @@ function executeMapping(mapping, otype, oid, o) {
 	}
 	// console.log('mapping:',mapping);
 	//console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
+
 	let structObject = window[func](serverData.table, loc, o, oid, path, omap);
 }
 
@@ -83,6 +84,7 @@ function rMergeSpec() {
 	SPEC = deepmerge(defaultSpec, userSpec, { arrayMerge: overwriteMerge });
 
 	//need to correct areas because it should NOT be merged!!!
+	if (userSpec.layout_alias) { SPEC.layout_alias = userSpec.layout_alias; }
 	if (userSpec.areas) { SPEC.areas = userSpec.areas; }
 
 	//SPEC is merged userSpec!
@@ -182,36 +184,4 @@ function _initScenarioButtons() {
 	}
 }
 
-//#region unused
-function rPresentMappings_WORKS() {
-	for (const kPool of ['table', 'players']) {
-		let pool = serverData[kPool];
-		console.log('_________')
-		for (const oid in pool) {
-
-			let o = pool[oid];
-			let otype = o.obj_type;
-
-			if (otype == 'GamePlayer' || otype == 'opponent') console.log(otype);
-
-			if (mappingTypes[otype]) {
-				//there have been found mappings on this object type
-				//check all these mappings
-
-				if (mappingsInitialized[otype + '.' + oid]) continue;
-
-				let mm = mappings.filter(x => x[otype]);
-				//console.log('matching mappings for object', oid, mm);
-				let onlyOnce = false; //immutable need to implement other structure uis!!!
-				for (const mapping of mm) {
-					// if (!mapping.immutable) onlyOnce = false;
-					executeMapping(mapping, otype, oid, o, pool);
-				}
-				if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
-			}
-		}
-	}
-}
-
-//#endregion
 //#endregion

@@ -10,7 +10,8 @@ function logGetDiv(plid) {
 	if (!d) {
 		let idParent = 'logDiv';
 		let id = idParent + '_' + plid;
-		d=mDiv(idParent); 
+		console.log(id)
+		d=mDiv(mBy(idParent)); 
 		mStyle(d,{position:'relative',left:0,top:0,width:100,height:100},'%');
 		d.id = id;
 		LOG[plid] = d;

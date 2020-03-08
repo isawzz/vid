@@ -76,6 +76,8 @@ def _cheat(code=None):
 @app.route('/game/info')
 @app.route('/game/info/<name>')
 def _get_game_info(name=None):
+	x = _ex_wrap(H.get_game_info, name)
+	y = _fmt_output(_ex_wrap(H.get_game_info, name))
 	return _fmt_output(_ex_wrap(H.get_game_info, name))
 
 @app.route('/game/available')

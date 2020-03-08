@@ -1,51 +1,108 @@
+//#region primitives
+function pictoLabelDiv(key, label, color = 'blue', sz=50, gap=2, fz) {
+	let dOuter = mCreate('div');
+	let wOuter = sz;
+	let wInner = sz - 2 * gap;
 
-
+	mStyle(dOuter, {
+		width: wOuter,
+		padding: 0,
+		display: 'inline',
+		position: 'absolute',
+		'text-align': 'center',
+		'background-color': randomColor(),
+		// color: 'black',
+	});
+	let dPic = pictoDiv(key, color, wInner, wInner);
+	mAppend(dOuter,dPic)
+	mStyle(dPic, { margin: gap, 'margin-bottom': 1 })
+	let dText = mAppendText(dOuter, label);
+	dText.classList.add('truncate');
+	mStyle(dText, { 'margin-bottom': gap, width: wOuter });
+	// area=asElem(area);
+	// mPosRel(area);
+	// mAppend(area, dOuter);
+	return dOuter;
+}
 function pictoDiv(key, color, w, h) { let d = mPic(key); mColor(d, color); mSizePic(d, w, h); return d; }
-function showPictoDivCentered(key, area, color = 'blue', sz = 50) { let d = pictoDiv(key, color, sz, sz); posCIC(d); return mAppPos(area, d); }
-function showPictoDiv(key, area, color = 'blue', x = 0, y = 0, w = 50, h = 0) { let d = pictoDiv(key, color, w, h ? h : w); mAppPos(area, d); mPos(x, y); return d; }
+function labelDiv(label, color, w, h) { 
+	let d = mTextDiv(label); 
+	mColor(d, color); 
+	mSize(d, w, h); 
+	return d; 
+}
+//#region items
+function picLabelDiv(size) { return o=>pictoLabelDiv(o.key, o.label, o.color, size); }
+function picDiv(size) { return o=>pictoDiv(o.key, o.color, size, size); }
+function colorLabelDiv(size) { return o=>pictoDiv(o.key, o.color, size, size); }
+function getUis(olist, func) { return olist.map(o => func(o)); }
+
+//#region layouts
+function layoutRow(uis, area, size, gap) {
+	if (isEmpty(uis)) return [0,0];
+	let x = y = gap;
+	uis.map(d => {
+		mAppend(area, d);
+		mPos(d, x, y);
+
+		x += size + gap;
+	});
+	let h=getBounds(uis[0]).height; //getBounds kann erst NACH appendChild benuetzt werden!!!!!!!!!!!!!!!!!!!
+	//console.log('h',h)
+	return [x,y+h+gap]; //x is total width for layout
+}
+
+
+
+
+//#region older code not separating ui creation and layout!
+function showPictoDivCentered(key, area, color = 'blue', sz = 50) { 
+	let d = pictoDiv(key, color, sz, sz); 
+	mAppend(area,d);
+	posCIC(d); 
+	return d;
+}
+function showPictoDiv(key, area, color = 'blue', x = 0, y = 0, w = 50, h = 0) { 
+	let d = pictoDiv(key, color, w, h ? h : w); 
+	mAppend(area, d); 
+	mPos(d, x, y); 
+	return d; 
+}
 function addPictoDiv(key, area, color = 'blue', w = 50, h = 0) {
 	let d = pictoDiv(key, color, w, h ? h : w);
 	mAppend(area, d);
 	return d;
 }
-
-function showPicLabel(key, label, area, color = 'blue', x = 0, y = 0, sz = 50, gap=4) {
+function showPicLabel(key, label, area, color = 'blue', x = 0, y = 0, sz = 50, gap = 4) {
+	console.log(key, label, area, color, x, y, sz, gap)
 	let dOuter = mCreate('div');
+	let wOuter = sz;
+	let wInner = sz - 2 * gap;
 
 	mStyle(dOuter, {
-		color:'black',
-		width:sz+'px',
-		padding:gap,
-		position:'absolute',
-		left:x,
-		top:y,
+		color: 'black',
+		width: wOuter,
+		left: x,
+		top: y,
+		padding: 0,
+		position: 'absolute',
 		'text-align': 'center',
-		'background-color':'yellow',
-		display:'inline' });
-	let dPic = addPictoDiv(key, dOuter, color, sz-2*gap);
-	//mStyle(dPic,{margin:'auto'})
-	let dText = mAppendText(dOuter,label);
-	mAppend(area,dOuter);
+		'background-color': randomColor(),
+		display: 'inline'
+	});
+	let dPic = addPictoDiv(key, dOuter, color, wInner);
+	mStyle(dPic, { margin: gap, 'margin-bottom': 1 })
+	let dText = mAppendText(dOuter, label);
+	dText.classList.add('truncate');
+	mStyle(dText, { 'margin-bottom': gap, width: wOuter });
+	area=asElem(area);
+	mPosRel(area);
+	mAppend(area, dOuter);
 }
-
-function picLabelList(olist,area){
-	//mach ein div
-	let dList=mCreate('div');
-	
-	//fuelle es mit lauter pic labels, horizontally
-	let sz=50;
-	let x=0;
-	let y=0;
-	for(const o of olist){
-		let key=o.key; if (nundef(key)) key='crow';
-		let label=o.name; if (nundef(label)) label=key;
-		let color = o.color; if (nundef(label)) color=randomColor();
-		showPicLabel(key,label,dList,color,x,y,sz);
-		x+=sz;
-	}
-	//add it to area
-	mAppend(area,dList);
+function showPicLabelCentered(key, label, area, color = 'blue', sz = 50, gap = 4) {
+	let d=showPicLabel(key,label,area,color,0,0,sz,gap);
 }
+//#endregion older code not separating ui creation and layout!
 
 
 

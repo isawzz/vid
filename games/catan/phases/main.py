@@ -103,19 +103,14 @@ class MainPhase(TurnPhase, stg.StagePhase, name='main', game='catan'):
 			                        if 'maritime' in action.get_type() else None)
 		
 		obj_type = obj.get_type()
-
-		print('action',action)
-		print('obj',obj)
-		print('obj_type',obj_type)
+		
 		if 'build' in action.get_type():
 			if obj_type == 'settlement': # replace this settlement
 				unbuild(C, obj, silent=False)
 				bld = build(C, 'city', self.player, obj.loc)
 			else:
 				bld = build(C, 'settlement' if obj_type == 'Corner' else 'road', self.player, obj)
-
-			t=bld.get_type()
-			print(t)
+			
 			pay_cost(self.player, C.state.costs[bld.get_type()], C.state.bank)
 		
 		elif obj_type == 'devcard':

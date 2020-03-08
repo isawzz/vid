@@ -1,9 +1,16 @@
 //#region routes
 async function route_allGames() {
 	let gameNames = await route_server_js('/game/available');
+	console.log('gamenames returned:', gameNames)
 	let res = {};
 	for (const name of gameNames) {
-		res[name] = await route_server_js('/game/info/' + name);
+		console.log(name);
+		if (USE_ALL_GAMES_ROUTE) {
+			res[name] = await route_server_js('/game/info/' + name);
+		} else {
+			let url = '/games/' + GAME + '/info.yaml';
+			res[name] = await route_path_yaml_dict(url);// last 2 params: reload, useLocal
+		}
 	}
 	return res;
 }

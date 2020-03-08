@@ -6,8 +6,8 @@ function makeBoard(idBoard, o, areaName) {
 	let mk = new MK();
 	mk.id = id;
 	// let domel = addSvggViewbox(UIS[areaName].elem, id, { originInCenter: true });
+	//console.log(areaName)
 	let domel = addSvgg(UIS[areaName].elem, id, { originInCenter: true });
-
 
 	mk.elem = domel;
 	mk.parts.elem = mk.elem;

@@ -9,7 +9,7 @@ layout: [
   'o o o o',
   ]
 
-areas: 
+layout_alias: 
   d: decks
   z: zone
   i: influence

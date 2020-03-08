@@ -7,7 +7,7 @@ layout: [
   'h h h o'
   ]
 
-areas: 
+layout_alias: 
   d: decks
   Z: zone
   a: extra
@@ -28,9 +28,8 @@ mappings:
     loc: this.name
 
 typeMappings:
-  card: #standard rsg type
-    rank: short_name #rank is standard rsg to identify c52 card rank
-
+  card: #standard rsg object type
+    rank: short_name #rank is standard rsg to identify c52 card rank (standard cards have rank,suit)
 
 
 

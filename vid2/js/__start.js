@@ -1,22 +1,110 @@
-var prevGamePlid=null;
-var prevWaitingFor=null; //needed to update header info when waiting for several players in a row
-var RUNTEST=true;
+var prevGamePlid = null;
+var prevWaitingFor = null; //needed to update header info when waiting for several players in a row
+var RUNTEST = false;
 window.onload = () => _startSession();
 
 //#region testing
-function runTest(){
-	console.log('ah');
-	//showPictoDivCentered('crow','board');
-	//showPicLabel('crow','hallo','board');
-	let keyList = ['female','male','spy','frog','fairy'];
+function getOlist() {
+	let keyList = ['female', 'male', 'spy', 'frog', 'fairy'];
 	let olist = [];
-	for(const k of keyList){
-		olist.push({key:k,label:k});
+	for (const k of keyList) {
+		olist.push({ key: k, label: k, color: randomColor() });
 	}
-	picLabelList(olist,'board')
+	return olist;
+}
+var testCounter = 100;
+function stressTest01(area) {
+	timit.showTime('*test')
+	let n = 500;
+	for (let index = 0; index < n; index++) {
+		showPictoDivCentered('crow', area, randomColor(), n + 25 - index); //ok
+	}
+	timit.showTime('*test done...');
+	if (testCounter > 0) { testCounter -= 1; setTimeout(_startStep, 0); }
+	else {
+		let t = timit.getTotalTimeElapsed();
+		console.log('avg msecs per cycle:', t / 100, 'cycle size:', n)
+	}
+}
+function layRow(olist, area, size = 50, gap = 4) {
+	let res = [];
+	let w = size, x = gap;
+	olist.map(o => {
+		let d = showPictoDiv(o.key, area, o.color, x, gap, w);
+		res.push(d);
+		x += w + gap;
+	});
+	return res;
+}
+function runTest() {
+	console.log('ah');
+
+	let area = mBy('board'); mPosRel(area);
+	let olist = getOlist();
+
+	//showPictoDivCentered('crow', area, 'red', 100); //ok
+	//showPictoDivCentered('crow', area); //ok
+	//stressTest01(area); //ok
+
+	//let w = 50, x = gap = 4; olist.map(o => { showPictoDiv(o.key, area, randomColor(), x, gap, w); x += w + gap; }); //ok
+
+	//let uis = layRow(olist, area, 50, 4); 	console.log(uis); //ok aber need to separate layout from ui generation
+
+	//let uis = getUis(olist, picDiv50);	let [w,h] = layoutRow(uis,area,50,10);	console.log('dims of row layout',w,h); //ok
+
+	//was passiert wenn layout change?
+	//nimmt er automatisch die divs von einem platz weg in den anderen platz? JA, GEHT!!!!
+	let size=50,gap=10;
+
+	//picDiv test: OK!!!
+	// test fuer colorPicRow
+	// let uis = getUis(olist, picDiv(size));
+	// let container = mDivPosAbs(100,100,area);
+	// let [w,h] = layoutRow(uis,container,size,gap);
+	// mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
+	// layoutRow(uis,area,size,gap);
+
+	//picLabelDiv test: (picLabelRow)
+	// let uis = getUis(olist, picLabelDiv(size));
+	// let container = mDivPosAbs(100,100,area);
+	// let [w,h] = layoutRow(uis,container,size,gap);
+	// mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
+
+	//colorLabelDiv test: (picLabelRow)
+	let uis = getUis(olist, colorLabelDiv(size));
+	let container = mDivPosAbs(100,100,area);
+	let [w,h] = layoutRow(uis,container,size,gap);
+	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
+
+
+	// let dlist = mDiv(d);
+	// mPosAbs(dlist);
+
+	// let area = mBy('board');
+	// let container = mDivPosAbs(10,10,area);
+	// mBg(container,'red');
+	// mSize(container,100,100)
+	// showPicLabelCentered('crow', 'hallo', container);
+
+
+
+
+
+
+	// let w = 50;
+	// let gap = 4;
+	// let x=gap;
+	// let y=gap;
+	// for (const o of olist) {
+	// 	let dpic = mPic(o.key);
+	// 	mAppend(dlist, dpic);
+	// 	mSizePic(dpic,w);
+	// 	mPos(dpic,x,y);
+	// 	x+=w+gap;
+	// }
 
 }
-
+//#endregion
 
 //#region control flow
 async function _startSession(resetLocalStorage = false) {
@@ -68,9 +156,9 @@ function _startStep() {
 	//reset_zoom_on_resize();
 	clearStep();
 
-	if (serverData.error){
+	if (serverData.error) {
 		alert(serverData.error.type + ' ' + serverData.error.msg);
-		console.log(serverData.error);
+		console.log(serverData.error.msg);
 		onClickRestart();
 		return;
 	}
@@ -79,18 +167,18 @@ function _startStep() {
 	rPreProcessActions();
 
 	pageHeaderInit();
-	if (GAMEPLID != prevGamePlid){
+	if (GAMEPLID != prevGamePlid) {
 		pageHeaderUpdatePlayer(GAMEPLID);
 		logUpdateVisibility(GAMEPLID, serverData.players);
 		prevGamePlid = GAMEPLID;
 	}
 
+	//static part of spec
 	rMergeSpec();
-
 	rAreas();
-	rPlayerStatsAreas();
+	rPlayerStatsAreas(); //=> moved to dynamic uncomment for old spec (uspec1.yaml)
 
-	if (RUNTEST){runTest();return;}
+	if (RUNTEST) { runTest(); return; }
 
 	timit.showTime('*mappings')
 	rMappings();
@@ -118,11 +206,11 @@ function _startStep() {
 
 }
 
-function findGamePlayer(){
+function findGamePlayer() {
 	if (serverData.options) {
 		let plid = firstCondDict(playerConfig[GAME].players, x => x.username == USERNAME);
 		return plid;
-	}else return null;
+	} else return null;
 }
 
 //#region helpers
@@ -164,11 +252,11 @@ async function interaction(action, data) {
 		if (TESTING) {
 			let pl = serverData.players[GAMEPLID];
 			let o = GAME == 'catan' ? pl.devcards : pl.hand;
-			if (!o){
-				for(const plid in serverData.players){
-					serverData.players[plid].hand = {_set:[]};
+			if (!o) {
+				for (const plid in serverData.players) {
+					serverData.players[plid].hand = { _set: [] };
 				}
-				o=pl.hand;
+				o = pl.hand;
 			}
 			let cards = getElements(o);
 			if (cards.length > 5) resetPlayerCards(); else addCardsToPlayers();
@@ -242,7 +330,7 @@ async function presentWaitingFor() {
 	if (PLAYMODE != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(GAMEPLID))) {
 		USERNAME = playerConfig[GAME].players[pl].username;
 		GAMEPLID = pl;
-		console.log('switching player to', GAMEPLID,USERNAME)
+		console.log('switching player to', GAMEPLID, USERNAME)
 		let data = await route_status(USERNAME);
 		serverData = data;
 		_startStep();
@@ -260,7 +348,7 @@ function rPreProcessPlayers() {
 	//let gplid=findGamePlayer();
 	for (const plid in serverData.players) {
 		let pl = serverData.players[plid];
-		pl.obj_type = plid == GAMEPLID?'GamePlayer':'opponent';
+		pl.obj_type = plid == GAMEPLID ? 'GamePlayer' : 'opponent';
 		// if (nundef(pl.obj_type)) {
 		// 	//console.log('.......CORRECTING!!!!',plid)
 		// 	pl.obj_type = 'opponent';

@@ -7,7 +7,7 @@ layout: [
   'h h h h',
   ]
 
-areas: 
+layout_alias: 
   d: decks
   z: zone
   a: extra

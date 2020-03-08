@@ -2,7 +2,7 @@ tableSize: [400, 300]
 layout: [
   " M ",
 ]
-areas:
+layout_alias:
   M: board
 
 #mappings generate structures or lists, or can be used as a shortcut for simple behaviors

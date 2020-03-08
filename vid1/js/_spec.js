@@ -1,6 +1,6 @@
 function rMergeSpec() {
 	let defaultSpec = {
-		table: { areas: [{ main: [800, 600] }] }
+		table: { layout_alias: [{ main: [800, 600] }] }
 	};
 	SPEC = deepmerge(defaultSpec, vidCache.asDict('userSpec'), { arrayMerge: overwriteMerge });
 

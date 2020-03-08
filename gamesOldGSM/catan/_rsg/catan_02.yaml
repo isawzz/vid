@@ -6,7 +6,7 @@ layout: [
   " M M M M M o ",
   " p p p p p a ",
 ]
-areas:
+layout_alias:
   M: board
   o: others
   p: player

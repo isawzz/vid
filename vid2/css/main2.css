@@ -180,6 +180,17 @@ html,body{
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;  
 }
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncate:hover {
+	overflow: visible;
+}
+/* .truncate:hover+div {
+  margin-top: 50px;
+} */
 /* #endregion centering */
 
 /* #region fieldset */

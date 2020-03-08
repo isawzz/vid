@@ -3,6 +3,11 @@ class TimeIt {
 		this.showOutput = showOutput;
 		this.init(msg);
 	}
+	getTotalTimeElapsed() {
+		let tNew = new Date();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		return tDiffStart;
+	}
 	tacit() { this.showOutput = false; }
 	timeStamp(name) {
 		let tNew = new Date(); //new Date().getTime() - this.t;
@@ -768,47 +773,73 @@ function setCSSVariable(varName, val) {
 }
 //#endregion
 
-//#DOM 1 liners
+//#DOM 1 liners A list
+function asElem(x) { return isString(x) ? mBy(x) : x; }
 function asList(x) { return isList(x) ? x : [x]; }
-function mEnsure(d){return isString(d)?mById(d):d;}
-function mAppend(d, child) { d=mEnsure(d); if (d) d.appendChild(child); }
-function mAppendText(d,text){	let dText = document.createTextNode(text);	d.appendChild(dText);	return dText;}
-function mAppPos(d, child) { return mAppend(mPosRel(d), child); }
-function mById(id) { return document.getElementById(id); }
-function mColor(d, bg, fg = 'white') { return mStyle(d, { 'background-color': bg, 'color': fg }); }
+function mAppend(d, child) { d.appendChild(child); }
+function mBg(d, color) { d.style.backgroundColor = color; }
+function mBy(id) { return document.getElementById(id); }
+
 function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
-function mRemove(elem) { mDestroy(elem); }
 function mDiv(dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); return d; }
-//function onMouseEnter(d, handler = null) { d3.on('mouse') }
-function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
-function mGap(d, gap) { d.style.setProperty('margin', gap + 'px'); }
+function mDivPosAbs(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPos(d, x, y); return d; }
+function mFg(d, color) { d.style.color = color; }
+function mLabel(label) {
+	//choice a) fontsize nach length berechnen
+	//b) 
+	let ch = iconChars[key];
+	let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
+	let text = String.fromCharCode('0x' + ch);
+	let d = mTextDiv(text);
+	d.style.setProperty('font-family', family);
+	return d;
+}
 function mPic(key) {
 	let ch = iconChars[key];
 	let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
 	let text = String.fromCharCode('0x' + ch);
 	let d = mTextDiv(text);
-	mStyle(d, { 'font-family': family });
+	d.style.setProperty('font-family', family);
 	return d;
 }
 function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
-function mPosRel(d) { return mStyle(d, { position: 'relative' }); }
-function mPosAbs(d) { return mStyle(d, { position: 'absolute' }); }
-function mRot(d, angle) { mStyle(d, { transform: 'rotate(' + angle + 'deg)' }); }
+function mPosAbs(d) { d.style.position = 'absolute'; }
+function mPosRel(d) { d.style.position = 'relative'; }
+function mRot(d, angle) { d.style.transform = 'rotate(' + angle + 'deg)'; }
 function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
-function mSizePic(d, w, h, unit = 'px') { return mStyle(d, { 'font-size': h / 2, 'font-weight': 900, 'padding-top': h / 4, 'text-align': 'center', 'box-sizing': 'border-box', width: w, height: h }); }
+function mSizePic(d, w, h = 0, unit = 'px') { return mStyle(d, { 'font-size': h / 2, 'font-weight': 900, 'padding-top': h / 4, 'text-align': 'center', 'box-sizing': 'border-box', width: w, height: h ? h : w }, unit); }
+function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
+function mTextDiv(text, dParent = null) { let d = mCreate('div'); d.innerHTML = text; return d; }
+
+
+
+function mEnsure(d) { return isString(d) ? mById(d) : d; }
+function mAppendS(d, child) { d = mEnsure(d); if (d) d.appendChild(child); return child; }
+function mAppendText(d, text) { let dText = mCreate('div'); dText.innerHTML = text; d.appendChild(dText); return dText; }
+function mAppendTextS(d, text) { let dText = mCreate('div'); dText.innerHTML = text; mAppendS(d, dText); return dText; }
+function mAppPos(d, child) { d.style.position = 'relative'; return mAppend(d, child); }
+function mAppPosS(d, child) { d = ensure(d); d.style.position = 'relative'; return mAppend(d, child); }
+function mBox(w, h, color, dParent = null) { let d = mDiv(dParent); return mStyle(d, { 'background-color': color, position: 'absolute', display: 'inline', width: w, height: h }); }
+
+function mById(id) { return document.getElementById(id); }
+function mColor(d, bg, fg = 'white') { return mStyle(d, { 'background-color': bg, 'color': fg }); }
+function mRemove(elem) { mDestroy(elem); }
+//function onMouseEnter(d, handler = null) { d3.on('mouse') }
+function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
+function mGap(d, gap) { d.style.setProperty('margin', gap + 'px'); }
+//function mPosAbs(d) { return mStyle(d, { position: 'absolute' }); }
 function mSzPic(d, sz, unit = 'px') { return mSizePic(d, sz, sz, unit); }
-function mStyle(elem, styles, unit = 'px') { elem=mEnsure(elem);for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } return elem; }
-function mTextDiv(text, dParent = null) { let d = mCreate('div'); mAppend(dParent, d); d.innerHTML = text; return d; }
+function mStyleS(elem, styles, unit = 'px') { elem = mEnsure(elem); for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } return elem; }
 function posTL(d) { mPos(d, 0, 0) }
 function posTR(d) { mStyle(d, { right: 0, top: 0, position: 'absolute' }); }
 function posBL(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); }
 function posBLR(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
 function posBR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); }
 function posBRR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
-function posCIC(d) { d=mEnsure(d); d.classList.add('centerCentered'); }
-function posCICT(d) { d=mEnsure(d); d.classList.add('centerCenteredTopHalf'); }
-function posCICB(d) { d=mEnsure(d); d.classList.add('centerCenteredBottomHalf'); }
+function posCIC(d) { d = mEnsure(d); d.classList.add('centerCentered'); }
+function posCICT(d) { d = mEnsure(d); d.classList.add('centerCenteredTopHalf'); }
+function posCICB(d) { d = mEnsure(d); d.classList.add('centerCenteredBottomHalf'); }
 
 //#region DOM: creating divs: 2020
 function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, className, styleStr, border, rounding, gap, margin, padding, float, textAlign, fz }) {
@@ -979,7 +1010,7 @@ function actualCenter(elem, relToParent = false, elRelTo) {
 function calcNumRowsFitting(dParent, maxHeight, html) {
 	let sz = getTextSize(html, dParent);
 	//console.log('line height as per calcNumRowsFitting',sz.h);
-	return maxHeight / (sz.h+2);
+	return maxHeight / (sz.h + 2);
 }
 function getRelBounds(elem, elRel) {
 	let b1 = elem.getBoundingClientRect();

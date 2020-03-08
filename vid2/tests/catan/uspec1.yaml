@@ -1,4 +1,8 @@
 tableSize: [600, 600]
+
+#fe: 
+# cap letters => expand this area to max space
+# lowercase letter => collapse to min content
 layout: [
   " M M M M M o ",
   " M M M M M o ",
@@ -6,7 +10,7 @@ layout: [
   " M M M M M o ",
   " p p p p p a ",
 ]
-areas:
+layout_alias:
   M: board
   o: others
   p: player
@@ -16,28 +20,53 @@ playerStatsAreas:  #standard setting
   type: columnGrid
   loc: others
 
-#mappings generate structures or lists, or can be used as a shortcut for simple behaviors
-mappings: #form: obj_type.property1.property2...
-  board: 
-    type: hexGrid
-    field_type: hex
-    corner_type: Corner
-    edge_type: Edge
+#frage fe: should we remain case sensitive for strings, ich sag eher nicht, bin es aber for now
+#string mappings used to represent key,val lists, eg., resources
+strings: 
+  wood:
+    color: 'sienna' #color, symbol, label are used in standard RSG types
+    symbol: 'tree'
+    label: 'wood' #obsolete, this would be default anyway!
+  brick:
+    color: 'salmon'
+    symbol: 'wall'
+  Knight:
+    color: 'red'
+    symbol: 'spy'
+
+#type mappings used for standard RSG object types
+typeMappings:
+  card: #standard rsg object type
+    symbol: name #name property of card object (as per mapping) will be translated to symbol looked up in strings
+    color: name
+
+#mappings generate standard RSG structure types (eg. grids,lists,diff layouts for groups of objects)
+# general syntax for RSG standard type: [key][value][layout] to represent a dictionary (see GamePlayer.resources)
+# example 1: GamePlayer.resources => colorLabelRow 
+#     means: {wood:5, brick:0} => [{key:wood, value:5},{key:brick, value:0}]
+#            wood=>color (lookup strings[key].color, [default:random] (default will be entered into SPEC to be reused!)
+#            5=>label, (lookup strings[value].label, [default:value]
+#            layout=>Row (the resulting colored label uis will be layed out as row in loc)
+# syntax for RSG standard type to map collections of game objects: [generic_type][layout] (eg. {_set:[{_obj:[ID]},{_obj:[ID]}]})
+# example 2: GamePlayer.devcards => cardHand
+#     means: [{name:Knight,...},{name:Victory,..}] 
+#            card => lookup typeMappings => take name property for symbol,color 
+#                 => Knight => lookup strings => use symbol='spy' and color='red' => this is done for each object
+#            Hand: layout objects like a hand (overlapping row)
+mappings: 
+  board: #key syntax: obj_type.property1.property2... >will be matched to player & table (from backend data)
+    type: hexGrid #RSG standard type, will be called as a function, passing in key,loc, and corresponding objects found in player,table
     loc: board
-    immutable: true #not implemented!
+    immutable: true #not implemented! >will be used later to allow only once creation
   GamePlayer.devcards: 
     type: cardHand
     loc: player
   GamePlayer.resources: 
-    type: pictoHand
+    type: colorLabelRow #key=>color,value=>label,layout=>row
     loc: player
   opponent.devcards:
     type: cardHand
     loc: this.name
-
-typeMappings:
-  card: #standard rsg type
-    rank: short_name #rank is standard rsg to identify c52 card rank
 
 
 #the following are used for automatic presentation if no behavior:
@@ -48,9 +77,9 @@ pieceSizeRelativeToLoc:
 symbol:
   city: 'castle'
   settlement: 'house'
-color: #used for colorHintDetection
+color: #used for colorHintDetection 
   theme: '#3d7c47'
-  wood: 'maroon'
+  wood: 'maroon' #fe: not used, war eine simplere vorige art colors fuer strings zu specifien
   brick: 'salmon'
   wheat: 'yellow'
   sheep: 'green'

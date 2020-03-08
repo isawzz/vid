@@ -26,16 +26,6 @@ function rAreas() {
 	if (SPEC.collapseEmptySmallLetterAreas) { collapseSmallLetterAreas(m, d); }
 	else fixedSizeGrid(m, d);
 
-	for (const k in SPEC.layout_alias) {
-		let areaName = SPEC.layout_alias[k];
-		let d1 = document.createElement('div');
-		d1.id = areaName;
-		d1.style.gridArea = k;
-		if (SPEC.shadeAreaBackgrounds) { d1.style.backgroundColor = palette[ipal]; ipal = (ipal + 1) % palette.length; }
-		if (SPEC.showAreaNames) { d1.innerHTML = makeAreaNameDomel(areaName); }
-		UIS[areaName] = { elem: d1, children: [] };
-		d.appendChild(d1);
-	}
 	for (const k in SPEC.areas) {
 		let areaName = SPEC.areas[k];
 		let d1 = document.createElement('div');

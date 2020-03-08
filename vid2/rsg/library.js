@@ -26,7 +26,14 @@ function pictoLabelDiv(key, label, color = 'blue', sz=50, gap=2, fz) {
 }
 function pictoDiv(key, color, w, h) { let d = mPic(key); mColor(d, color); mSizePic(d, w, h); return d; }
 function labelDiv(label, color, w, h) { 
-	let d = mTextDiv(label); 
+	let d = mDiv(); 
+	let dText = mAppendText(d, label);
+	dText.classList.add('truncate');
+	dText.classList.add('centerCentered');
+
+	//TODO fuer color nachdunkeln damit text besser lesbar
+	//mFg(dText,colorIdealText(color))
+	//mMarginAuto(d);
 	mColor(d, color); 
 	mSize(d, w, h); 
 	return d; 
@@ -34,7 +41,7 @@ function labelDiv(label, color, w, h) {
 //#region items
 function picLabelDiv(size) { return o=>pictoLabelDiv(o.key, o.label, o.color, size); }
 function picDiv(size) { return o=>pictoDiv(o.key, o.color, size, size); }
-function colorLabelDiv(size) { return o=>pictoDiv(o.key, o.color, size, size); }
+function colorLabelDiv(size) { return o=>labelDiv(o.label, o.color, size, size); }
 function getUis(olist, func) { return olist.map(o => func(o)); }
 
 //#region layouts
@@ -52,6 +59,10 @@ function layoutRow(uis, area, size, gap) {
 	return [x,y+h+gap]; //x is total width for layout
 }
 
+//#RSG types main functions
+function colorLabelRow(olist,area,size,gap){
+	
+}
 
 
 

@@ -1,7 +1,6 @@
 tableSize: [600, 600]
     
-# cap letters => expand this area to max space
-# lowercase letter => collapse to min content
+# cap letters => expand this area to max space, lowercase letter => collapse to min content
 layout: [
   " M M M M M o ",
   " M M M M M o ",
@@ -9,15 +8,14 @@ layout: [
   " M M M M M o ",
   " p p p p p p ",
 ]
-layout_alias:
-  M: board_info
-  o: opponent_info
-  p: player_info
-
-# global: # global settings for UI >>moved to defaultSpec2.yaml
-#   default_loc: "none" # hide any game objects not
-#   visualize: "default"
-#   autofind_loc: "true" # if a game object has a "loc" property, and if that loc is an element of a grid, then autmatically place the object 
+areas:
+  M: 
+    alias: board_info
+  o: 
+    alias: opponent_info
+    create: player_props
+  p: 
+    alias: player_info
 
 placement: # "Behavior" component - keys must be: 
             # - GameObject type (GamePlayer) 
@@ -26,32 +24,36 @@ placement: # "Behavior" component - keys must be:
     loc: board_info
     type: Grid # should be inferred
   
-  GamePlayer:
-    create: player_props
-    _append:
-      - map: place_player
-        key: this.obj_type
+  opponent:
+    loc: self.name
   
+  opponent.num_res:
+    loc: 
+
   GamePlayer.devcards:
-    loc: player_props
+    loc: player_info
 
   GamePlayer.resources:
-    loc: player_props
+    loc: player_info
   
   GamePlayer.vps:
-    loc: player_props
+    loc: player_info
 
   GamePlayer.buildings: # this would display the buildings in the player_props (as well as on the board because the game objects have loc)
-    loc: player_props
+    loc: player_info
 
 visualize: # "Visualize" component, keys must be:
             # - GameObject types
             # - set of game objects
             # TODO: visualization can depend on location (for objects placed in multiple places)
   player_props:
-    type: list
-    direction: automatic #horiz or vertical dep on loc dims
+    type: dict
+    direction: vertical
     spacing: fill
+    key: self.name
+    val:
+      type: area
+      color: self.color
   
   Field:
     type: GridField # should be inferred

@@ -1,6 +1,5 @@
 var prevGamePlid = null;
 var prevWaitingFor = null; //needed to update header info when waiting for several players in a row
-var RUNTEST = false;
 window.onload = () => _startSession();
 
 //#region testing
@@ -76,6 +75,10 @@ function runTest() {
 	let [w,h] = layoutRow(uis,container,size,gap);
 	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
 
+	//composite function tests: RSG types
+	colorLabelRow(o)
+
+
 
 	// let dlist = mDiv(d);
 	// mPosAbs(dlist);
@@ -146,6 +149,8 @@ function _startGame() {
 	logClearAll();
 	scenarioQ = [];
 
+	rMergeSpec();
+
 	_startStep();
 
 }
@@ -174,11 +179,10 @@ function _startStep() {
 	}
 
 	//static part of spec
-	rMergeSpec();
 	rAreas();
-	rPlayerStatsAreas(); //=> moved to dynamic uncomment for old spec (uspec1.yaml)
+	rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
 
-	if (RUNTEST) { runTest(); return; }
+	if (RUNTEST && TESTING) { runTest(); return; }
 
 	timit.showTime('*mappings')
 	rMappings();
@@ -206,12 +210,7 @@ function _startStep() {
 
 }
 
-function findGamePlayer() {
-	if (serverData.options) {
-		let plid = firstCondDict(playerConfig[GAME].players, x => x.username == USERNAME);
-		return plid;
-	} else return null;
-}
+//#endregion
 
 //#region helpers
 function fillActions(areaName, boats, availHeight) {
@@ -243,6 +242,12 @@ function fillActions(areaName, boats, availHeight) {
 	let bds = getBounds('actions');
 	//console.log('action bounds',bds);
 	if (bds.width < 200) mById('actions').style.setProperty('min-width', Math.ceil(bds.width) + 'px');
+}
+function findGamePlayer() {
+	if (serverData.options) {
+		let plid = firstCondDict(playerConfig[GAME].players, x => x.username == USERNAME);
+		return plid;
+	} else return null;
 }
 function getReadyForInteraction() { startInteraction(); }
 
@@ -457,6 +462,7 @@ function setStatus(s) {
 	//clearElement(d);
 	d.innerHTML = s;
 }
+//#endregion
 
 //#region tupleGroups
 function getTupleGroups() {

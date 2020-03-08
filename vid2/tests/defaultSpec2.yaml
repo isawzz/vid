@@ -23,9 +23,9 @@ boardDetection: true
 deckDetection: true
 useColorHintForProperties: true
 useColorHintForObjects: true
-onlySimpleValues: true
+onlySimpleValues: true #false is NOT IMPLEMENTED!!!
 ignoreStructureTypesInPresentation : true
-collapseEmptySmallLetterAreas: false
+collapseEmptySmallLetterAreas: true
 shadeAreaBackgrounds: true
 showAreaNames: false
 showCardHandNames: false

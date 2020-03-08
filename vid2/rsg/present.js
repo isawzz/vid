@@ -11,7 +11,7 @@ function rPresentDefault() {
 			let mk = getVisual(oid);
 			let mkDefault = getDefaultVisual(oid);
 			if (!mk) {
-				if ('loc' in o && isBoardElement(o.loc._obj)) mk = makeMainBoardElementVisual(oid, o);
+				if ('loc' in o && isBoardElement(o.loc._obj) &&  SPEC.useLocPropertyForPlacement) mk = makeMainBoardElementVisual(oid, o);
 			}
 			if (!mk && !mkDefault && SPEC.table.createDefault != false) {
 				mkDefault = makeDefaultObject(oid, o, SPEC[kPool].defaultArea);
@@ -24,7 +24,7 @@ function rPresentDefault() {
 			//update object presentation
 			//means show relevant properties as specified in SPEC
 			if (mk) {
-				if (o.loc) _presentLocationChange(oid, o, mk, isTable);
+				if (o.loc && SPEC.useLocPropertyForPlacement) _presentLocationChange(oid, o, mk, isTable);
 				//console.log('presenting main!',oid)
 				if (otype in mappingTypes && SPEC.ignoreStructureTypesInPresentation) continue;
 				//console.log(otype,otype in mappingTypes, SPEC.ignoreStructureTypesInPresentation)
@@ -89,7 +89,7 @@ function presentMain(oid, o, mk, isTableObject = true) {
 	// let bg, fg;
 	for (const k of validKeys) {
 		let val = o[k];
-		if (isSimple(val)) akku.push(val.toString());
+		if (isSimple(val) || !SPEC.onlySimpleValues) akku.push(val.toString());
 	}
 	if (!isEmpty(akku)) { mk.multitext({ txt: akku, fill: color }); } else mk.clearText();
 }

@@ -23,16 +23,25 @@ function rPresentMappings() {
 	//let bds=getBounds('others');
 	//console.log('---------------------------',bds.height);
 	
-	if (isdef(serverData.players)) presentMappings(GAMEPLID, serverData.players[GAMEPLID]);
+	if (isdef(serverData.players)) {
+		//console.log('------------------presentMappings',GAMEPLID);
+		presentMappings(GAMEPLID, serverData.players[GAMEPLID]);
+		//console.log('presentMappings',GAMEPLID,' DONE!!!!!!!!!!!!!');
+	}
 
 	//bds=getBounds('others');
 	//console.log('---------------------------',bds.height);
 
-	for (const plid in serverData.players) { if (plid != GAMEPLID) presentMappings(plid, serverData.players[plid]); }
+	for (const plid in serverData.players) { 
+		//console.log(plid)
+		if (plid != GAMEPLID) presentMappings(plid, serverData.players[plid]); 
+	}
 	for (const oid in serverData.table) { presentMappings(oid, serverData.table[oid]); }
 }
 function presentMappings(oid, o) {
 	let otype = o.obj_type;
+
+	//console.log('presentMappings',oid,o,otype);
 
 	if (mappingTypes[otype]) {
 		//there have been found mappings on this object type
@@ -45,8 +54,10 @@ function presentMappings(oid, o) {
 		let onlyOnce = false; //immutable need to implement other structure uis!!!
 		for (const mapping of mm) {
 			// if (!mapping.immutable) onlyOnce = false;
+			//console.log('___mapping:',mapping)
 
 			executeMapping(mapping, otype, oid, o);
+			//console.log('___mapping done:',mapping)
 		}
 		if (onlyOnce) mappingsInitialized[otype + '.' + oid] = true;
 	}
@@ -74,36 +85,10 @@ function executeMapping(mapping, otype, oid, o) {
 		//console.log('call',func)
 		//return;
 	}
-	// console.log('mapping:',mapping);
-	//console.log('func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
+	// //console.log('mapping:',mapping);
+	//console.log('type',mapping.type,'func',window[func].name,'\nloc',loc,'\no',o,'\noid',oid,'\npath',path,'\nomap',omap);
 
 	let structObject = window[func](serverData.table, loc, o, oid, path, omap);
-}
-
-function rMergeSpec() {
-	SPEC = deepmerge(defaultSpec, userSpec, { arrayMerge: overwriteMerge });
-
-	//need to correct areas because it should NOT be merged!!!
-	if (userSpec.layout_alias) { SPEC.layout_alias = userSpec.layout_alias; }
-	if (userSpec.areas) { SPEC.areas = userSpec.areas; }
-
-	//SPEC is merged userSpec!
-	//console.log(SPEC);
-	delete SPEC.asText;
-	// document.getElementById('SPEC').innerHTML = '<pre id="spec-result"></pre>';
-	// document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
-
-	mById('SPEC').innerHTML = '<pre>"' + jsonToYaml(SPEC) + '"</pre>';
-
-
-	//console.log(defaultSpec.color,userSpec.color,SPEC.color)
-
-
-	_initAutoplayToActionButtons();
-	_initCheatButtons();
-	_initScenarioButtons();
-
-
 }
 
 

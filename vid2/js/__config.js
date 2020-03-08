@@ -7,11 +7,14 @@ var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
 const TIMIT_SHOW = false; // true | false
+const SHOW_SERVER_ROUTE = true; // true | false
+const SHOW_SERVER_RETURN = false; // true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
-const TESTING = false; // true | false
+const RUNTEST = false; // true | false
+const TESTING = true; // true | false
 const TEST_PATH = '/vid2/tests/';
-const DSPEC_VERSION = 1;
+const DSPEC_VERSION = 2;
 const USPEC_VERSION = 1;
 const CODE_VERSION = 1;
 const DATA_VERSION = 1;

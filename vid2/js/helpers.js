@@ -784,7 +784,9 @@ function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); return d; }
 function mDivPosAbs(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPos(d, x, y); return d; }
+function mDivPosRel(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPosRel(d, x, y); return d; }
 function mFg(d, color) { d.style.color = color; }
+function mFlex(d){d.style.display = 'flex';d.style.flexWrap='wrap';}
 function mLabel(label) {
 	//choice a) fontsize nach length berechnen
 	//b) 
@@ -803,9 +805,10 @@ function mPic(key) {
 	d.style.setProperty('font-family', family);
 	return d;
 }
+function mMarginAuto(d){d.style.setProperty('margin','auto');}
 function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mPosAbs(d) { d.style.position = 'absolute'; }
-function mPosRel(d) { d.style.position = 'relative'; }
+function mPosRel(d,x,y,unit) { d.style.position = 'relative';if (isdef(x)) mStyle(d,{ left: x, top: y},unit); }
 function mRot(d, angle) { d.style.transform = 'rotate(' + angle + 'deg)'; }
 function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
 function mSizePic(d, w, h = 0, unit = 'px') { return mStyle(d, { 'font-size': h / 2, 'font-weight': 900, 'padding-top': h / 4, 'text-align': 'center', 'box-sizing': 'border-box', width: w, height: h ? h : w }, unit); }

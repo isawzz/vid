@@ -10,7 +10,7 @@ function logGetDiv(plid) {
 	if (!d) {
 		let idParent = 'logDiv';
 		let id = idParent + '_' + plid;
-		console.log(id)
+		//console.log(id)
 		d=mDiv(mBy(idParent)); 
 		mStyle(d,{position:'relative',left:0,top:0,width:100,height:100},'%');
 		d.id = id;
@@ -31,6 +31,34 @@ function makeSimpleString(d) {
 
 
 //#endregion log
+
+//#region merge spec
+function rMergeSpec() {
+	SPEC = deepmerge(defaultSpec, userSpec, { arrayMerge: overwriteMerge });
+
+	//need to correct areas because it should NOT be merged!!!
+	if (userSpec.layout_alias) { SPEC.areas = userSpec.layout_alias; }
+	if (userSpec.areas) { SPEC.areas = userSpec.areas; }
+	delete SPEC.layout_alias;
+
+	//SPEC is merged userSpec!
+	//console.log(SPEC);
+	delete SPEC.asText;
+	// document.getElementById('SPEC').innerHTML = '<pre id="spec-result"></pre>';
+	// document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
+
+	mById('SPEC').innerHTML = '<pre>"' + jsonToYaml(SPEC) + '"</pre>';
+
+
+	//console.log(defaultSpec.color,userSpec.color,SPEC.color)
+
+
+	_initAutoplayToActionButtons();
+	_initCheatButtons();
+	_initScenarioButtons();
+
+
+}
 
 
 

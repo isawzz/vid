@@ -63,8 +63,8 @@ async function route_userCode(game, fname) {
 
 }
 async function route_initGame(game, gc, username, seed = SEED) {
-	await fetch(SERVER + '/restart');
-	await fetch(SERVER + '/game/select/' + game);
+	await fetch_wrapper(SERVER + '/restart');
+	await fetch_wrapper(SERVER + '/game/select/' + game);
 	let nPlayers = gc.numPlayers;
 	//console.log(gc)
 	// for (let i = 0; i < nPlayers; i++) {
@@ -74,12 +74,12 @@ async function route_initGame(game, gc, username, seed = SEED) {
 		if (isAI) {
 			await postData(SERVER + '/add/client/agent/' + plInfo.username, { agent_type: plInfo.agentType, timeout: null });
 		}
-		await fetch(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
+		await fetch_wrapper(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
 	}
 	return await route_restart(username, seed);
 }
 async function route_restart(username, seed = SEED) {
-	await fetch(SERVER + '/begin/' + seed);
+	await fetch_wrapper(SERVER + '/begin/' + seed);
 	let data = await route_status(username);
 	//console.log(data)
 	return data;
@@ -91,27 +91,27 @@ async function route_rsg_asset(filename, ext = 'yml') {
 	return response;
 }
 async function route_server_js(url) {
-	let data = await fetch(SERVER + url);
+	let data = await fetch_wrapper(SERVER + url);
 	return await data.json();
 }
 async function route_server_text(url) {
 	//console.log(url, SERVER + url)
-	let data = await fetch(SERVER + url);
+	let data = await fetch_wrapper(SERVER + url);
 	let text = await data.text();
 	return text;
 }
 async function route_path_yaml_dict(url) {
-	let data = await fetch(url);
+	let data = await fetch_wrapper(url);
 	let text = await data.text();
 	let dict = jsyaml.load(text);
 	return dict;
 }
 async function route_path_text(url) {
-	let data = await fetch(url);
+	let data = await fetch_wrapper(url);
 	return await data.text();
 }
 async function route_path_asText_dict(url) {
-	let data = await fetch(url);
+	let data = await fetch_wrapper(url);
 	let res = {};
 	res.asText = await data.text();
 	//console.log(res.asText)
@@ -137,7 +137,14 @@ async function postData(url = '', data = {}) {
 	});
 	return await response.json(); // parses JSON response into native JavaScript objects
 }
-async function route_server(url) { await fetch(SERVER + url); }
+async function route_server(url) { await fetch_wrapper(SERVER + url); }
 
-
+var route_counter=0;
+async function fetch_wrapper(url){
+	route_counter+=1;
+	if (SHOW_SERVER_ROUTE) console.log(route_counter+': route:'+url);
+	let res = await fetch(url);
+	if (SHOW_SERVER_RETURN) console.log(route_counter+': return:',res);
+	return res;
+}
 

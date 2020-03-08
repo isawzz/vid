@@ -34,9 +34,9 @@ function openInfobox(ev, mk, part) {
 	} else {
 		let msInfobox = makeInfobox(mk.id, oid, serverData.table[oid]);
 
-		console.log(msInfobox);
+		//console.log(msInfobox);
 		let bmk = getBounds(mk.elem);
-		console.log(bmk);
+		//console.log(bmk);
 		let el=msInfobox.elem;
 		el.style.position='fixed';
 		el.style.left=(bmk.left+bmk.width/2)+'px';

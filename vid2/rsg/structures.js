@@ -19,20 +19,23 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 
 	//do NOT present empty hands!
 	let ids = oHand ? getElements(oHand) : [];
-	if (isEmpty(ids)) return;
+	if (isEmpty(ids)) {
+		//console.log('no data in',oid,'...returning to spec')
+		return;
+	}
+	let oCardDict = {};
+	for (const id of ids) { oCardDict[id] = objectPool[id]; }
+	let oCardList = dict2list(oCardDict, 'id');
+	// console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
 
 
 	let key = oid + '.' + path;
 	let mkHand = getVisual(key);
-	let hPadding=4;
-	let hMargin=4;
-	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o),hMargin,hPadding);
+	let hPadding = 4;
+	let hMargin = 4;
+	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
 	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
-	let oCardDict = {};
-	for (const id of ids) { oCardDict[id] = serverData.table[id]; }
-	let oCardList = dict2list(oCardDict, 'id');
-	// console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
 
 	let mkCardList = [];
 	for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
@@ -40,22 +43,88 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 
 	layoutCardsOverlapping(mkHand, mkCardList);
 }
+function mapOMap(omap, pool) {
+	//if o is a _set or list of objects, convert it to list of corresponding object in table
+	//otherwise, turn it into [{key:key,val:value},...] list
+	let olist = [];
+	let ids = omap ? getElements(omap) : [];
+	if (!isEmpty(ids)) {
+		let odict = {};
+		for (const id of ids) { odict[id] = pool[id]; }
+		olist = dict2list(odict, 'id');
+	} else {
+		for (const k in omap) {
+			let item = { key: k, value: omap[k] };
+			olist.push(item);
+		}
+	}
+	return olist;
+}
+function convertToColor(x){
+	let res=SPEC.color[x];
+	if (!res){
+		res = SPEC.color[x]=randomColor();
+	}
+	return res;
+}
+function convertToLabel(x){
+	let res=lookup(SPEC,['label',x]);
+	return res?res:x;
+}
+function colorLabelRow(objectPool, loc, o, oid, path, omap) {
+	// console.log('colorLabelRow NOT IMPLEMENTED!!!');
+	console.log('_______ colorLabelRow')
+	console.log(objectPool)
+	console.log('loc', loc, 'o', o, 'oid', oid)
+	console.log('oHand', omap, 'path', path);
+
+	//convert collection into color,label list
+	let olist = mapOMap(omap);
+	console.log('olist',olist);
+	let otrans = olist.map(item=>({color:convertToColor(item.key),label:convertToLabel(item.value)}));
+	console.log('otransformed',otrans);
+
+	let size=50,gap=4;
+	let area = mBy(loc); 
+	mFlex(area);
+	//mPosRel(area);
+	let uis = getUis(otrans, colorLabelDiv(size));
+	let container = mDivPosRel(gap,gap,area);
+	let [w,h] = layoutRow(uis,container,size,gap);
+	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
+
+
+
+	// let key = oid + '.' + path;
+	// let mkHand = getVisual(key);
+	// let hPadding = 4;
+	// let hMargin = 4;
+	// if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
+	// // console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
+
+	// let mkCardList = [];
+	// for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
+	// // console.log('cards',mkCardList);
+
+	// layoutCardsOverlapping(mkHand, mkCardList);
+
+}
 function pictoHand(objectPool, loc, o, oid, path, oDict) {
 	//console.log('_______cardHand')
 	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
 
 	let key = oid + '.' + path;
 	let mkHand = getVisual(key);
-	let hPadding=4;
-	let hMargin=4;
-	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o),hMargin,hPadding);
+	let hPadding = 4;
+	let hMargin = 4;
+	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
 	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
 	//let ores={wood: 2, brick: 0, sheep: 2, ore: 0, wheat: 0};
 	//let oCardDict = oDict;
 	let oCardList = [];
-	for(const k in oDict){
-		let card={name:k,desc:oDict[k]};
+	for (const k in oDict) {
+		let card = { name: k, desc: oDict[k] };
 		oCardList.push(card);
 	}
 	//let oCardList = dict2list(oCardDict, 'id');
@@ -72,7 +141,7 @@ function columnGrid(areaNames, loc) {
 	//transforms loc into equal-sized flex grid of columns or rows
 	//each cell gets name from areaNames and is a div, usable as area
 	let dLoc = mById(loc);
-	
+
 	clearElement(dLoc);
 	dLoc.style.display = 'grid';
 
@@ -100,7 +169,7 @@ function columnGrid(areaNames, loc) {
 		//a.style.width='auto';
 		if (SPEC.shadeAreaBackgrounds) a.style.backgroundColor = palette[i];
 		if (SPEC.showAreaNames) a.innerHTML = makeAreaNameDomel(areaNames[i]);
-		UIS[areaNames[i]] = { elem: a, children: [], maxHeightFunc:()=>getBounds(loc).height/areaNames.length };
+		UIS[areaNames[i]] = { elem: a, children: [], maxHeightFunc: () => getBounds(loc).height / areaNames.length };
 	}
 }
 

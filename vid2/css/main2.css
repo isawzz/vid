@@ -1,7 +1,7 @@
 /* #region root, body, html */
 :root{
-	--hTable: 400px;
-	--wTable: 500px;
+	/* --hTable: 400px;
+	--wTable: 500px; */
 	--gridGap: 4px;
 	/* -rgba(0,0,0,0.2); -rgba(255,255,255,0.2); */
 	--tableRowPadding: 6px;
@@ -28,12 +28,12 @@ html,body{
 	background-color: rgba(0,0,0,0.2);
 	margin: 4px
 }
-.flexWrap >div {
-	flex-grow: 1;
+.flexWrap>div {
+	/* flex-grow: 1; */
 	background-color: rgba(0,0,0,0.2);
 	margin: 10px;
 	border-radius: 8px;
-	padding: 4px;
+	/* padding: 4px; */
 	color:silver;
 	text-align:center;
 }
@@ -49,82 +49,66 @@ html,body{
 	padding:2px;
 	text-align:center;
 	grid-gap:var(--gridGap);
-	min-width:97vw;
+	/* min-width:97vw; */
 
 }
 #rsg{
 	display: grid;
-	grid-template-columns: min-content var(--wTable) auto;
+	grid-template-columns: min-content min-content 1fr;
 	grid-template-areas: 'ha hb hc' 'a b c';
+	align-content: stretch;
+	align-items: stretch;
+	justify-items: stretch;
+	justify-content: stretch;	
+
+	/* display: grid;
+	grid-template-columns: min-content var(--wTable) auto;
+	grid-template-areas: 'ha hb hc' 'a b c'; */
 	/* justify-items: stretch;
 	justify-content: stretch;	 */
 	grid-column-gap:var(--gridGap);
 }
-#rsg>div, #pageHeader, #test>div, #test2>div, #test3>div{
-	border-radius: 8px;
-	background-color: rgba(0,0,0,0.2);
-	/* margin: 4px; */
-}
-#test, #test2, #test3{
+#test{
 	grid-gap:var(--gridGap);
 	display:grid;
 	grid-template-columns: min-content auto;
 }
+#rsg>div, #pageHeader, #test>div{
+	border-radius: 8px;
+	background-color: rgba(0,0,0,0.2);
+}
 #actions{
 	grid-area: a;
-	/* min-width: 200px; */
-}
-#a_d_divSelect{
+	min-height: 150px;
+	min-width: 30px;
 	display: grid;
-	max-height: var(--hTable);
 	grid-gap: 0px;
 	text-align: left;
-}
-#a_d_divSelect>*{
 	margin: 0px 6px 2px 2px;
 	padding: 0;
 	cursor: pointer;
 	white-space: nowrap;
-	/* color:white; */
 }
 #table{
 	grid-area: b;
+	display: inline-grid;
 	align-self: stretch;
-	/* position:absolute; */
-	/* box-sizing:border-box; */
-	/* flex:0 1 auto; 
-	text-align: center; */
-}
-#tableTop{
-	/* border-radius: 12px; */
-	box-sizing:border-box;
-	padding:10px;
-	height: var(--hTable);
-	width: var(--wTable);
-	/* flex:0 1 auto; */
-	/* position:absolute; */
 }
 #logDiv{
 	grid-area: c;
 	align-self: stretch;
-	min-width:150px;
+	/* min-width:150px; */
 	text-align:left;
 	position:relative;
 }
 #logDiv>div{
-	max-height:var(--hTable);
+	/* max-height:var(--hTable); */
 	overflow-y:auto;
 }
 #status{
 	min-height:25px;
 }
-/* .actionPane {
-	max-height: var(--hTable);
-	display: flex;
-	flex-flow: column wrap;
-	text-align: left;
-} */
-#test2,#test3{
+#SPEC,#code,#serverData{
 	text-align:left;
 }
 #headerActions{
@@ -380,35 +364,6 @@ button:active {
 }
 
 /* #endregion fonts */
-
-/* #region actions */
-
-/* .sidenav1 > p {
-	min-width: 180px;
-	margin: 3px 10px;
-} */
-/* .sidenav1>a {
-	padding-top: 8px;
-	padding-bottom: 4px;
-	padding-left: 8px;
-	font-size: 16px;
-	color: #c4c3c3;
-	overflow: hidden;
-	display: block;
-} */
-/* #a_d_divSelect>*.high {
-	cursor: pointer;
-	background-color:#ccff00;
-	color:black;
-	font-size: 120px;
-}
-#a_d_divSelect.selected {
-	background-color:#ccff00;
-	color:black;
-	font-size: 20px;
-} */
-
-/* #endregion actions */
 
 /* #region tabs */
 .tab {

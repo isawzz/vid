@@ -60,9 +60,6 @@ function layoutRow(uis, area, size, gap) {
 }
 
 //#RSG types main functions
-function colorLabelRow(olist,area,size,gap){
-	
-}
 
 
 

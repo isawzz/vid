@@ -1,7 +1,7 @@
 var maxZIndex = 110;
 var DELETED_IDS = [];
 var DELETED_THIS_ROUND = [];
-const IB_PARENT = 'table'; // tableTop | table
+const IB_PARENT = 'table'; 
 
 function bringInfoboxToFront(mobj){
 	mobj.elem.style.zIndex = maxZIndex;

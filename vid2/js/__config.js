@@ -7,8 +7,9 @@ var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
 const TIMIT_SHOW = false; // true | false
-const SHOW_SERVER_ROUTE = true; // true | false
+const SHOW_SERVER_ROUTE = false; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
+const SHOW_SPEC_CODE_DATA = false; // true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
 const RUNTEST = false; // true | false

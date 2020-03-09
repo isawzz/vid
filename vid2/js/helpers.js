@@ -779,7 +779,7 @@ function asList(x) { return isList(x) ? x : [x]; }
 function mAppend(d, child) { d.appendChild(child); }
 function mBg(d, color) { d.style.backgroundColor = color; }
 function mBy(id) { return document.getElementById(id); }
-
+function mClass(d){for(let i=1;i<arguments.length;i++) d.classList.add(arguments[i]);}
 function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); return d; }
@@ -787,6 +787,7 @@ function mDivPosAbs(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (
 function mDivPosRel(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPosRel(d, x, y); return d; }
 function mFg(d, color) { d.style.color = color; }
 function mFlex(d){d.style.display = 'flex';d.style.flexWrap='wrap';}
+function mFlex1(d){d.style.display = 'flex';d.style.flexWrap='wrap';d.style.flex=1;}
 function mLabel(label) {
 	//choice a) fontsize nach length berechnen
 	//b) 

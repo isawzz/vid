@@ -26,7 +26,7 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 	let oCardDict = {};
 	for (const id of ids) { oCardDict[id] = objectPool[id]; }
 	let oCardList = dict2list(oCardDict, 'id');
-	// console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
+	// //console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
 
 
 	let key = oid + '.' + path;
@@ -34,12 +34,12 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 	let hPadding = 4;
 	let hMargin = 4;
 	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
-	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
+	// //console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
 
 	let mkCardList = [];
 	for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
-	// console.log('cards',mkCardList);
+	// //console.log('cards',mkCardList);
 
 	layoutCardsOverlapping(mkHand, mkCardList);
 }
@@ -72,24 +72,26 @@ function convertToLabel(x){
 	return res?res:x;
 }
 function colorLabelRow(objectPool, loc, o, oid, path, omap) {
-	// console.log('colorLabelRow NOT IMPLEMENTED!!!');
-	console.log('_______ colorLabelRow')
-	console.log(objectPool)
-	console.log('loc', loc, 'o', o, 'oid', oid)
-	console.log('oHand', omap, 'path', path);
+	// //console.log('colorLabelRow NOT IMPLEMENTED!!!');
+	//console.log('_______ colorLabelRow')
+	//console.log(objectPool)
+	//console.log('loc', loc, 'o', o, 'oid', oid)
+	//console.log('oHand', omap, 'path', path);
 
 	//convert collection into color,label list
 	let olist = mapOMap(omap);
-	console.log('olist',olist);
+	//console.log('olist',olist);
 	let otrans = olist.map(item=>({color:convertToColor(item.key),label:convertToLabel(item.value)}));
-	console.log('otransformed',otrans);
+	//console.log('otransformed',otrans);
 
-	let size=50,gap=4;
+	let size=40,gap=4;
 	let area = mBy(loc); 
-	mFlex(area);
-	//mPosRel(area);
+	mClass(area,'flexWrap');
+	// mFlex1(area);
 	let uis = getUis(otrans, colorLabelDiv(size));
-	let container = mDivPosRel(gap,gap,area);
+
+	let container = mDiv(area); mPosRel(container);//PosRel(gap,gap,area);
+
 	let [w,h] = layoutRow(uis,container,size,gap);
 	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
 
@@ -100,11 +102,11 @@ function colorLabelRow(objectPool, loc, o, oid, path, omap) {
 	// let hPadding = 4;
 	// let hMargin = 4;
 	// if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
-	// // console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
+	// // //console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
 	// let mkCardList = [];
 	// for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
-	// // console.log('cards',mkCardList);
+	// // //console.log('cards',mkCardList);
 
 	// layoutCardsOverlapping(mkHand, mkCardList);
 
@@ -118,7 +120,7 @@ function pictoHand(objectPool, loc, o, oid, path, oDict) {
 	let hPadding = 4;
 	let hMargin = 4;
 	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
-	// console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
+	// //console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
 
 	//let ores={wood: 2, brick: 0, sheep: 2, ore: 0, wheat: 0};
 	//let oCardDict = oDict;
@@ -128,12 +130,12 @@ function pictoHand(objectPool, loc, o, oid, path, oDict) {
 		oCardList.push(card);
 	}
 	//let oCardList = dict2list(oCardDict, 'id');
-	console.log('_______________\ncardList', oCardList, oDict);
+	//console.log('_______________\ncardList', oCardList, oDict);
 	return;
 
 	let mkCardList = [];
 	for (const oCard of oCardList) { mkCardList.push(makePictoCard(oCard.id, oCard)); }
-	// console.log('cards',mkCardList);
+	// //console.log('cards',mkCardList);
 
 	layoutCardsOverlapping(mkHand, mkCardList);
 }
@@ -202,8 +204,9 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 	let div = area.elem;
 	let dim = getBounds(div);
 
-	w = dim.width;
+	w = dim.width; //NEIN, hier muss ich aendern!!!!
 	h = dim.height;
+	//area.setBounds(0,0,800,800);
 
 	let pal = getTransPalette('silver');
 	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
@@ -323,6 +326,8 @@ function _quadGrid(loc, idBoard, sBoard, soDict) {
 function _hexGrid(loc, idBoard, sBoard, soDict) {
 	//console.log(loc,idBoard,sBoard,soDict);
 	let board = createGrid(loc, idBoard, sBoard, soDict, 'hex');
+
+	//setTimeout(()=>addVisuals(board),0);
 	addVisuals(board);
 	return board;
 }

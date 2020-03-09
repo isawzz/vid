@@ -70,13 +70,15 @@ async function loadSpecAndCode() {
 	loadCode(userCode.asText);
 	serverData = vidCache.asDict('_initial_' + initialPath);
 
+	if (!SHOW_SPEC_CODE_DATA) return;
+
 	//timit.showTime('*** DONE ***');
-	document.getElementById('userSpec').innerHTML = '<pre>' + userSpec.asText + '</pre>'; //PERFECT!!!!!!!!!!
+	// document.getElementById('userSpec').innerHTML = '<pre>' + userSpec.asText + '</pre>'; //PERFECT!!!!!!!!!!
 	document.getElementById('code').innerHTML = '<pre>"' + userCode.asText + '"</pre>'; //PERFECT!!!!!!!!!!
 
 	//delete serverData.table.asText;
-	document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
-	document.getElementById("json-result").innerHTML = JSON.stringify(serverData, undefined, 2);
+	// document.getElementById('serverData').innerHTML = '<pre id="json-result"></pre>';
+	// document.getElementById("json-result").innerHTML = JSON.stringify(serverData, undefined, 2);
 
 	mById('serverData').innerHTML = '<pre>"' + jsonToYaml(serverData.table) + '"</pre>';
 

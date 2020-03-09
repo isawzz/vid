@@ -5,8 +5,8 @@ async function onClickReloadAll() {
 async function onClickResetLocal() {
 	_startSession(true);
 }
-function onClickNewColors(){
-	iTHEME=(iTHEME+1)%THEMES.length;
+function onClickNewColors() {
+	iTHEME = (iTHEME + 1) % THEMES.length;
 	let color = THEMES[iTHEME];
 	document.body.style.backgroundColor = color;
 	let fg = colorIdealText(color)
@@ -72,7 +72,7 @@ function onClickLobby() {
 async function onClickRestart() {
 	unfreezeUI();
 	setGamePlayer(USERNAME_ORIG);
-	serverData = await route_restart(USERNAME);
+	if (TESTING) restoreServerData(); else serverData = await route_restart(USERNAME);
 	_startGame();
 }
 function onClickRunToNextPlayer() {

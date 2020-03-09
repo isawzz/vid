@@ -28,6 +28,14 @@ function rPresentBehaviors() {
 
 
 
+function placement(){
+	let plac=SPEC.placement;
+
+	
+}
+
+
+
 
 
 

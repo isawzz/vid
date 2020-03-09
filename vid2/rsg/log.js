@@ -1,6 +1,3 @@
-var LOG = {};
-var LOGDIVS = [];
-
 //#region log
 function logRenew() {	for (const d of LOGDIVS) {		makeSimpleString(d);	}}
 function logAddLine(div) { LOGDIVS.push(div); }
@@ -31,40 +28,5 @@ function makeSimpleString(d) {
 
 
 //#endregion log
-
-//#region merge spec
-function rMergeSpec() {
-	SPEC = deepmerge(defaultSpec, userSpec, { arrayMerge: overwriteMerge });
-
-	//need to correct areas because it should NOT be merged!!!
-	if (userSpec.layout_alias) { SPEC.areas = userSpec.layout_alias; }
-	if (userSpec.areas) { SPEC.areas = userSpec.areas; }
-	delete SPEC.layout_alias;
-
-	//SPEC is merged userSpec!
-	//console.log(SPEC);
-	delete SPEC.asText;
-	// document.getElementById('SPEC').innerHTML = '<pre id="spec-result"></pre>';
-	// document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
-
-	mById('SPEC').innerHTML = '<pre>"' + jsonToYaml(SPEC) + '"</pre>';
-
-
-	//console.log(defaultSpec.color,userSpec.color,SPEC.color)
-
-
-	_initAutoplayToActionButtons();
-	_initCheatButtons();
-	_initScenarioButtons();
-
-
-}
-
-
-
-
-
-
-
 
 

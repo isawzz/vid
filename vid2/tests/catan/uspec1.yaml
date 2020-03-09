@@ -1,14 +1,11 @@
-tableSize: [800, 600]
+tableSize: [400, 400]
 
 #fe: 
 # cap letters => expand this area to max space
 # lowercase letter => collapse to min content
 layout: [
-  " M M M M M o ",
-  " M M M M M o ",
-  " M M M M M o ",
-  " M M M M M o ",
-  " p p p p p a ",
+  " M o ",
+  " p a ",
 ]
 layout_alias:
   M: board

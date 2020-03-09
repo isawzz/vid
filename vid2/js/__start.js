@@ -1,5 +1,3 @@
-var prevGamePlid = null;
-var prevWaitingFor = null; //needed to update header info when waiting for several players in a row
 window.onload = () => _startSession();
 
 //#region testing
@@ -36,76 +34,6 @@ function layRow(olist, area, size = 50, gap = 4) {
 	return res;
 }
 function runTest() {
-	console.log('ah');
-
-	let area = mBy('board'); mPosRel(area);
-	let olist = getOlist();
-
-	//showPictoDivCentered('crow', area, 'red', 100); //ok
-	//showPictoDivCentered('crow', area); //ok
-	//stressTest01(area); //ok
-
-	//let w = 50, x = gap = 4; olist.map(o => { showPictoDiv(o.key, area, randomColor(), x, gap, w); x += w + gap; }); //ok
-
-	//let uis = layRow(olist, area, 50, 4); 	console.log(uis); //ok aber need to separate layout from ui generation
-
-	//let uis = getUis(olist, picDiv50);	let [w,h] = layoutRow(uis,area,50,10);	console.log('dims of row layout',w,h); //ok
-
-	//was passiert wenn layout change?
-	//nimmt er automatisch die divs von einem platz weg in den anderen platz? JA, GEHT!!!!
-	let size=50,gap=10;
-
-	//picDiv test: OK!!!
-	// test fuer colorPicRow
-	// let uis = getUis(olist, picDiv(size));
-	// let container = mDivPosAbs(100,100,area);
-	// let [w,h] = layoutRow(uis,container,size,gap);
-	// mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
-	// layoutRow(uis,area,size,gap);
-
-	//picLabelDiv test: (picLabelRow)
-	// let uis = getUis(olist, picLabelDiv(size));
-	// let container = mDivPosAbs(100,100,area);
-	// let [w,h] = layoutRow(uis,container,size,gap);
-	// mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
-
-	//colorLabelDiv test: (picLabelRow)
-	let uis = getUis(olist, colorLabelDiv(size));
-	let container = mDivPosAbs(100,100,area);
-	let [w,h] = layoutRow(uis,container,size,gap);
-	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
-
-	//composite function tests: RSG types
-	colorLabelRow(o)
-
-
-
-	// let dlist = mDiv(d);
-	// mPosAbs(dlist);
-
-	// let area = mBy('board');
-	// let container = mDivPosAbs(10,10,area);
-	// mBg(container,'red');
-	// mSize(container,100,100)
-	// showPicLabelCentered('crow', 'hallo', container);
-
-
-
-
-
-
-	// let w = 50;
-	// let gap = 4;
-	// let x=gap;
-	// let y=gap;
-	// for (const o of olist) {
-	// 	let dpic = mPic(o.key);
-	// 	mAppend(dlist, dpic);
-	// 	mSizePic(dpic,w);
-	// 	mPos(dpic,x,y);
-	// 	x+=w+gap;
-	// }
-
 }
 //#endregion
 
@@ -178,11 +106,13 @@ function _startStep() {
 		prevGamePlid = GAMEPLID;
 	}
 
+	if (RUNTEST && TESTING) { runTest(); return; }
+
+
 	//static part of spec
 	rAreas();
 	rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
 
-	if (RUNTEST && TESTING) { runTest(); return; }
 
 	timit.showTime('*mappings')
 	rMappings();
@@ -214,6 +144,16 @@ function _startStep() {
 
 //#region helpers
 function fillActions(areaName, boats, availHeight) {
+	//console.log('________fillActions: availHeight',availHeight);
+	let bds=getBounds('table');
+	//console.log(bds.width,bds.height);
+	let bds1=getBounds('actions');
+	//console.log(bds1.width,bds1.height);
+	let max=Math.max(bds.height+25,bds1.height);
+	availHeight = max>0?max:300;
+	if (availHeight<50) availHeight=50;
+	//console.log(availHeight);
+
 	let nActions = boats.length;
 	//console.log(areaName, nActions, availHeight)
 	//let html='hallo133'; `<a>hallo</a>`
@@ -239,7 +179,7 @@ function fillActions(areaName, boats, availHeight) {
 	//check if width of 200px erreicht ist
 	// wenn ja, immediately set min-width
 	//nein: set minWidth as long as it is <=200px
-	let bds = getBounds('actions');
+	bds = getBounds('actions');
 	//console.log('action bounds',bds);
 	if (bds.width < 200) mById('actions').style.setProperty('min-width', Math.ceil(bds.width) + 'px');
 }
@@ -251,20 +191,12 @@ function findGamePlayer() {
 }
 function getReadyForInteraction() { startInteraction(); }
 
+var removedActions=[];
 async function interaction(action, data) {
 	if (action == INTERACTION.selected) {
 		timit.init('*send action');
 		if (TESTING) {
-			let pl = serverData.players[GAMEPLID];
-			let o = GAME == 'catan' ? pl.devcards : pl.hand;
-			if (!o) {
-				for (const plid in serverData.players) {
-					serverData.players[plid].hand = { _set: [] };
-				}
-				o = pl.hand;
-			}
-			let cards = getElements(o);
-			if (cards.length > 5) resetPlayerCards(); else addCardsToPlayers();
+			modifyServerData();
 		} else {
 			let boat = data;
 			let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
@@ -295,15 +227,12 @@ function _pickStringForAction(x) {
 function presentActions() {
 	deleteActions(); //clear rest of action data from last round
 	if (!tupleGroups) return;
-	let areaName = 'a_d_divSelect';
+	let areaName = 'actions';
 	let div = mById(areaName);
 	div.scrollTop = 0;
 	let iGroup = 0;
 	let iTuple = 0;
 
-	//new code
-
-	//end of new code
 	let boats = [];
 	for (const tg of tupleGroups) {
 		for (const t of tg.tuples) {
@@ -379,7 +308,7 @@ function rPresentEnd() {
 	unfreezeUI();
 
 	//clear action div
-	let d = mById('a_d_divSelect'); clearElement(d); d.scrollTop = 0;
+	let d = mById('actions'); clearElement(d); d.scrollTop = 0;
 	return true;
 }
 function rPresentLog() {

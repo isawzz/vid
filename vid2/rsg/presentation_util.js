@@ -149,7 +149,7 @@ function makeInfobox(uid, oid, o) {
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
-	let idParent = 'tableTop'; //wer soll parent von infobox sein? brauch div!
+	let idParent = 'table'; //wer soll parent von infobox sein? brauch div!
 	mk.idParent = idParent;
 	//let parent = UIS[idParent];
 	//parent.children.push(id);

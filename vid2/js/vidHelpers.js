@@ -39,9 +39,9 @@ function pageHeaderGetPlayerHtml(username, playerId, color) {
 //#endregion
 
 //#region playerConfig (stub)
-function setGamePlayer(username){
+function setGamePlayer(username) {
 	USERNAME = username;
-	GAMEPLID = firstCondDict(playerConfig[GAME].players,p=>p.username == username);
+	GAMEPLID = firstCondDict(playerConfig[GAME].players, p => p.username == username);
 
 }
 function stubPlayerConfig(gameInfo) {
@@ -111,7 +111,46 @@ function areaBlink(id) { mById(id).classList.add('blink'); }
 function stopBlinking(id) { mById(id).classList.remove('blink'); }
 //#endregion
 
-//#region mod serverData (stub)
+//#region modify serverData (stubs)
+
+function restoreServerData(){
+	resetPlayerCards();
+	let opt = serverData.options;
+	if (opt) {
+		let keys = Object.keys(opt);
+		let firstKey = keys[0];
+		let actions = opt[firstKey].actions._set[0]._tuple[0]._set;
+		removedActions.map(x => actions.push(x));
+		removedActions=[];
+	}
+
+}
+function modifyServerData() {
+	let pl = serverData.players[GAMEPLID];
+	let o = GAME == 'catan' ? pl.devcards : pl.hand;
+	if (!o) {
+		for (const plid in serverData.players) {
+			serverData.players[plid].hand = { _set: [] };
+		}
+		o = pl.hand;
+	}
+	let cards = getElements(o);
+	if (cards.length > 5) resetPlayerCards(); else addCardsToPlayers();
+
+	let opt = serverData.options;
+	if (opt) {
+		let keys = Object.keys(opt);
+		let firstKey = keys[0];
+		let actions = opt[firstKey].actions._set[0]._tuple[0]._set;
+		if (actions.length > 50) removedActions = actions.splice(0, 8);
+		else if (actions.length > 33) removedActions = removedActions.concat(actions.splice(0, 30));
+		else removedActions.map(x => actions.push(x));
+		//console.log(actions);
+
+	}
+
+
+}
 function addCardsToPlayers(n = 1) {
 	// if (GAME != 'catan') return;
 	for (const plid in serverData.players) {
@@ -129,9 +168,9 @@ function addCardsToPlayers(n = 1) {
 			serverData.table[card.id] = card;
 		}
 		let pl = serverData.players[plid];
-		res = GAME == 'catan'?pl.devcards._set.concat(res):pl.hand._set.concat(res);
+		res = GAME == 'catan' ? pl.devcards._set.concat(res) : pl.hand._set.concat(res);
 
-		if (GAME == 'catan') pl.devcards = { _set: res };else pl.hand={ _set: res };
+		if (GAME == 'catan') pl.devcards = { _set: res }; else pl.hand = { _set: res };
 	}
 
 
@@ -140,9 +179,8 @@ function addCardsToPlayers(n = 1) {
 function resetPlayerCards() {
 	for (const plid in serverData.players) {
 		let pl = serverData.players[plid];
-		if (GAME == 'catan') pl.devcards = { _set: [] };else pl.hand={ _set: [] };
+		if (GAME == 'catan') pl.devcards = { _set: [] }; else pl.hand = { _set: [] };
 	}
 }
-
 
 

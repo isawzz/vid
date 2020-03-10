@@ -55,84 +55,62 @@ function hexGrid(pool, loc, o, oid, path, omap) {
 	console.log('edges', edges);
 	//#endregion
 
-	let size = 200;//FIELD_SZ;
-	let [w, h, gap] = [size, size, 4];
+	//hab hiermit board,fields,corners,edges dicts mit {o,oid,info}
 
-	//hab hiermit board,fields,corners,edges dicts
+	let size = 120;//FIELD_SZ;//sollte multiple of 4 sein! weil wdef=4
+	let gap=4;
+	let [fw, fh, wField, hField] = [size / board.info.wdef, size / board.info.hdef, size-gap, size-gap];
+	let szCorner = Math.max(wField/4,20);
+	let [wBoard, hBoard] = [fw * board.info.w+szCorner, fh * board.info.h+szCorner];
 
-	//container is a svg element
-	//board is a g element
+	//area is div element treated as always (flexWrap)
+	//container=board is a div (posRel) with svg and g inside =>3 containers!
 	//fields,edges,corners are g elements within board g
-	let fw = size / board.info.wdef;
-	let fh = size / board.info.hdef;
-
-	let uis=[];
-
-	//board should be a g element of size wBoard=fw*board.info.w,...
-	let uiBoard = gG(); //document.createElementNS('http://www.w3.org/2000/svg', 'g');
-	uiBoard.style.transform = "translate(50%, 50%)";
-	agRect(uiBoard,fw*board.info.w,fh*board.info.h);
-	gBg(uiBoard,'blue');
-	console.log(uiBoard)
-
-	uis.push(uiBoard);
-
-	//fields
-	for(const oid in fields){
-		let el = gG(); 
-		console.log(el);
-
-		agHex(el,size,size);
-		gBg(el,'grey');
-		fields[oid].el=el;
-		uis.push(el);
-	}
-	//makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.structInfo.wdef * fw - gap, board.structInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
-	console.log(uis);
-
-
-	//every x,y,w,h in field.info has to be multiplied by ff to yield correct center,width,height of polys
-	//add 
 
 	// *** stage 1: convert objects into uis ***
-	// let olist = mapOMap(omap.fields, pool); //fields only for now
-	// //console.log(olist)
-	// if (isEmpty(olist)) return null;
-	// let uis = getUis(olist, hexhex(w, h));
+	for (const oid in fields) { let el = gG(); agHex(el, wField, hField); gBg(el, '#00000060'); fields[oid].ui = el; }
+	for (const oid in edges) { let el = gG(); gFg(el, 'dimgrey', 4); edges[oid].ui = el; }
+	for (const oid in corners) { let el = gG(); agCircle(el, szCorner); gBg(el, '#202020'); corners[oid].ui = el; }
 
 	// //TODO: if any cards are present: need to create corresponding mks and link them to oid (because care correspond to objects and resources dont!!!)
 
+	// *** stage 2: prep area div (loc 'table') as flexWrap ***
 	let area = stage2_prepArea(loc);
 
-	let container = stage3_prepContainer(area); mColor(container,'red')
-	let gContainer = gSvg();
-	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;width:100%;height:100%;background-color:yellow';
-	gContainer.setAttribute('style', style);
-	container.appendChild(gContainer);
+	// *** stage 3: prep container div/svg/g (board) as posRel, size wBoard,hBoard ***
+	let container = stage3_prepContainer(area); mColor(container, 'transparent'); //container is appended to area!!!!!!!
 
-	//stage4_layout(uis, gContainer, w, h, gap, layoutHand);
-	let [wTotal, hTotal] = [board.info.w*fw,board.info.h*fh];// layoutInfo(uis, gContainer, w, h, gap);
+	let svgContainer = gSvg();
+	let style = `margin:0;padding:0;position:absolute;top:0px;left:0px;width:100%;height:100%;border-radius:${gap}px;`;
+	svgContainer.setAttribute('style', style);
+	container.appendChild(svgContainer);
+
+	let gContainer = gG();
+	svgContainer.appendChild(gContainer);
+
+	board.div=container;
+	board.svg=svgContainer;
+	board.g=gContainer;
+
+	let [wTotal, hTotal] = [wBoard+2*gap,hBoard+2*gap];
 	mStyle(container, { width: wTotal, height: hTotal, 'border-radius': gap });
-	console.log(wTotal,hTotal);
+	gContainer.style.transform = "translate(50%, 50%)"; //geht das schon vor append???
+	console.log(wTotal, hTotal);
 
-	
-
-}
-function layoutInfo(extuis, area, w,h, gap) {
-	if (isEmpty(extuis)) return [0,0];
-	for(const m of extuis){
-		
+	// *** stage 4: layout! means positioning = transforms... ***
+	for(const [id,f] of Object.entries(fields)){
+		gContainer.appendChild(f.ui);
+		gPos(f.ui,fw*f.info.x,fh*f.info.y);
 	}
-	let x = y = gap;
-	let overlap = .25*w;
-	uis.map(d => {
-		mAppend(area, d);
-		mPos(d, x, y);
-		x += overlap;
-	});
-	//let h=getBounds(uis[0]).height; //getBounds kann erst NACH appendChild benuetzt werden!!!!!!!!!!!!!!!!!!!
-	//console.log('h',h)
-	return [x+w,y+h+gap]; //x is total width for layout
+	for(const [id,f] of Object.entries(edges)){
+		agLine(f.ui,f.info.x1*fw,f.info.y1*fw,f.info.x2*fw,f.info.y2*fw);
+		gContainer.appendChild(f.ui);
+	}
+	for(const [id,f] of Object.entries(corners)){
+		gContainer.appendChild(f.ui);
+		gPos(f.ui,fw*f.info.x,fh*f.info.y);
+	}
+
 }
 
 

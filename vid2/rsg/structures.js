@@ -1,7 +1,7 @@
 //*** RSG types ***
 const CARD_SZ=80;
 const LABEL_SZ=40;
-const FIELD_SZ=60;
+const FIELD_SZ=160;
 function cardHand(objectPool, loc, o, oid, path, omap) {
 	let size = CARD_SZ;
 	let [w, h, gap] = [size * .66, size, 4];
@@ -24,6 +24,7 @@ function cardHand(objectPool, loc, o, oid, path, omap) {
 }
 function colorLabelRow(objectPool, loc, o, oid, path, omap) {
 
+	// *** stage 1: convert objects into uis ***
 	//console.log(omap)
 	let size = LABEL_SZ, gap = 4;
 	let olist = mapOMap(omap);
@@ -31,6 +32,7 @@ function colorLabelRow(objectPool, loc, o, oid, path, omap) {
 	if (isEmpty(olist)) return;
 	olist = olist.map(item => ({ color: convertToColor(item.key), label: convertToLabel(item.value) }));
 	let uis = getUis(olist, colorLabelDiv(size));
+	//TODO: if any cards are present: need to create corresponding mks and link them to oid (because care correspond to objects and resources dont!!!)
 
 	let area = stage2_prepArea(loc);
 

@@ -816,16 +816,24 @@ function mSizePic(d, w, h = 0, unit = 'px') { return mStyle(d, { 'font-size': h 
 function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
 function mTextDiv(text, dParent = null) { let d = mCreate('div'); d.innerHTML = text; return d; }
 //shapes G
+function gCreate(tag){return document.createElementNS('http://www.w3.org/2000/svg', tag);}
+function gPos(g,x,y){g.style.transform = `translate(${x}px, ${y}px)`; }
 function gBg(g,color){g.setAttribute('fill',color);}
-function gSvg() { return document.createElementNS('http://www.w3.org/2000/svg', 'svg'); }
-function gG() { return document.createElementNS('http://www.w3.org/2000/svg', 'g'); }
+function gFg(g,color,thickness){g.setAttribute('stroke',color);if (thickness) g.setAttribute('stroke-width',thickness);}
+function gSvg() { return gCreate('svg');} //document.createElementNS('http://www.w3.org/2000/svg', 'svg'); }
+function gG() { return gCreate('g');}// document.createElementNS('http://www.w3.org/2000/svg', 'g'); }
 function gHex(w, h) { let pts = size2hex(w, h); return gPoly(pts); }
-function gPoly(pts) { let r = document.createElementNS('http://www.w3.org/2000/svg', 'polygon'); if (pts) r.setAttribute('points', pts); return r; }
-function gRect(w, h) { let r = document.createElementNS('http://www.w3.org/2000/svg', 'rect'); r.setAttribute('width', w); r.setAttribute('height', h); return r; }
+function gPoly(pts) { let r = gCreate('polygon'); if (pts) r.setAttribute('points', pts); return r; }
+function gRect(w, h) { let r = gCreate('rect'); r.setAttribute('width', w); r.setAttribute('height', h); return r; }
+function gEllipse(w,h){let r = gCreate('ellipse'); r.setAttribute('rx', w/2); r.setAttribute('ry', h/2); return r; }
+function gLine(x1,y1,x2,y2){let r = gCreate('line'); r.setAttribute('x1', x1); r.setAttribute('y1', y1); r.setAttribute('x2', x2); r.setAttribute('y2', y2); return r; }
 
+function agCircle(g,sz){ let r = gEllipse(sz, sz); g.appendChild(r); return r; }
+function agEllipse(g,w,h){ let r = gEllipse(w, h); g.appendChild(r); return r; }
 function agHex(g, w, h) { let pts = size2hex(w, h); return agPoly(g,pts); }
 function agPoly(g, pts) { let r = gPoly(pts); g.appendChild(r); return r; }
 function agRect(g, w, h) { let r = gRect(w, h); g.appendChild(r); return r; }
+function agLine(g, x1,y1,x2,y2) { let r = gLine(x1,y1,x2,y2); g.appendChild(r); return r; }
 
 
 

@@ -84,7 +84,7 @@ function _startGame() {
 }
 function _startStep() {
 
-	//addCardsToPlayers();
+	addCardsToMainPlayer(3);
 
 	//reset_zoom_on_resize();
 	clearStep();
@@ -111,7 +111,7 @@ function _startStep() {
 
 	//static part of spec
 	rAreas();
-	rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
+	//rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
 
 
 	timit.showTime('*mappings')

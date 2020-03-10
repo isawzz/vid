@@ -175,6 +175,31 @@ function addCardsToPlayers(n = 1) {
 
 
 }
+function addCardsToMainPlayer(n = 1) {
+	// if (GAME != 'catan') return;
+	for (const plid in serverData.players) {
+		let res = [];
+		for (let i = 0; i < n; i++) {
+			let card = {
+				id: getUID(),
+				short_name: 'K',
+				obj_type: 'card',
+				// visible: { _set: [{ _player: Player1 }] },
+				// name: 'King',
+				generic_type: 'card'
+			};
+			res.push({ _obj: card.id });
+			serverData.table[card.id] = card;
+		}
+		let pl = serverData.players[plid];
+		res = GAME == 'catan' ? pl.devcards._set.concat(res) : pl.hand._set.concat(res);
+
+		if (GAME == 'catan') pl.devcards = { _set: res }; else pl.hand = { _set: res };
+		break;
+	}
+
+
+}
 
 function resetPlayerCards() {
 	for (const plid in serverData.players) {

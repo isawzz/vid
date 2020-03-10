@@ -1,3 +1,7 @@
+
+
+
+
 function test98(){
 	let area = mBy(table);
 	
@@ -16,7 +20,7 @@ function test99(){
 
 	//let uis = layRow(olist, area, 50, 4); 	console.log(uis); //ok aber need to separate layout from ui generation
 
-	//let uis = getUis(olist, picDiv50);	let [w,h] = layoutRow(uis,area,50,10);	console.log('dims of row layout',w,h); //ok
+	//let uis = getUis(olist, picDiv50);	let [w,h] = layoutRow(uis,area,50,50,10);	console.log('dims of row layout',w,h); //ok
 
 	//was passiert wenn layout change?
 	//nimmt er automatisch die divs von einem platz weg in den anderen platz? JA, GEHT!!!!
@@ -26,20 +30,20 @@ function test99(){
 	// test fuer colorPicRow
 	// let uis = getUis(olist, picDiv(size));
 	// let container = mDivPosAbs(100,100,area);
-	// let [w,h] = layoutRow(uis,container,size,gap);
+	// let [w,h] = layoutRow(uis,container,size,size,gap);
 	// mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
-	// layoutRow(uis,area,size,gap);
+	// layoutRow(uis,area,size,size,gap);
 
 	//picLabelDiv test: (picLabelRow)
 	// let uis = getUis(olist, picLabelDiv(size));
 	// let container = mDivPosAbs(100,100,area);
-	// let [w,h] = layoutRow(uis,container,size,gap);
+	// let [w,h] = layoutRow(uis,container,size,size,gap);
 	// mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
 
 	//colorLabelDiv test: (picLabelRow)
 	let uis = getUis(olist, colorLabelDiv(size));
 	let container = mDivPosAbs(100,100,area);
-	let [w,h] = layoutRow(uis,container,size,gap);
+	let [w,h] = layoutRow(uis,container,size,size,gap);
 	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
 
 	//composite function tests: RSG types

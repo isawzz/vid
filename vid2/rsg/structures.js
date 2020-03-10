@@ -1,7 +1,81 @@
-//********************************************/
-//* RSG types                              */
-//********************************************/
-function hexGrid(soDict, loc, sBoard, idBoard) {
+//*** RSG types ***
+const CARD_SZ=80;
+const LABEL_SZ=40;
+const FIELD_SZ=60;
+function cardHand(objectPool, loc, o, oid, path, omap) {
+	let size = CARD_SZ;
+	let [w, h, gap] = [size * .66, size, 4];
+
+	// *** stage 1: convert objects into uis ***
+	let olist = mapOMap(omap, objectPool);
+	if (isEmpty(olist)) return null;
+	let uis = getUis(olist, sizedCard123(w, h));
+
+	//TODO: if any cards are present: need to create corresponding mks and link them to oid (because care correspond to objects and resources dont!!!)
+
+	let area = stage2_prepArea(loc);
+
+	let container = stage3_prepContainer(area); mColor(container,'red')
+
+	//TODO: shall I create an mk for container??? not needed in step_from_scratch!!!! because hand does not need to be highlighted
+	//TODO: naeher testen und ueberlegen ob das auch stimmt wenn ein object fuer hand existiert (market.neutral)
+
+	stage4_layout(uis, container, w, h, gap, layoutHand);
+}
+function colorLabelRow(objectPool, loc, o, oid, path, omap) {
+
+	//console.log(omap)
+	let size = LABEL_SZ, gap = 4;
+	let olist = mapOMap(omap);
+	//console.log('olist',olist)
+	if (isEmpty(olist)) return;
+	olist = olist.map(item => ({ color: convertToColor(item.key), label: convertToLabel(item.value) }));
+	let uis = getUis(olist, colorLabelDiv(size));
+
+	let area = stage2_prepArea(loc);
+
+	let container = stage3_prepContainer(area); mColor(container,'white');
+
+	//TODO: shall I create an mk for container??? not needed in step_from_scratch!!!! because hand does not need to be highlighted
+	//TODO: naeher testen und ueberlegen ob das auch stimmt wenn ein object fuer hand existiert (market.neutral)
+
+	stage4_layout(uis, container, size, size, gap, layoutRow);
+}
+
+
+
+
+//#region stages
+function stage1_makeUis(omap, objectPool, w, h, gap, domelFunc) {
+	// *** stage 1: convert objects into uis ***
+	let olist = mapOMap(omap, objectPool);
+	//console.log('olist', olist);
+	if (isEmpty(olist)) return null;
+
+	let otrans = olist; //.map(item =>  ({ color: convertToColor(item.key), label: convertToLabel(item.value) }));
+	//console.log('otransformed', otrans);
+
+	let uis = getUis(otrans, domelFunc(w, h));
+	//console.log(uis);
+	return uis;
+}
+function stage2_prepArea(areaId) { let area = mBy(areaId); mClass(area, 'flexWrap'); return area; }
+function stage3_prepContainer(area) { let container = mDiv(area); mPosRel(container); return container; }
+function stage4_layout(uis, container, w, h, gap, layoutFunc) {
+	// *** stage 4: create layout of objects within container *** >>returns size needed for collection
+	let [wTotal, hTotal] = layoutFunc(uis, container, w, h, gap);
+	mStyle(container, { width: wTotal, height: hTotal, 'border-radius': gap });
+}
+//#endregion
+
+
+
+
+
+
+
+
+function hexGrid_dep(soDict, loc, sBoard, idBoard) {
 	//timit.showTime(getFunctionCallerName());
 	//let [idBoard, sBoard] = findMatch(soDict, condList);
 
@@ -13,7 +87,7 @@ function quadGrid(soDict, loc, sBoard, idBoard) {
 	//console.log('quadGrid call')
 	return _quadGrid(loc, idBoard, sBoard, soDict);
 }
-function cardHand(objectPool, loc, o, oid, path, oHand) {
+function cardHand_dep(objectPool, loc, o, oid, path, oHand) {
 	//console.log('_______cardHand')
 	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
 
@@ -43,57 +117,75 @@ function cardHand(objectPool, loc, o, oid, path, oHand) {
 
 	layoutCardsOverlapping(mkHand, mkCardList);
 }
-function mapOMap(omap, pool) {
-	//if o is a _set or list of objects, convert it to list of corresponding object in table
-	//otherwise, turn it into [{key:key,val:value},...] list
-	let olist = [];
-	let ids = omap ? getElements(omap) : [];
-	if (!isEmpty(ids)) {
-		let odict = {};
-		for (const id of ids) { odict[id] = pool[id]; }
-		olist = dict2list(odict, 'id');
-	} else {
-		for (const k in omap) {
-			let item = { key: k, value: omap[k] };
-			olist.push(item);
-		}
-	}
-	return olist;
-}
-function convertToColor(x){
-	let res=SPEC.color[x];
-	if (!res){
-		res = SPEC.color[x]=randomColor();
+function convertToColor(x) {
+	let res = SPEC.color[x];
+	if (!res) {
+		res = SPEC.color[x] = randomColor();
 	}
 	return res;
 }
-function convertToLabel(x){
-	let res=lookup(SPEC,['label',x]);
-	return res?res:x;
+function convertToLabel(x) {
+	let res = lookup(SPEC, ['label', x]);
+	return res ? res : x;
 }
-function colorLabelRow(objectPool, loc, o, oid, path, omap) {
+
+
+function cardHand_verb(objectPool, loc, o, oid, path, omap) {
+	let [size, gap] = [80, 4];
+	let [w, h] = [size * .66, size];
+
+	let uis = stage1_makeUis(omap, objectPool, w, h, gap, sizedCard123);
+	if (!uis) return null;
+
+	//TODO: if any cards are present: need to create corresponding mks and link them to oid (because care correspond to objects and resources dont!!!)
+
+	let area = stage2_prepArea(loc);
+
+	//testing 
+	// for (const ui of uis) mAppend(area, ui)
+
+	let container = stage3_prepContainer(area);
+	//after this step, the area already contains an element (of size 0!) and is therefore expanded to flex wrap margin!!!
+
+	//TODO: shall I create an mk for container??? not needed in step_from_scratch!!!! because hand does not need to be highlighted
+	//TODO: naeher testen und ueberlegen ob das auch stimmt wenn ein object fuer hand existiert (market.neutral)
+
+	//=>layout!
+	// *** stage 4: create layout of objects within container *** >>returns size needed for collection
+	stage4_layout(uis, container, w, h, gap, layoutHand);
+}
+function colorLabelRow_verb(objectPool, loc, o, oid, path, omap) {
 	// //console.log('colorLabelRow NOT IMPLEMENTED!!!');
 	//console.log('_______ colorLabelRow')
 	//console.log(objectPool)
 	//console.log('loc', loc, 'o', o, 'oid', oid)
 	//console.log('oHand', omap, 'path', path);
 
+	// *** stage 1: convert objects into uis ***
 	//convert collection into color,label list
 	let olist = mapOMap(omap);
-	//console.log('olist',olist);
-	let otrans = olist.map(item=>({color:convertToColor(item.key),label:convertToLabel(item.value)}));
-	//console.log('otransformed',otrans);
 
-	let size=40,gap=4;
-	let area = mBy(loc); 
-	mClass(area,'flexWrap');
-	// mFlex1(area);
+	//if olist is empty: no presentation at all!
+	if (isEmpty(olist)) return;
+
+	//console.log('olist',olist);
+	let otrans = olist.map(item => ({ color: convertToColor(item.key), label: convertToLabel(item.value) }));
+	//console.log('otransformed',otrans);
+	let size = 40, gap = 4;
 	let uis = getUis(otrans, colorLabelDiv(size));
 
-	let container = mDiv(area); mPosRel(container);//PosRel(gap,gap,area);
+	// *** stage 2: prep area ***
+	let area = mBy(loc);
+	mClass(area, 'flexWrap');
+	// mFlex1(area);
 
-	let [w,h] = layoutRow(uis,container,size,gap);
-	mStyle(container,{width:w,height:h,'background-color':'white','border-radius':gap});
+	// *** stage 3: create container for uis ***
+	let container = mDiv(area); mPosRel(container);
+
+	// *** stage 4: create layout of objects within container *** >>returns size needed for collection
+	let [w, h] = layoutRow(uis, container, size, size, gap);
+	// set container to appropriate size: area should adapt to that!!!
+	mStyle(container, { width: w, height: h, 'background-color': 'white', 'border-radius': gap });
 
 
 
@@ -190,9 +282,6 @@ function cardHandCompact(objectPool, loc, o, oid, path, oHand) {
 
 
 //#region old code still used!
-//********************************************/
-//* main functions                           */
-//********************************************/
 function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 20, edgeColor, fieldColor, nodeColor, iPalette = 1, nodeShape = 'circle', factors, w, h } = {}) {
 	//opt can be  fitRatio | fitStretch | none
 	//coloring: if iPalette is set, board object will set this as its palette
@@ -309,12 +398,6 @@ function detectBoard(soDict, loc) {
 	return null;
 
 }
-// function quadGrid(soDict, loc, condList) {
-// 	//timit.showTime(getFunctionCallerName());
-// 	let [idBoard, sBoard] = findMatch(soDict, condList);
-// 	return _quadGrid(loc, idBoard, sBoard, soDict);
-// }
-//#endregion
 
 
 //#region helpers

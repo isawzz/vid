@@ -1,3 +1,26 @@
+function hexhex(w,h){ return o=>hex123(o,w,h);}
+function hex123(o){
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //#region primitives
 function pictoLabelDiv(key, label, color = 'blue', sz=50, gap=2, fz) {
 	let dOuter = mCreate('div');
@@ -45,21 +68,76 @@ function colorLabelDiv(size) { return o=>labelDiv(o.label, o.color, size, size);
 function getUis(olist, func) { return olist.map(o => func(o)); }
 
 //#region layouts
-function layoutRow(uis, area, size, gap) {
+
+function layoutRow(uis, area, w,h, gap) {
 	if (isEmpty(uis)) return [0,0];
 	let x = y = gap;
 	uis.map(d => {
 		mAppend(area, d);
 		mPos(d, x, y);
 
-		x += size + gap;
+		x += w + gap;
 	});
-	let h=getBounds(uis[0]).height; //getBounds kann erst NACH appendChild benuetzt werden!!!!!!!!!!!!!!!!!!!
+	//let h=getBounds(uis[0]).height; //getBounds kann erst NACH appendChild benuetzt werden!!!!!!!!!!!!!!!!!!!
 	//console.log('h',h)
 	return [x,y+h+gap]; //x is total width for layout
 }
+function layoutHand(uis, area, w,h, gap) {
+	if (isEmpty(uis)) return [0,0];
+	let x = y = gap;
+	let overlap = .25*w;
+	uis.map(d => {
+		mAppend(area, d);
+		mPos(d, x, y);
+		x += overlap;
+	});
+	//let h=getBounds(uis[0]).height; //getBounds kann erst NACH appendChild benuetzt werden!!!!!!!!!!!!!!!!!!!
+	//console.log('h',h)
+	return [x+w,y+h+gap]; //x is total width for layout
+}
 
 //#RSG types main functions
+
+
+//helpers
+function sizedCard123(w,h){return o=>card123(o,w,h);}
+function card123(oCard,w,h) {
+	//console.log(oCard,w,h)
+	//look at card typeMappings
+	if (lookup(SPEC, ['typeMappings', 'card'])) {
+		for (const k in SPEC.typeMappings.card) {
+			oCard[k] = oCard[SPEC.typeMappings.card[k]];
+		}
+	}
+	let el = cardFace(oCard,w,h);
+	return el;
+}
+
+function mapOMap(omap, pool) {
+	//if o is a _set or list of objects, convert it to list of corresponding object in table
+	//otherwise, turn it into [{key:key,val:value},...] list
+	let olist = [];
+	//console.log(omap)
+	//console.log(pool)
+	let ids = omap ? getElements(omap) : [];
+	//console.log('ids',ids)
+	if (!isEmpty(ids)) {
+		for(const id of ids){
+			let o=pool[id];
+			o.id=id;
+			olist.push(o);
+		}
+		// let odict = {};
+		// for (const id of ids) { odict[id] = pool[id]; }
+		// olist = dict2list(odict, 'id');
+	} else {
+		for (const k in omap) {
+			let item = { key: k, value: omap[k] };
+			olist.push(item);
+		}
+	}
+	return olist;
+}
 
 
 

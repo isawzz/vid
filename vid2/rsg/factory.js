@@ -83,9 +83,9 @@ function makeHand(key, idParent, color, padding = 4, margin = 4) {
 	return mk;
 }
 //#region single card
-function cardFace({ rank, suit, key } = {}) {
+function cardFace({ rank, suit, key } = {},w,h) {
 	let cardKey, svgCode;
-	//console.log('cardFace',rank,suit,key)
+	//console.log('cardFace',rank,suit,key,w,h)
 	if (isdef(key)) {
 		cardKey = key;
 		svgCode = testCards[cardKey];
@@ -101,6 +101,8 @@ function cardFace({ rank, suit, key } = {}) {
 	}
 	svgCode = '<div>' + svgCode + '</div>';
 	let el = createElementFromHTML(svgCode);
+	if (isdef(h)){mSize(el,w,h);}
+	//console.log('__________ERGEBNIS:',w,h)
 	return el;
 }
 function makeCardDomel(oCard) {

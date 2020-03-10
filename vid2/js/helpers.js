@@ -779,15 +779,15 @@ function asList(x) { return isList(x) ? x : [x]; }
 function mAppend(d, child) { d.appendChild(child); }
 function mBg(d, color) { d.style.backgroundColor = color; }
 function mBy(id) { return document.getElementById(id); }
-function mClass(d){for(let i=1;i<arguments.length;i++) d.classList.add(arguments[i]);}
+function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
 function mCreate(tag) { return document.createElement(tag); }
 function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
 function mDiv(dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); return d; }
 function mDivPosAbs(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPos(d, x, y); return d; }
 function mDivPosRel(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPosRel(d, x, y); return d; }
 function mFg(d, color) { d.style.color = color; }
-function mFlex(d){d.style.display = 'flex';d.style.flexWrap='wrap';}
-function mFlex1(d){d.style.display = 'flex';d.style.flexWrap='wrap';d.style.flex=1;}
+function mFlex(d) { d.style.display = 'flex'; d.style.flexWrap = 'wrap'; }
+function mFlex1(d) { d.style.display = 'flex'; d.style.flexWrap = 'wrap'; d.style.flex = 1; }
 function mLabel(label) {
 	//choice a) fontsize nach length berechnen
 	//b) 
@@ -806,15 +806,26 @@ function mPic(key) {
 	d.style.setProperty('font-family', family);
 	return d;
 }
-function mMarginAuto(d){d.style.setProperty('margin','auto');}
+function mMarginAuto(d) { d.style.setProperty('margin', 'auto'); }
 function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
 function mPosAbs(d) { d.style.position = 'absolute'; }
-function mPosRel(d,x,y,unit) { d.style.position = 'relative';if (isdef(x)) mStyle(d,{ left: x, top: y},unit); }
+function mPosRel(d, x, y, unit) { d.style.position = 'relative'; if (isdef(x)) mStyle(d, { left: x, top: y }, unit); }
 function mRot(d, angle) { d.style.transform = 'rotate(' + angle + 'deg)'; }
 function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
 function mSizePic(d, w, h = 0, unit = 'px') { return mStyle(d, { 'font-size': h / 2, 'font-weight': 900, 'padding-top': h / 4, 'text-align': 'center', 'box-sizing': 'border-box', width: w, height: h ? h : w }, unit); }
 function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
 function mTextDiv(text, dParent = null) { let d = mCreate('div'); d.innerHTML = text; return d; }
+//shapes G
+function gBg(g,color){g.setAttribute('fill',color);}
+function gSvg() { return document.createElementNS('http://www.w3.org/2000/svg', 'svg'); }
+function gG() { return document.createElementNS('http://www.w3.org/2000/svg', 'g'); }
+function gHex(w, h) { let pts = size2hex(w, h); return gPoly(pts); }
+function gPoly(pts) { let r = document.createElementNS('http://www.w3.org/2000/svg', 'polygon'); if (pts) r.setAttribute('points', pts); return r; }
+function gRect(w, h) { let r = document.createElementNS('http://www.w3.org/2000/svg', 'rect'); r.setAttribute('width', w); r.setAttribute('height', h); return r; }
+
+function agHex(g, w, h) { let pts = size2hex(w, h); return agPoly(g,pts); }
+function agPoly(g, pts) { let r = gPoly(pts); g.appendChild(r); return r; }
+function agRect(g, w, h) { let r = gRect(w, h); g.appendChild(r); return r; }
 
 
 

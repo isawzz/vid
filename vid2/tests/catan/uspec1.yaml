@@ -36,6 +36,7 @@ typeMappings:
   card: #standard rsg object type
     symbol: name #name property of card object (as per mapping) will be translated to symbol looked up in strings
     color: name
+    rank: short_name #just for testing!
 
 #mappings generate standard RSG structure types (eg. grids,lists,diff layouts for groups of objects)
 # general syntax for RSG standard type: [key][value][layout] to represent a dictionary (see GamePlayer.resources)
@@ -63,7 +64,7 @@ mappings:
     loc: player
   opponent.devcards:
     type: cardHand
-    loc: this.name
+    loc: others
 
 
 #the following are used for automatic presentation if no behavior:

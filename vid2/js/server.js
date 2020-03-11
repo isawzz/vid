@@ -8,8 +8,9 @@ async function route_allGames() {
 		if (USE_ALL_GAMES_ROUTE) {
 			res[name] = await route_server_js('/game/info/' + name);
 		} else {
-			let url = '/games/' + GAME + '/info.yaml';
+			let url = '/games/' + name + '/info.yaml';
 			res[name] = await route_path_yaml_dict(url);// last 2 params: reload, useLocal
+			console.log('game info',name,res[name]);
 		}
 	}
 	return res;

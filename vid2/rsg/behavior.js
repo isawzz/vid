@@ -12,7 +12,7 @@ function rPresentBehaviors() {
 			//console.log('o',o);
 
 			for (const cond in COND) {
-				//console.log('try',cond)
+				console.log('try',cond)
 				let todo = COND[cond](o);
 				if (isdef(todo)) {
 					//console.log('todo',todo,oid)

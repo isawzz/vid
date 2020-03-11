@@ -1,28 +1,30 @@
-//*** RSG types ***
-const CARD_SZ=80;
-const LABEL_SZ=40;
-const FIELD_SZ=160;
-function cardHand(objectPool, loc, o, oid, path, omap) {
+//*** RSG structure types ***
+const CARD_SZ = 80;
+const LABEL_SZ = 40;
+const FIELD_SZ = 160;
+
+function cardHand(pool, loc, o, oid, path, omap) {
 	let size = CARD_SZ;
 	let [w, h, gap] = [size * .66, size, 4];
 
 	// *** stage 1: convert objects into uis ***
-	let olist = mapOMap(omap, objectPool);
+	let olist = mapOMap(omap, pool);
 	if (isEmpty(olist)) return null;
 	let uis = getUis(olist, sizedCard123(w, h));
 
 	//TODO: if any cards are present: need to create corresponding mks and link them to oid (because care correspond to objects and resources dont!!!)
 
+	//console.log(loc)
 	let area = stage2_prepArea(loc);
 
-	let container = stage3_prepContainer(area); mColor(container,'red')
+	let container = stage3_prepContainer(area); mColor(container, 'red')
 
 	//TODO: shall I create an mk for container??? not needed in step_from_scratch!!!! because hand does not need to be highlighted
 	//TODO: naeher testen und ueberlegen ob das auch stimmt wenn ein object fuer hand existiert (market.neutral)
 
 	stage4_layout(uis, container, w, h, gap, layoutHand);
 }
-function colorLabelRow(objectPool, loc, o, oid, path, omap) {
+function colorLabelRow(pool, loc, o, oid, path, omap) {
 
 	// *** stage 1: convert objects into uis ***
 	//console.log(omap)
@@ -36,7 +38,7 @@ function colorLabelRow(objectPool, loc, o, oid, path, omap) {
 
 	let area = stage2_prepArea(loc);
 
-	let container = stage3_prepContainer(area); mColor(container,'white');
+	let container = stage3_prepContainer(area); mColor(container, 'white');
 
 	//TODO: shall I create an mk for container??? not needed in step_from_scratch!!!! because hand does not need to be highlighted
 	//TODO: naeher testen und ueberlegen ob das auch stimmt wenn ein object fuer hand existiert (market.neutral)
@@ -44,8 +46,132 @@ function colorLabelRow(objectPool, loc, o, oid, path, omap) {
 	stage4_layout(uis, container, size, size, gap, layoutRow);
 }
 
+function hexGrid(pool, loc, o, oid, path, omap) {
+
+	if (USE_OLD_GRID_FUNCTIONS) return _hexGrid(loc, oid, omap, pool);
+
+	// console.log('___________')
+	// console.log('omap=board', omap)
+	// console.log('path', path, 'board', board);
+
+	// *** stage 0: calc skeleton of grid (layout) ***
+	let [board, fields, corners, edges] = gridSkeleton(omap, pool, getHexGridInfo, getHexFieldInfo);
+	board.oid = oid + (isEmpty(path) ? '' : '.' + path);
+
+	//timit.showTime('skeleton done');
+	generalGrid(board, fields, corners, edges, loc, agHex);
+
+	// each ui created will get an address and a UID and be linked in 
+	registerObject(board,'m',loc);
+	registerDict(fields);
+	registerDict(corners);
+	registerDict(edges);
+
+}
+function quadGrid(pool, loc, o, oid, path, omap) {
+	if (USE_OLD_GRID_FUNCTIONS) return _quadGrid(loc, oid, omap, pool);
+	// *** stage 0: calc skeleton of grid (layout) ***
+	let [board, fields, corners, edges] = gridSkeleton(omap, pool, getQuadGridInfo, getQuadFieldInfo);
+	board.oid = oid + (isEmpty(path) ? '' : '.' + path);
+	return generalGrid(board, fields, corners, edges, loc, agRect);
+
+}
+function registerObject(o, idType, loc,cat){
+	//o must have oid (in path notation) and o
+	let id = getUID();
+	let mk = new MK();
+	mk.o=o.o;
+	mk.info = o.info;
+
+	mk.id=id;
+	mk.idType = idType;
+	if (o.ui){mk.elem = mk.parts.elem=o.ui;mk.elem.id=id;}
+	mk.loc = loc; //id of containing ui (can be in UIS or just a div)
+	let oid = stringBefore(o.oid,'.');
+	mk.path=o.oid;
+	mk.oid=oid;
+	mk.cat=cat;
+	linkObjects(id, oid);
+	listKey(IdOwner, idType, id);
+	console.log(idType)
+	UIS[id] = mk;
+	return mk;
+}
+function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
+
+	//hab hiermit board,fields,corners,edges dicts mit {o,oid,info}
+
+	// *** stage 0: sizing info ***
+	let size = 50;//FIELD_SZ;//sollte multiple of 4 sein! weil wdef=4
+	let gap = 4;
+
+	let [fw, fh, wField, hField] = [size / board.info.wdef, size / board.info.hdef, size - gap, size - gap];
+	let szCorner = Math.max(wField / 4, 20);
+	let [wBoard, hBoard] = [fw * board.info.w + szCorner, fh * board.info.h + szCorner];
+
+	// *** stage 1: convert objects into uis ***
+
+	let pal = getTransPalette('silver');
+	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
+
+	let mk = registerObject(board,'m',loc,'g');
+	
+	for (const oid in fields) { let o=fields[oid]; let el = gG(); fieldFunc(el, wField, hField); gBg(el, fieldColor); o.ui = el; registerObject(o,'m',mk.id,'g'); }
+	for (const oid in edges) { let o=edges[oid]; let el = gG(); gFg(el, edgeColor, 10); o.ui = el; registerObject(o,'m',mk.id,'g'); }
+	for (const oid in corners) { let o=corners[oid]; let el = gG(); agCircle(el, szCorner); gBg(el, nodeColor); o.ui = el; registerObject(o,'m',mk.id,'g'); }
+
+	//uis sind board,fields,corners,edges .map(x=>x.ui)
+	timit.showTime('stage 1 done');
+
+	//area is div element treated as always (flexWrap)
+	//container=board is a div (posRel) with svg and g inside =>3 containers!
+	//fields,edges,corners are g elements within board g
 
 
+	// *** stage 2: prep area div (loc 'table') as flexWrap ***
+	//let area = mBy(loc);// 
+	let area = stage2_prepArea(loc);
+
+	timit.showTime('stage 2 done');
+	// *** stage 3: prep container div/svg/g (board) as posRel, size wBoard,hBoard ***
+	let container = stage3_prepContainer(area); mColor(container, 'transparent'); //container is appended to area!!!!!!!
+
+	let svgContainer = gSvg();
+	let style = `margin:0;padding:0;position:absolute;top:0px;left:0px;width:100%;height:100%;border-radius:${gap}px;`;
+	svgContainer.setAttribute('style', style);
+	container.appendChild(svgContainer);
+
+	let gContainer = gG();
+	svgContainer.appendChild(gContainer);
+
+	board.ui = board.div = container;
+	board.svg = svgContainer;
+	board.g = gContainer; gContainer.id = board.id; //this counts as loc for board elements
+
+	let [wTotal, hTotal] = [wBoard + 2 * gap, hBoard + 2 * gap];
+	mStyle(container, { width: wTotal, height: hTotal, 'border-radius': gap });
+	gContainer.style.transform = "translate(50%, 50%)"; //geht das schon vor append???
+	//console.log(wTotal, hTotal);
+
+	timit.showTime('stage 3 done');
+	// *** stage 4: layout! means append & positioning = transforms... ***
+	layoutGridInfo(board.g, fields, corners, edges, fw, fh);
+
+
+}
+function quadGrid_old(soDict, loc, sBoard, idBoard) {
+	//timit.showTime(getFunctionCallerName());
+	//let [idBoard, sBoard] = findMatch(soDict, condList);
+	//console.log('quadGrid call')
+	return _quadGrid(loc, idBoard, sBoard, soDict);
+}
+function hexGrid_old(soDict, loc, sBoard, idBoard) {
+	//timit.showTime(getFunctionCallerName());
+	//let [idBoard, sBoard] = findMatch(soDict, condList);
+	let res = _hexGrid(loc, idBoard, sBoard, soDict);
+	timit.showTime('old hexGrid done!');
+	return res;
+}
 
 //#region stages
 function stage1_makeUis(omap, objectPool, w, h, gap, domelFunc) {
@@ -70,55 +196,7 @@ function stage4_layout(uis, container, w, h, gap, layoutFunc) {
 }
 //#endregion
 
-
-
-
-
-
-
-
-function hexGrid_dep(soDict, loc, sBoard, idBoard) {
-	//timit.showTime(getFunctionCallerName());
-	//let [idBoard, sBoard] = findMatch(soDict, condList);
-
-	return _hexGrid(loc, idBoard, sBoard, soDict);
-}
-function quadGrid(soDict, loc, sBoard, idBoard) {
-	//timit.showTime(getFunctionCallerName());
-	//let [idBoard, sBoard] = findMatch(soDict, condList);
-	//console.log('quadGrid call')
-	return _quadGrid(loc, idBoard, sBoard, soDict);
-}
-function cardHand_dep(objectPool, loc, o, oid, path, oHand) {
-	//console.log('_______cardHand')
-	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
-
-	//do NOT present empty hands!
-	let ids = oHand ? getElements(oHand) : [];
-	if (isEmpty(ids)) {
-		//console.log('no data in',oid,'...returning to spec')
-		return;
-	}
-	let oCardDict = {};
-	for (const id of ids) { oCardDict[id] = objectPool[id]; }
-	let oCardList = dict2list(oCardDict, 'id');
-	// //console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
-
-
-	let key = oid + '.' + path;
-	let mkHand = getVisual(key);
-	let hPadding = 4;
-	let hMargin = 4;
-	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
-	// //console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
-
-
-	let mkCardList = [];
-	for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
-	// //console.log('cards',mkCardList);
-
-	layoutCardsOverlapping(mkHand, mkCardList);
-}
+//#region helpers
 function convertToColor(x) {
 	let res = SPEC.color[x];
 	if (!res) {
@@ -131,304 +209,6 @@ function convertToLabel(x) {
 	return res ? res : x;
 }
 
-
-function cardHand_verb(objectPool, loc, o, oid, path, omap) {
-	let [size, gap] = [80, 4];
-	let [w, h] = [size * .66, size];
-
-	let uis = stage1_makeUis(omap, objectPool, w, h, gap, sizedCard123);
-	if (!uis) return null;
-
-	//TODO: if any cards are present: need to create corresponding mks and link them to oid (because care correspond to objects and resources dont!!!)
-
-	let area = stage2_prepArea(loc);
-
-	//testing 
-	// for (const ui of uis) mAppend(area, ui)
-
-	let container = stage3_prepContainer(area);
-	//after this step, the area already contains an element (of size 0!) and is therefore expanded to flex wrap margin!!!
-
-	//TODO: shall I create an mk for container??? not needed in step_from_scratch!!!! because hand does not need to be highlighted
-	//TODO: naeher testen und ueberlegen ob das auch stimmt wenn ein object fuer hand existiert (market.neutral)
-
-	//=>layout!
-	// *** stage 4: create layout of objects within container *** >>returns size needed for collection
-	stage4_layout(uis, container, w, h, gap, layoutHand);
-}
-function colorLabelRow_verb(objectPool, loc, o, oid, path, omap) {
-	// //console.log('colorLabelRow NOT IMPLEMENTED!!!');
-	//console.log('_______ colorLabelRow')
-	//console.log(objectPool)
-	//console.log('loc', loc, 'o', o, 'oid', oid)
-	//console.log('oHand', omap, 'path', path);
-
-	// *** stage 1: convert objects into uis ***
-	//convert collection into color,label list
-	let olist = mapOMap(omap);
-
-	//if olist is empty: no presentation at all!
-	if (isEmpty(olist)) return;
-
-	//console.log('olist',olist);
-	let otrans = olist.map(item => ({ color: convertToColor(item.key), label: convertToLabel(item.value) }));
-	//console.log('otransformed',otrans);
-	let size = 40, gap = 4;
-	let uis = getUis(otrans, colorLabelDiv(size));
-
-	// *** stage 2: prep area ***
-	let area = mBy(loc);
-	mClass(area, 'flexWrap');
-	// mFlex1(area);
-
-	// *** stage 3: create container for uis ***
-	let container = mDiv(area); mPosRel(container);
-
-	// *** stage 4: create layout of objects within container *** >>returns size needed for collection
-	let [w, h] = layoutRow(uis, container, size, size, gap);
-	// set container to appropriate size: area should adapt to that!!!
-	mStyle(container, { width: w, height: h, 'background-color': 'white', 'border-radius': gap });
-
-
-
-	// let key = oid + '.' + path;
-	// let mkHand = getVisual(key);
-	// let hPadding = 4;
-	// let hMargin = 4;
-	// if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
-	// // //console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
-
-	// let mkCardList = [];
-	// for (const oCard of oCardList) { mkCardList.push(makeCard123(oCard.id, oCard)); }
-	// // //console.log('cards',mkCardList);
-
-	// layoutCardsOverlapping(mkHand, mkCardList);
-
-}
-function pictoHand(objectPool, loc, o, oid, path, oDict) {
-	//console.log('_______cardHand')
-	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
-
-	let key = oid + '.' + path;
-	let mkHand = getVisual(key);
-	let hPadding = 4;
-	let hMargin = 4;
-	if (!mkHand) mkHand = makeHand(key, loc, getColorHint(o), hMargin, hPadding);
-	// //console.log('_______________\nmkHand', mkHand, '\nbounds', getBounds(mkHand.elem));
-
-	//let ores={wood: 2, brick: 0, sheep: 2, ore: 0, wheat: 0};
-	//let oCardDict = oDict;
-	let oCardList = [];
-	for (const k in oDict) {
-		let card = { name: k, desc: oDict[k] };
-		oCardList.push(card);
-	}
-	//let oCardList = dict2list(oCardDict, 'id');
-	//console.log('_______________\ncardList', oCardList, oDict);
-	return;
-
-	let mkCardList = [];
-	for (const oCard of oCardList) { mkCardList.push(makePictoCard(oCard.id, oCard)); }
-	// //console.log('cards',mkCardList);
-
-	layoutCardsOverlapping(mkHand, mkCardList);
-}
-function columnGrid(areaNames, loc) {
-	//transforms loc into equal-sized flex grid of columns or rows
-	//each cell gets name from areaNames and is a div, usable as area
-	let dLoc = mById(loc);
-
-	clearElement(dLoc);
-	dLoc.style.display = 'grid';
-
-	if (SPEC.collapseEmptySmallLetterAreas) {
-		dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + 'fit-content)'; //',min-max(0,min-content))';
-		dLoc.style.gridTemplateColumns = 'fit-content';// 'min-max(0,min-content)';
-	} else {
-		dLoc.style.gridTemplateRows = 'repeat(' + areaNames.length + ',1fr)';
-		dLoc.style.gridTemplateColumns = '1fr';
-	}
-
-	let bds = getBounds(dLoc);
-	//let maxHeight = bds.height / areaNames.length;
-	//console.log(dLoc, bds,maxHeight);return;
-	let palette = getTransPalette9('white');
-	for (let i = 0; i < areaNames.length; i++) {
-		let a = mDiv(dLoc);
-		a.id = areaNames[i];
-
-		//a.style.setProperty('max-height',maxHeight+'px');
-		//console.log('settings max-height of',areaNames[i],'to',maxHeight);
-
-		//a.style.maxHeight = '100px'; // bds.height / areaNames.length + 'px';
-		//a.style.minWidth='fit-content';//min-max(0px,min-content)';
-		//a.style.width='auto';
-		if (SPEC.shadeAreaBackgrounds) a.style.backgroundColor = palette[i];
-		if (SPEC.showAreaNames) a.innerHTML = makeAreaNameDomel(areaNames[i]);
-		UIS[areaNames[i]] = { elem: a, children: [], maxHeightFunc: () => getBounds(loc).height / areaNames.length };
-	}
-}
-
-
-function cardHandCompact(objectPool, loc, o, oid, path, oHand) {
-	//console.log('_______cardHand')
-	//console.log(objectPool, '\nloc', loc, '\noHand', oHand, '\npath', path);
-	// return _hexGrid(loc, path, oHand, objectPool);
-	let ids = getElements(oHand);
-	//console.log('have to present',ids,'in area',loc)
-}
-
-
-
-
-
-
-//#region old code still used!
-function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 20, edgeColor, fieldColor, nodeColor, iPalette = 1, nodeShape = 'circle', factors, w, h } = {}) {
-	//opt can be  fitRatio | fitStretch | none
-	//coloring: if iPalette is set, board object will set this as its palette
-	//if fieldColor is a number 0-8, it will be interpreted as ipal into board palette, and all fields will be given ipal and iPalette in addition to bg
-	//if fieldColor is a color, field members will just be given that bg, and they wont have an ipal or iPalette
-	//if fieldColor is undefined, in getMemberColors the default colors will be set which are from board palette (board will inherit palette if not set!)
-	//same for nodeColor, edgeColor
-	let area = UIS[board.idParent];
-	let div = area.elem;
-	let dim = getBounds(div);
-
-	w = dim.width; //NEIN, hier muss ich aendern!!!!
-	h = dim.height;
-	//area.setBounds(0,0,800,800);
-
-	let pal = getTransPalette('silver');
-	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
-	let [fw, fh, nw, nh, ew] = getBoardScaleFactors(board, { factors: factors, opt: opt, f2nRatio: f2nRatio, w: w, h: h, margin: margin });
-
-	//console.log('---------------',w,h,fieldColor,fw,fh,nw,nh,ew)
-
-	for (const id of board.structInfo.fields) {
-		let o = getVisual(id);
-		makeVisual(o, o.memInfo.x * fw, o.memInfo.y * fh, board.structInfo.wdef * fw - gap, board.structInfo.hdef * fh - gap, fieldColor, o.memInfo.shape);
-		o.attach();
-	}
-	if (isdef(board.structInfo.corners)) {
-		for (const id of board.structInfo.corners) {
-			let mk = getVisual(id);
-			makeVisual(mk, mk.memInfo.x * fw, mk.memInfo.y * fh, Math.max(board.structInfo.wdef * nw, ew), Math.max(board.structInfo.hdef * nh, ew), nodeColor, nodeShape);
-
-		}
-	}
-	if (isdef(board.structInfo.edges)) {
-
-		//get reference val for nodesize to compute edge length
-		//TODO: what if irregular node shape? 
-		let nodeSize = getVisual(board.structInfo.corners[0]).w;
-
-		for (const id of board.structInfo.edges) {
-			let mk = getVisual(id);
-			//console.log('edge info',mk.memInfo,ew);
-
-			makeVisual(mk, mk.memInfo.x * fw, mk.memInfo.y * fh, mk.memInfo.thickness * ew, 0, edgeColor, 'line', { x1: mk.memInfo.x1 * fw, y1: mk.memInfo.y1 * fh, x2: mk.memInfo.x2 * fw, y2: mk.memInfo.y2 * fh });
-			//set length of line!
-			mk.length = mk.h = mk.distance - nodeSize;
-			mk.attach();
-			//break;
-		}
-	}
-	if (isdef(board.structInfo.corners)) {
-		for (const id of board.structInfo.corners) getVisual(id).attach();
-	}
-}
-/**
- * 
- * @param {id of parent object} areaName 
- * @param {id of board object to be created} idBoard 
- * @param {server object that has at least rows,cols,fields} sBoard 
- * @param {server object dict containing fields,corners,edges} sMemberPool 
- * @param {hex or quad} shape 
- */
-function createGrid(areaName, idBoard, sBoard, sMemberPool, shape) {
-	let board = makeBoard(idBoard, sBoard, areaName);
-	board.structInfo = shape == 'hex' ? getHexGridInfo(sBoard.rows, sBoard.cols) : getQuadGridInfo(sBoard.rows, sBoard.cols);
-
-	//ausser fuer board object, sind neighborhood infos (fields.corners,...) NUR im G.table object
-	makeFields(sMemberPool, board, sBoard, shape);
-	if (isdef(sBoard.corners)) makeCorners(sMemberPool, board, sBoard);
-	if (isdef(sBoard.edges)) makeEdges(sMemberPool, board, sBoard);
-
-	return board;
-}
-function areaRows(soDict, loc) {
-	//for each object in soDict makes a row div
-	let area = getVisual(loc);
-	let [w, areaH] = area.getSize();
-	let keys = getKeys(soDict);
-	let n = keys.length;
-	let h = areaH / n;
-	let extra = areaH - n * h;
-	let x = 0;
-	let y = 0;
-	let [iPalette, ipal] = area.getColorInfo();
-	let pal = S.pals[iPalette];
-	ipal = n <= pal.length - ipal ? ipal : n <= pal.length ? pal.length - n : ipal;
-	let i = 0;
-	for (const k in soDict) {
-		//console.log(loc,x,y,w,h,iPalette,ipal)
-		let id = k;
-		i += 1;
-		let o = createMainDiv(id, loc);
-		let h1 = i == n - 1 ? h + extra : h;
-		o.setBounds(x, y, w, h1);
-		//console.log('h',h1, areaH)
-		o.setPalette(iPalette, ipal);
-		y += h1;
-		ipal = (ipal + 1) % pal.length;
-	}
-}
-function detectBoard(soDict, loc) {
-	timit.showTime('*** board start ***')
-	let idBoard = firstCondDict(soDict, x => isBoardObject(x)); // isdef(x.map) && isdef(x.fields));
-	if (isdef(idBoard)) {
-		let sBoard = soDict[idBoard];
-		//detect shape of board fields
-		//look at first field
-		//guess hex if field has 6 neighbors...
-		let idField0 = sBoard.fields._set[0]._obj;
-		let f0 = soDict[idField0];
-		let numNei = f0.neighbors.length;
-		if (numNei == 6) return _hexGrid(loc, idBoard, sBoard, soDict); else return _quadGrid(loc, idBoard, sBoard, soDict);
-	}
-	return null;
-
-}
-
-
-//#region helpers
-function _quadGrid(loc, idBoard, sBoard, soDict) {
-	let board = createGrid(loc, idBoard, sBoard, soDict, 'quad');
-	addVisuals(board);
-	return board;
-}
-function _hexGrid(loc, idBoard, sBoard, soDict) {
-	//console.log(loc,idBoard,sBoard,soDict);
-	let board = createGrid(loc, idBoard, sBoard, soDict, 'hex');
-
-	//setTimeout(()=>addVisuals(board),0);
-	addVisuals(board);
-	return board;
-}
-function findMatch(odict, condList) {
-	if (isListOfLiterals(condList)) condList = [condList];
-	//console.log('odict',odict);//console.log('condList',condList)
-
-	let Board = lastCondDictPlusKey(odict, x => {
-		for (const tuple of condList) {
-			if (x[tuple[0]] != tuple[1]) return false;
-		}
-		return true;
-	});
-	//console.log('findMatchDict',Board);
-	return Board;
-}
 function getQuadGridInfo(rows, cols) {
 	[wdef, hdef] = [4, 4];
 	let info = {
@@ -494,114 +274,61 @@ function getHexFieldInfo(boardInfo, row, col) {
 	info.poly = getHexPoly(info.x, info.y, info.w, info.h);
 	return info;
 }
-function getBoardScaleFactors(board, { factors, opt, f2nRatio, w, h, margin } = {}) {
-	let [fw, fh, nw, nh, ew] = isdef(factors) ? factors : [43, 50, 12, 12, 10];
-	if (startsWith(opt, 'fit')) {
-		if (w == 0) {
-			let g = document.getElementById(board.id);
-			let transinfo = getTransformInfo(g);
-			w = transinfo.translateX * 2;
-			h = transinfo.translateY * 2;
-		}
-		let divBy = 2 * (f2nRatio - 2);
-		fw = Math.floor((w - margin) / (board.structInfo.w + board.structInfo.wdef / divBy));
-		fh = Math.floor((h - margin) / (board.structInfo.h + board.structInfo.hdef / divBy));
 
-		let maintainRatio = (opt[3] == 'R');
-		if (maintainRatio) {
-			let ff = Math.min(fw, fh);
-			fw = ff;
-			fh = ff;
-		}
-		nw = Math.floor(fw / f2nRatio);
-		nh = Math.floor(fh / f2nRatio);
-		if (ew > nw) ew = nw * 1.2;
+function gridSkeleton(omap, pool, gridInfoFunc, fieldInfoFunc) {
+	//calc pos skeleton of board
+	let board = { o: omap, info: gridInfoFunc(omap.rows, omap.cols) };
+
+	let fields = {};
+	for (const fid of getElements(omap.fields)) {
+		let o = pool[fid];
+		fields[fid] = { oid: fid, o: pool[fid], info: fieldInfoFunc(board.info, o.row, o.col) };
 	}
-	return [fw, fh, nw, nh, ew];
-}
-function makeFields(pool, board, serverBoard, shape) {
-	//console.log(board, serverBoard)
-	let serverFieldIds = _setToList(serverBoard.fields).map(x => x._obj);
-	board.structInfo.fields = serverFieldIds;
-	for (const fid of serverFieldIds) {
-		let sField = pool[fid];
-		let r = sField.row;
-		let c = sField.col;
-		let field = makeBoardElement(fid, sField, board.id, 'field');
-		field.memInfo = shape == 'hex' ? getHexFieldInfo(board.structInfo, r, c) : getQuadFieldInfo(board.structInfo, r, c);
-	}
-	//console.log(board,board.structInfo,board.structInfo.fields);
-	//for(const oid of board.structInfo.fields) //console.log(oid2ids[oid],getMainId(oid));
-	board.structInfo.vertices = correctPolys(board.structInfo.fields.map(x => getVisual(x).memInfo.poly), 1);
-	//console.log(board.structInfo.vertices)
-}
-function makeCorners(pool, board, serverBoard) {
-	let serverFieldIds = _setToList(serverBoard.fields).map(x => x._obj);
-	board.structInfo.corners = _setToList(serverBoard.corners).map(x => x._obj);
+	// console.log('fields', fields);
+
+	//now vertices
+	board.info.vertices = correctPolys(Object.values(fields).map(x => x.info.poly), 1);
+
 	let dhelp = {}; //remember nodes that have already been created!!!
-	for (const fid of serverFieldIds) {
-		let sfield = pool[fid];
-		let ffield = getVisual(fid);
-		if (nundef(sfield.corners)) continue;
-		let iPoly = 0;
-		let cornerIds = sfield.corners.map(x => x._obj);
-		for (const cid of cornerIds) {
-			if (!cid) {
-				iPoly += 1;
-				continue;
-			} else if (isdef(dhelp[cid])) {
-				iPoly += 1;
-				continue;
-			} else {
-				//create a new corner object
-				let corner = makeBoardElement(cid, pool[cid], board.id, 'corner');//createMainG(cid, board.id);
-				let poly = ffield.memInfo.poly[iPoly];
-				corner.memInfo = { shape: 'circle', memType: 'corner', x: poly.x, y: poly.y, w: 1, h: 1 };
-				dhelp[cid] = corner;
-				iPoly += 1;
+	let corners = {};
+	for (const fid in fields) {
+		let f = fields[fid];
+		let i = 0;
+		for (const cid of getElements(f.o.corners)) {
+			if (cid && nundef(dhelp[cid])) {
+				let pt = f.info.poly[i];
+				corners[cid] = { oid: cid, o: pool[cid], info: { shape: 'circle', memType: 'corner', x: pt.x, y: pt.y, w: 1, h: 1 } };
+				dhelp[cid] = true;
 			}
+			i += 1;
 		}
 	}
-}
-function makeEdges(pool, board, serverBoard) {
-	let serverFieldIds = _setToList(serverBoard.fields).map(x => x._obj);
-	board.structInfo.edges = _setToList(serverBoard.edges).map(x => x._obj);
-	dhelp = {}; //remember nodes that have already been created!!!
-	for (const fid of serverFieldIds) {
-		let sfield = pool[fid];
-		if (nundef(sfield.edges)) continue;
-		let edgeIds = sfield.edges.map(x => x._obj);
-		for (const eid of edgeIds) {
-			if (!eid) {
-				continue;
-			} else if (isdef(dhelp[eid])) {
-				continue;
-			} else {
-				//create an edge object
-				let edge = makeBoardElement(eid, pool[eid], board.id, 'edge');
+	// console.log('corners', corners);
 
-				//find end corners (server objects):
+	//now edges
+	dhelp = {}; //remember edges that have already been created!!!
+	edges = {};
+	for (const fid in fields) {
+		let f = fields[fid];
+		for (const eid of getElements(f.o.edges)) {
+			if (eid && nundef(dhelp[eid])) {
 				let el = pool[eid];
-				let n1 = getVisual(el.corners[0]._obj);
-				let n2 = getVisual(el.corners[1]._obj);
+				let n1 = corners[el.corners[0]._obj];
+				let n2 = corners[el.corners[1]._obj];
+				let [x1, y1, x2, y2] = [n1.info.x, n1.info.y, n2.info.x, n2.info.y];
 				//console.log(el, n1, n2)
-
-				edge.memInfo = {
-					shape: 'line',
-					memType: 'edge',
-					x1: n1.memInfo.x,
-					y1: n1.memInfo.y,
-					x2: n2.memInfo.x,
-					y2: n2.memInfo.y,
-					x: (n1.x + n2.x) / 2,
-					y: (n1.y + n2.y) / 2,
-					thickness: 1,
-					w: 1,
-					h: 1,
-				};
-				dhelp[eid] = edge;
+				edges[eid] = { oid: eid, o: el, info: { shape: 'line', memType: 'edge', x1: x1, y1: y1, x2: x2, y2: y2, x: (x1 + x2) / 2, y: (y1 + y2) / 2, thickness: 1, w: 1, h: 1 } };
+				dhelp[eid] = true;
 			}
 		}
 	}
+	// console.log('edges', edges);
+
+	return [board, fields, corners, edges];
+
 }
+
+
+
+
 

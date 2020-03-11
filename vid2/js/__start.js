@@ -82,9 +82,11 @@ function _startGame() {
 	_startStep();
 
 }
+var t_total=0;
+var t_avg=0;
 function _startStep() {
 
-	addCardsToMainPlayer(3);
+	//addCardsToMainPlayer(3);
 
 	//reset_zoom_on_resize();
 	clearStep();
@@ -113,15 +115,22 @@ function _startStep() {
 	rAreas();
 	//rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
 
-
-	timit.showTime('*mappings')
+	timit.init('***');
+	// timit.showTime('*mappings');
 	rMappings();
 
 	//present
 	mkMan.presentationStart();
 	rPresentMappings();
 	//return;
-	timit.showTime('mappings done...')
+	// timit.showTime('mappings done...')
+	t_total += timit.getTotalTimeElapsed();
+	t_avg = t_total/route_counter;
+	timit.showTime('*presentation done! ...'+t_avg);
+	console.log('route_counter',route_counter)
+
+
+
 	rPresentBehaviors(); //should enter completed oids in DONE dict
 
 	rPresentDefault();//???
@@ -130,7 +139,6 @@ function _startStep() {
 	rPresentStatus();
 	rPresentLog();
 
-	timit.showTime('*presentation done!');
 
 	if (serverData.options) { presentActions(); getReadyForInteraction(); }
 	else if (serverData.waiting_for) { presentWaitingFor(); }
@@ -264,7 +272,7 @@ async function presentWaitingFor() {
 	if (PLAYMODE != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(GAMEPLID))) {
 		USERNAME = playerConfig[GAME].players[pl].username;
 		GAMEPLID = pl;
-		console.log('switching player to', GAMEPLID, USERNAME)
+		//console.log('switching player to', GAMEPLID, USERNAME)
 		let data = await route_status(USERNAME);
 		serverData = data;
 		_startStep();

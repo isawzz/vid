@@ -1,4 +1,4 @@
-tableSize: [600, 500]
+tableSize: [400, 400]
 layout: [
   " M M M M M o ",
   " M M M M M o ",
@@ -21,12 +21,12 @@ mappings: #form: obj_type.property1.property2...
   Grid: 
     type: hexGrid
     loc: board
-  GamePlayer.devcards: 
-    type: cardHand
-    loc: player
-  opponent.devcards:
-    type: cardHand
-    loc: this.name
+  # GamePlayer.devcards: 
+  #   type: cardHand
+  #   loc: player
+  # opponent.devcards:
+  #   type: cardHand
+  #   loc: this.name
   # opponent.num_res:
   #   type: cardHand
   #   loc: this.name

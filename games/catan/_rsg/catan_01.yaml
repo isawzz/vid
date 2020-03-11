@@ -16,9 +16,6 @@ layout_alias:
 mappings: #form: obj_type.property1.property2...
   board: 
     type: hexGrid
-    field_type: hex
-    corner_type: Corner
-    edge_type: Edge
     loc: board
     mutable: false #speeds up presentation
   # GamePlayer.devcards: 

@@ -949,6 +949,7 @@ class MK {
 		else { let bg = part.bg; if (nundef(bg)) bg = null; part.style.backgroundColor = bg; if (isdef(bg)) part.style.color = colorIdealText(bg); }
 	}
 	high(pname = 'elem', elIfMiss = true) {
+		if (this.cat == 'g') console.log('high',this)
 		let part = this._getPart(pname, elIfMiss);
 		if (!part) return; //{//console.log('no part',pname); return;}
 		if (this.cat == 'g') {

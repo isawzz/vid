@@ -95,6 +95,20 @@ function layoutHand(uis, area, w,h, gap) {
 	//console.log('h',h)
 	return [x+w,y+h+gap]; //x is total width for layout
 }
+function layoutGridInfo(gContainer,fields,corners,edges,fw,fh){
+	for (const [id, f] of Object.entries(fields)) {
+		gContainer.appendChild(f.ui);
+		gPos(f.ui, fw * f.info.x, fh * f.info.y);
+	}
+	for (const [id, f] of Object.entries(edges)) {
+		agLine(f.ui, f.info.x1 * fw, f.info.y1 * fw, f.info.x2 * fw, f.info.y2 * fw);
+		gContainer.appendChild(f.ui);
+	}
+	for (const [id, f] of Object.entries(corners)) {
+		gContainer.appendChild(f.ui);
+		gPos(f.ui, fw * f.info.x, fh * f.info.y);
+	}
+}
 
 //#RSG types main functions
 

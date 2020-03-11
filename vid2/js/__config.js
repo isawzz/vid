@@ -1,19 +1,20 @@
 var USERNAME = 'felix';
 var GAMEPLID=null;
 const USERNAME_ORIG = USERNAME;
-var GAME = 'catan'; // catan | aristocracy | ttt | game01
+var GAME = 'ttt'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
-const TIMIT_SHOW = false; // true | false
-const SHOW_SERVER_ROUTE = false; // true | false
+const TIMIT_SHOW = true; // true | false
+const SHOW_SERVER_ROUTE = true; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
 const SHOW_SPEC_CODE_DATA = false; // true | false
+const USE_OLD_GRID_FUNCTIONS = false;// true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
 const RUNTEST = false; // true | false
-const TESTING = true; // true | false
+const TESTING = false; // true | false
 const TEST_PATH = '/vid2/tests/';
 const DSPEC_VERSION = 2;
 const USPEC_VERSION = 1;
@@ -22,10 +23,10 @@ const DATA_VERSION = 1;
 
 //used when NOT testing:
 var VERSION = '_02'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
-var CACHE_DEFAULTSPEC = false;
+var CACHE_DEFAULTSPEC = true;
 var CACHE_USERSPEC = false;
-var CACHE_CODE = false;
-var CACHE_INITDATA = false;
+var CACHE_CODE = true;
+const CACHE_INITDATA = false;
 const USE_ALL_GAMES_ROUTE = false; // true | false //false means directly loading game infos from info.yaml
 
 var SPEC = null; //merged userSpec and defaultSpec

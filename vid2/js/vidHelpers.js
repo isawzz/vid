@@ -176,7 +176,7 @@ function addCardsToPlayers(n = 1) {
 
 }
 function addCardsToMainPlayer(n = 1) {
-	// if (GAME != 'catan') return;
+	if (GAME != 'catan') return;
 	for (const plid in serverData.players) {
 		let res = [];
 		for (let i = 0; i < n; i++) {

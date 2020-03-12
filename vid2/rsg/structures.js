@@ -1,4 +1,5 @@
 //*** RSG structure types ***
+const RSGTYPES={board:1,hand:2,field:101,edges:102,corner:103};//unter 100:container types
 const CARD_SZ = 80;
 const LABEL_SZ = 40;
 const FIELD_SZ = 160;
@@ -61,12 +62,6 @@ function hexGrid(pool, loc, o, oid, path, omap) {
 	//timit.showTime('skeleton done');
 	generalGrid(board, fields, corners, edges, loc, agHex);
 
-	// each ui created will get an address and a UID and be linked in 
-	registerObject(board,'m',loc);
-	registerDict(fields);
-	registerDict(corners);
-	registerDict(edges);
-
 }
 function quadGrid(pool, loc, o, oid, path, omap) {
 	if (USE_OLD_GRID_FUNCTIONS) return _quadGrid(loc, oid, omap, pool);
@@ -76,33 +71,12 @@ function quadGrid(pool, loc, o, oid, path, omap) {
 	return generalGrid(board, fields, corners, edges, loc, agRect);
 
 }
-function registerObject(o, idType, loc,cat){
-	//o must have oid (in path notation) and o
-	let id = getUID();
-	let mk = new MK();
-	mk.o=o.o;
-	mk.info = o.info;
-
-	mk.id=id;
-	mk.idType = idType;
-	if (o.ui){mk.elem = mk.parts.elem=o.ui;mk.elem.id=id;}
-	mk.loc = loc; //id of containing ui (can be in UIS or just a div)
-	let oid = stringBefore(o.oid,'.');
-	mk.path=o.oid;
-	mk.oid=oid;
-	mk.cat=cat;
-	linkObjects(id, oid);
-	listKey(IdOwner, idType, id);
-	console.log(idType)
-	UIS[id] = mk;
-	return mk;
-}
 function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
 
 	//hab hiermit board,fields,corners,edges dicts mit {o,oid,info}
 
 	// *** stage 0: sizing info ***
-	let size = 50;//FIELD_SZ;//sollte multiple of 4 sein! weil wdef=4
+	let size = 100;//FIELD_SZ;//sollte multiple of 4 sein! weil wdef=4
 	let gap = 4;
 
 	let [fw, fh, wField, hField] = [size / board.info.wdef, size / board.info.hdef, size - gap, size - gap];
@@ -114,11 +88,11 @@ function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
 	let pal = getTransPalette('silver');
 	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
 
-	let mk = registerObject(board,'m',loc,'g');
-	
-	for (const oid in fields) { let o=fields[oid]; let el = gG(); fieldFunc(el, wField, hField); gBg(el, fieldColor); o.ui = el; registerObject(o,'m',mk.id,'g'); }
-	for (const oid in edges) { let o=edges[oid]; let el = gG(); gFg(el, edgeColor, 10); o.ui = el; registerObject(o,'m',mk.id,'g'); }
-	for (const oid in corners) { let o=corners[oid]; let el = gG(); agCircle(el, szCorner); gBg(el, nodeColor); o.ui = el; registerObject(o,'m',mk.id,'g'); }
+	let mk = registerObject(board, 'm', loc, RSGTYPES.board);
+
+	for (const oid in fields) { let o = fields[oid]; let el = gG(); fieldFunc(el, wField, hField); gBg(el, fieldColor); o.ui = el; registerObject(o, 'm', mk.id, RSGTYPES.field); }
+	for (const oid in edges) { let o = edges[oid]; let el = gG(); gFg(el, edgeColor, 10); o.ui = el; registerObject(o, 'm', mk.id, RSGTYPES.edge); }
+	for (const oid in corners) { let o = corners[oid]; let el = gG(); agCircle(el, szCorner); gBg(el, nodeColor); o.ui = el; registerObject(o, 'm', mk.id, RSGTYPES.corner); }
 
 	//uis sind board,fields,corners,edges .map(x=>x.ui)
 	timit.showTime('stage 1 done');
@@ -147,6 +121,7 @@ function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
 	board.ui = board.div = container;
 	board.svg = svgContainer;
 	board.g = gContainer; gContainer.id = board.id; //this counts as loc for board elements
+	registerUiFor(mk,container);
 
 	let [wTotal, hTotal] = [wBoard + 2 * gap, hBoard + 2 * gap];
 	mStyle(container, { width: wTotal, height: hTotal, 'border-radius': gap });

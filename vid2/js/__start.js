@@ -127,7 +127,7 @@ function _startStep() {
 	t_total += timit.getTotalTimeElapsed();
 	t_avg = t_total/route_counter;
 	timit.showTime('*presentation done! ...'+t_avg);
-	console.log('route_counter',route_counter)
+	//console.log('route_counter',route_counter)
 
 
 

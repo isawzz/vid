@@ -57,7 +57,11 @@ function sendRestartGame(username, seed, callbacks) {
 }
 function sendRoute(cmd, callback) { _sendRoute(cmd, callback); }
 function sendStatus(username, callbacks) {
+	statusCallerUsername = username;
 	_sendRouteJS('/status/' + username, data => {
+
+		//if (data.waiting_for) G.player=null;
+
 		// console.log('back from _sendStatusJS in sendStatus, data:',data)
 		if (!isEmpty(callbacks)) callbacks[0](data, arrFromIndex(callbacks, 1));
 	});

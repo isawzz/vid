@@ -1,15 +1,35 @@
 //convert data to various objects in G and M >pre-UI processing
+var statusCallerUsername=null;
+var gamePlayerId = null;
+
+function preprocessPlayerData(data){
+	//console.log(data);
+	//console.log(data.players,data.options,S.players)
+	if (!G.end && !data.waiting_for && data.players && data.options && S && S.players){
+		for(const plid in S.players){
+			if (S.players[plid].username == statusCallerUsername){
+				data.players[plid].obj_type == 'GamePlayer';
+				//console.log(plid,'is game player!!!')
+				gamePlayerId = plid;
+				G.serverData.players[plid].obj_type = 'GamePlayer'
+			}else data.players[plid].obj_type == 'opponent';
+		}
+	}
+}
+
 function processData(data) {
 	// timit.showTime('start processing');
 
+	//als erstes preprocess damit weiss wer gamePlayer ist
+	preprocessPlayerData(data);
 
 	if (G.end) {
 		//noch von voriger runde!
-		console.log(USERNAME, 'has G.end!!!!')
+		//console.log(USERNAME, 'has G.end!!!!')
 		stopBlinking('a_d_status');
 		stopInteraction();
 		clearLog();
-		console.log('signals:', G.signals)
+		//console.log('signals:', G.signals)
 		//delete G.signals.receivedEndMessage;
 	}
 	S.gameInProgress = true;
@@ -85,7 +105,10 @@ function processTable(data) {
 function processPlayers(data) {
 	//should also process player change!!!
 	//should return true if proceed (it's this terminals turn) or false
-	if (!S.players) _initPlayers();  //adding additional player info for RSG! such as index,id,altName,color
+	if (!S.players) {
+		_initPlayers();  //adding additional player info for RSG! such as index,id,altName,color
+		preprocessPlayerData(data);
+	}
 	G.playersCreated = [];
 	G.playersRemoved = [];
 	G.playersUpdated = {}; //updated also has prop change info
@@ -95,12 +118,26 @@ function processPlayers(data) {
 	let canProceed = false;
 
 	delete G.playerChanged;
+
+	if (gamePlayerId != G.player){
+		G.player = gamePlayerId;
+		G.serverData.players[gamePlayerId].obj_type = 'GamePlayer';
+		G.playerChanged = true;
+	}
+
+	//console.log('_________________________DATA.PLAYERS')
+	//console.log(data.players);
+	data=G.serverData;
 	if (data.players) {
 		let plkeys = union(Object.keys(G.players), Object.keys(data.players));
+
 		for (id of plkeys) {
 			let pl_new = id in data.players ? data.players[id] : null;
-			let pl_old = id in G.players ? G.players[id] : null;
+			//console.log(pl_new,'......................')
+			let pl_old = {};// id in G.players ? G.players[id] : null;
 			let changes = propDiffSimple(pl_old, pl_new); //TODO: could add prop filter here already!!!
+			// changes.summary.push('obj_type');
+			//console.log(changes.summary,'----------------------------')
 			if (changes.hasChanged) {
 				G.playersUpdated[id] = changes;
 				if (nundef(pl_old)) {
@@ -110,6 +147,7 @@ function processPlayers(data) {
 				}
 			}
 			if (pl_new.obj_type == 'GamePlayer') {
+				//console.log('FOUND GAME PPLAYER',id,'!!!!!!!!!!!!!!!!!!')
 				//id is the GamePlayer!
 				//if id is me, do as before: set G.player = id
 				//else if id is frontAI, and G.previousPlayer is me, also
@@ -121,20 +159,21 @@ function processPlayers(data) {
 				if (id != G.previousPlayer) G.playerChanged = true;
 
 				//console.log(id,'isMyPlayer?',isMyPlayer(id))
-				//if (G.previousPlayer) console.log(G.previousPlayer,'isMyPlayer?',isMyPlayer(G.previousPlayer))
+				//if (G.previousPlayer) //console.log(G.previousPlayer,'isMyPlayer?',isMyPlayer(G.previousPlayer))
 				//console.log(id,'isFrontAIPlayer?',isFrontAIPlayer(id))
 
 				//console.log('G.player is',G.player)
 				if (nundef(G.player) || isMyPlayer(id) || G.player == id || isMyPlayer(G.previousPlayer) && isFrontAIPlayer(id)) {
 					G.player = id;
+					console.log('set G.player',id,'..........')
 					G.playerIndex = S.players[id].index;
 					canProceed = true;
 				} else {
 					console.log('this must be multiplayer mode!!! OR i will never get here hopefully!!!!!!!!!!!!!!!!')
-					console.log('playmode:', PLAYMODE, S.settings.playmode);
-					console.log('I am', G.player, 'player changed:', G.playerChanged)
-					console.log('processPlayers: waiting for', G.serverData.waiting_for);
-					console.log('NOT MY TURN!!! HAVE TO WAIT!!!');
+					//console.log('playmode:', PLAYMODE, S.settings.playmode);
+					//console.log('I am', G.player, 'player changed:', G.playerChanged)
+					//console.log('processPlayers: waiting for', G.serverData.waiting_for);
+					//console.log('NOT MY TURN!!! HAVE TO WAIT!!!');
 				}
 
 			}
@@ -231,11 +270,11 @@ function expand1_99(x) {
 	//console.log('expand1_99 input', tsRec(x))
 	//console.log('expand1_99');
 	if (isList(x)) {
-		console.log('expand1_99: x should be dict BUT is a list', x);
+		//console.log('expand1_99: x should be dict BUT is a list', x);
 	}
 	if (isDict(x)) { // TODO:  || isList(x)) {
 		// if (isList(x)) {
-		// 	console.log('process: list',x)
+		// 	//console.log('process: list',x)
 		// }
 		if ('_set' in x) {
 			//console.log('handleSet wird aufgerufen')

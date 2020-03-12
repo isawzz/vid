@@ -67,7 +67,6 @@ function getBoatWith(lst, isGood = true) {
 	}
 	return null;
 }
-function makeIdInfobox(oid) { return 'i_i_' + oid; }
 function makeIdDefaultObject(oid) { return 'd_t_' + oid; }
 function makeIdDefaultPlayer(oid) { return 'd_p_' + oid; }
 function strategicBoat(goodlist, badlist) {

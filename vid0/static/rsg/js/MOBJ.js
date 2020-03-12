@@ -22,7 +22,7 @@ class MOBJ {
 		//soll das ein g oder ein d sein?
 		//sollte eigentlich fuer beide gehen!
 		//zuerst als g
-		console.log('_picto, type of iconChars is',getTypeOf(iconChars));
+		//console.log('_picto, type of iconChars is',getTypeOf(iconChars));
 		let ch = getTypeOf(iconChars)=='Object'?iconChars[key] : iconChars.get(key);
 		if (!ch) ch=iconChars.get('crow');
 		return this._pictoFromChar(ch,x,y,w,h,fg,bg);

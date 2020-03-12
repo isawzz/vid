@@ -120,13 +120,13 @@
 	display: grid;
 	grid-template-columns: var(--wActions) var(--wGame) minmax(var(--wPlayers),auto) minmax(var(--wActions),auto);
 	grid-template-rows:calc(2*var(--hTabs)) var(--hTabs)  var(--hGame) minmax(800px, auto);
-	grid-template-layout_alias:
+	grid-template-areas:
 		'h h h h'
 		'ah s hp hh'
 		'a g p l'
 		'bl t t t';
 	grid-gap: 4px;
-	background-color: null;
+	/* background-color: null; */
 	min-height: 100%;
 	width: 100%;
 	color: white;

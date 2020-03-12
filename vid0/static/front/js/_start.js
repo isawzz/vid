@@ -11,7 +11,7 @@ var SPEC;
 
 async function _start() {
 
-	timit = new TimeIt(getFunctionCallerName(),true);
+	timit = new TimeIt(getFunctionCallerName(),false);
 	vidCache = new LazyCache();
 	vidCache_dep = new VidCache_dep();
 

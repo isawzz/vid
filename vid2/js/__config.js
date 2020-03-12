@@ -6,15 +6,15 @@ var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const USE_MAX_PLAYER_NUM = true; // true | false
-const TIMIT_SHOW = true; // true | false
-const SHOW_SERVER_ROUTE = true; // true | false
+const TIMIT_SHOW = false; // true | false
+const SHOW_SERVER_ROUTE = false; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
 const SHOW_SPEC_CODE_DATA = false; // true | false
 const USE_OLD_GRID_FUNCTIONS = false;// true | false
 
 //when testing, uses files in tests/GAME/uspecN and codeN
 const RUNTEST = false; // true | false
-const TESTING = false; // true | false
+const TESTING = true; // true | false
 const TEST_PATH = '/vid2/tests/';
 const DSPEC_VERSION = 2;
 const USPEC_VERSION = 1;

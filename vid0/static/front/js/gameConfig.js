@@ -42,7 +42,7 @@ var allGames1 = {
 };
 //#endregion
 
-var allGames = null; //allGames1
+var allGames = allGames1;
 var numPlayersMin = 0;
 var numPlayersMax = 8;
 var currentSeed;
@@ -69,6 +69,7 @@ function closeGameConfig() {
 	hide('bLobbyCancel');
 }
 function ensureAllGames(callbacks = []) {
+	console.log(allGames);
 	if (allGames == null) {
 		sendGetAllGames(d => {
 			allGames = d;

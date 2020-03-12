@@ -1,4 +1,5 @@
 function specAndDOM(callbacks = []) {
+	//console.log('haloooooooooooo')
 	flags.specAndDOM = false;
 	initSETTINGS();
 	initPageHeader();

@@ -50,13 +50,14 @@ function onClickFilterOrInfobox(ev, mk, part) {
 	//console.log('ocFilterOr')
 	if (!ev.ctrlKey) onClickFilterTuples(ev, mk, part);
 	else {
-		openInfobox(ev, mk, part);
+		//console.log('should open infobox')
+		openInfobox(mk.oid,mk);//ev, mk, part);
 	}
 }
 
 function onClickFilterAndInfobox(ev, mk, part) { onClickFilterTuples(ev, mk, part); onClickPlusControlInfobox(ev, mk, part); }
 
-function onClickPlusControlInfobox(ev, mk, part) { if (ev.ctrlKey) { openInfobox(ev, mk, part); } }
+function onClickPlusControlInfobox(ev, mk, part) { if (ev.ctrlKey) { openInfobox(mk.oid,mk);}}//ev, mk, part); } }
 function onClickPollStatus() {
 	//poll status for USERNAME, and if does not work, poll for waiting for if it belongs to me!
 

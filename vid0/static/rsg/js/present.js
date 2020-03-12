@@ -189,6 +189,7 @@ function presentStatus() {
 		mobj.clear(); clearElement(d);
 
 		//make aux for current player (TODO: could reuse these but maybe not necessary)
+		//console.log(G.player,G.playersAugmented)
 		let pl = G.player;
 		let msStatus = makeAux(G.playersAugmented[pl].username + ' (' + pl + ')', pl, areaName);
 		let color = getPlayerColor(pl);
@@ -319,7 +320,7 @@ function presentWaitingFor() {
 	}
 	if (S.settings.playmode != 'passplay' && (isMyPlayer(pl) || isFrontAIPlayer(pl) && isMyPlayer(G.player))) {
 		let user = G.playersAugmented[pl].username;
-		//console.log('just switching username to', user)
+		console.log('just switching username to', user)
 		sendStatus(user, [gameStep]);
 	} else if (S.settings.playmode == 'passplay') {
 		//this is where I have to output message: NOT YOU TURN ANYMORE!!!!! please click pass!!!

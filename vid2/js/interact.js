@@ -12,6 +12,7 @@ function startInteraction() {
 	if (isdef(IdOwner.r)) IdOwner.r.map(x => _addStandardInteraction(x));
 	//if (isdef(IdOwner.s)) IdOwner.s.map(x => addStandardInteraction(x)); //anderen clickHandler
 	if (isdef(IdOwner.t)) IdOwner.t.map(x => _addStandardInteraction(x)); //anderen clickHandler
+	if (isdef(IdOwner.m)) IdOwner.m.map(x => _addStandardInteraction(x)); //anderen clickHandler
 	_preselectFirstVisualsForBoats();
 	choiceCompleted = false;
 	let nBoats = getBoatIds().length;
@@ -20,7 +21,7 @@ function startInteraction() {
 		//console.log(nBoats<2?'autoplay:...only 1 option!!!':'different function....');
 		setTimeout(onClickStep, AIThinkingTime);
 		return;
-	} else if (!isEmpty(scenarioQ)){
+	} else if (!isEmpty(scenarioQ)) {
 		let func = scenarioQ.shift();
 		//console.log(func.name,'wird aufgerufen!!!')
 		func();
@@ -75,6 +76,7 @@ function checkArrowKeys(ev) {
 //#region utilities
 function highlightMsAndRelatives(ev, mk, partName) {
 	//console.log(mk.id,partName)
+	if (nundef(mk)) return;
 	let id = mk.id;
 	//console.log('------------>id',id)
 	mk.high(partName);
@@ -88,6 +90,8 @@ function highlightMsAndRelatives(ev, mk, partName) {
 
 }
 function unhighlightMsAndRelatives(ev, mk, partName) {
+	if (nundef(mk)) return;
+	//console.log('mk',mk)
 	let id = mk.id;
 	mk.unhigh(partName);
 	let relativeIds = id2uids[id];
@@ -116,53 +120,60 @@ function _addFilterHighlight(mk) { mk.highC('green'); }
 function _addStandardInteraction(id) {
 	//console.log(id)
 	let mk = UIS[id];
-	switch (id[2]) {
+	if (id[0] == '_') {
+		//console.log(id,mk);
+		mk.addClickHandler('elem', onClickFilterOrInfobox);
+		if (mk.isa.card) {
+			//card should also be magnified or minified!
+			mk.addMouseEnterHandler('elem', _highlightAndMagnify);
+			mk.addMouseLeaveHandler('elem', _unhighlightAndMinify);
+		} else {
+			mk.addMouseEnterHandler('elem', highlightMsAndRelatives);
+			mk.addMouseLeaveHandler('elem', unhighlightMsAndRelatives);
+		}
 
-		case 'a':
-			mk.addClickHandler('elem', onClickSelectTuple);
-			mk.addMouseEnterHandler('title', highlightMsAndRelatives);
-			mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
-			break;
+	} else {
+		switch (id[2]) {
 
-		case 'l':
-		case 'r':
-			mk.addMouseEnterHandler('title', highlightMsAndRelatives);
-			mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
-			break;
+			case 'a':
+				mk.addClickHandler('elem', onClickSelectTuple);
+				mk.addMouseEnterHandler('title', highlightMsAndRelatives);
+				mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+				break;
 
-		case 't':
-			if (id[0] == 'm') { //main table objects!!!!!
-				
-				mk.addClickHandler('elem', onClickFilterOrInfobox);
+			case 'l':
+			case 'r':
+				mk.addMouseEnterHandler('title', highlightMsAndRelatives);
+				mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+				break;
 
-				// if (mk.isa.deck) {
-				// 	//card should also be magnified or minified!
-				// 	//console.log('adding mouse handler to deck!!!')
-				// 	mk.addMouseEnterHandler('topmost', highlightMsAndRelatives);
-				// 	mk.addMouseLeaveHandler('topmost', unhighlightMsAndRelatives);
-				// } else 
-				if (mk.isa.card) {
-					//card should also be magnified or minified!
-					mk.addMouseEnterHandler('title', _highlightAndMagnify);
-					mk.addMouseLeaveHandler('title', _unhighlightAndMinify);
+			case 't':
+				if (id[0] == 'm') { //main table objects!!!!!
+
+					mk.addClickHandler('elem', onClickFilterOrInfobox);
+					if (mk.isa.card) {
+						//card should also be magnified or minified!
+						mk.addMouseEnterHandler('title', _highlightAndMagnify);
+						mk.addMouseLeaveHandler('title', _unhighlightAndMinify);
+					} else {
+						mk.addMouseEnterHandler('title', highlightMsAndRelatives);
+						mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
+					}
+
+
 				} else {
+					mk.addClickHandler('elem', onClickFilterTuples);
 					mk.addMouseEnterHandler('title', highlightMsAndRelatives);
 					mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
 				}
+				break;
 
-
-			} else {
+			default:
 				mk.addClickHandler('elem', onClickFilterTuples);
 				mk.addMouseEnterHandler('title', highlightMsAndRelatives);
 				mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
-			}
-			break;
-
-		default:
-			mk.addClickHandler('elem', onClickFilterTuples);
-			mk.addMouseEnterHandler('title', highlightMsAndRelatives);
-			mk.addMouseLeaveHandler('title', unhighlightMsAndRelatives);
-			break;
+				break;
+		}
 	}
 }
 function _preselectFirstVisualsForBoats() {
@@ -190,6 +201,7 @@ function _removeInteraction(id) { let mk = UIS[id]; mk.removeHandlers(); mk.unhi
 function _hideBoat(id) { let mk = UIS[id]; mk.hide(); mk.o.weg = true; }
 function _showBoat(id) { let mk = UIS[id]; mk.show(); mk.o.weg = false; }
 function _highlightNextBoat() {
+	console.log('..._highlightNextBoat')
 	if (!boatHighlighted) _highlightBoat(getFirstBoatId());
 	else {
 		//console.log('boatHighlighted',boatHighlighted);
@@ -203,7 +215,7 @@ function _highlightPrevBoat() {
 	if (!boatHighlighted) _highlightBoat(getLastBoatId()); else _highlightBoat(getBoatIdByIdx(boatHighlighted.o.iTuple - 1));
 }
 function _highlightBoat(id) {
-	//console.log('...highlighBoat',id)
+	console.log('..._highlighBoat',id)
 	if (id === null) return;
 	if (boatHighlighted) {
 		if (boatHighlighted.id == id) return;
@@ -216,14 +228,22 @@ function _highlightBoat(id) {
 
 }
 function _openInfoboxesForBoatOids(boat) {
+	console.log('halooooooooooooo')
 	let oids = boat.o.oids;
-	let mainIds = oids.map(x => getMainId(x));
-	for (const id of mainIds) {
-		let mk = UIS[id];
-		openInfobox(null, mk);
-	}
+	//koennte mehrere mainIds geben! fuer 1 oid
+	//in dem fall only take first one
+	//besser ist aber: ueberlass das den infoboxes selbst!
+	oids.map(x=>openInfobox(oid));
+
+	// let mainIds = oids.map(x => getMainId(x));
+	// for (const id of mainIds) {
+	// 	let mk = UIS[id];
+	// 	openInfobox(null, mk);
+	// }
 }
-function _closeInfoboxesForBoatOids(boat) {
+
+// ^^^ soll ich da nicht gleich clearInfoboxes machen?????
+function _closeInfoboxesForBoatOids(boat) { 
 	let oids = boat.o.oids;
 	for (const oid of oids) hideInfobox(oid);
 }

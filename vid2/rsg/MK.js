@@ -45,7 +45,7 @@ class MK {
 
 		}
 	}
-	
+
 	//#endregion
 
 	//#region text
@@ -838,7 +838,7 @@ class MK {
 			name = s2;
 			//if (this.id == 'm_t_0' ||this.id=='d_t_Blue') console.log('5', name);
 			//console.log('name',name,isdef(name),isEmpty(name))
-			return isEmpty(name)? 'elem':name;
+			return isEmpty(name) ? 'elem' : name;
 		} catch{
 			name = 'elem';
 			return name;
@@ -949,8 +949,17 @@ class MK {
 		else { let bg = part.bg; if (nundef(bg)) bg = null; part.style.backgroundColor = bg; if (isdef(bg)) part.style.color = colorIdealText(bg); }
 	}
 	high(pname = 'elem', elIfMiss = true) {
-		if (this.cat == 'g') console.log('high',this)
+		if (this.rsg < 100) {
+			//console.log('container!');
+			return;
+		} //TODO!!!!!!!!!!! ^^^
+		if (this.cat == 'g') {
+			//console.log('high', this);
+			this.addClass(this.elem, 'high');
+			return;
+		}
 		let part = this._getPart(pname, elIfMiss);
+		//console.log('part',part)
 		if (!part) return; //{//console.log('no part',pname); return;}
 		if (this.cat == 'g') {
 			if (this.isPicto) {
@@ -966,6 +975,11 @@ class MK {
 
 	}
 	unhigh(pname = 'elem', elIfMiss = true) {
+		if (this.cat == 'g') { 
+			//console.log('unhigh', this); 
+			this.removeClass(this.elem, 'high'); 
+			return;
+		}
 		let part = this._getPart(pname, elIfMiss);
 		if (!part) return;
 		if (this.cat == 'g') {
@@ -1252,11 +1266,11 @@ class MK {
 
 
 	}
-	resetMKTransform(partName = 'elem'){
+	resetMKTransform(partName = 'elem') {
 		let el = this.parts[partName];
-		el.style.transform='none';
+		el.style.transform = 'none';
 	}
-	setMKTransform(x,y,scale,rot=0, partName = 'elem') {
+	setMKTransform(x, y, scale, rot = 0, partName = 'elem') {
 
 		//transform: rotate(15deg) translate(-20px,0px);
 		let el = this.parts[partName];
@@ -1279,7 +1293,7 @@ class MK {
 		if (this.cat == 'd') {
 			el.style.transformOrigin = '0% 0%';//`scale(${scale})`;
 			el.style.transform = `scale(${scale})`;
-		}else this._setTransform(el, { x: this.x, y: this.y, scaleX: scale, scaleY: scale });
+		} else this._setTransform(el, { x: this.x, y: this.y, scaleX: scale, scaleY: scale });
 	}
 	setShape(shape) {
 		//replaces ground and overlay!
@@ -1341,7 +1355,7 @@ class MK {
 	}
 	title(s, key = 'title', color = 'dimgray') {
 		if (this.parts[key]) {
-			//console.log('HALLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO', this.parts[key], this.elem); 
+			error('already has title! HALLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO'+ this.id); 
 			this.parts[key].style.backgroundColor = randomColor();
 			return;
 		}
@@ -1349,35 +1363,12 @@ class MK {
 		t.style.borderRadius = '6px';
 		t.style.padding = '4px 8px';
 		let bg = color;
-		//t.style.backgroundColor = bg;
 		t.classList.add('tttitle');
 		t.innerHTML = s;
 		this.elem.appendChild(t);
 		this.parts[key] = t;
-		//add these props to part:
-		//$(t).attrs({ name: key });//, bg: bg });
 		t.setAttribute('name', key);
 		this.setBg(bg, { updateFg: (color != 'dimgray'), partName: key });
-		// t.name = key;
-		// t.bg = t.style.backgroundColor;
-		return this;
-	}
-	table(o, keys, key = 'table') {
-		if (this.parts[key]) {
-			let oldTable = this.parts[key];
-			let t = tableElem(o, keys);
-			let t2 = t.innerHTML;
-			oldTable.innerHTML = t2;
-		} else {
-			let t = tableElem(o, keys);
-			this.elem.appendChild(t);
-			this.attach();
-			this.parts[key] = t;
-			// t.name = key;
-			t.setAttribute('name', key);
-
-		}
-
 		return this;
 	}
 	tableX(o, keys, key = 'table') {
@@ -1390,16 +1381,18 @@ class MK {
 		tNew.name = key;
 
 		if (replace) {
+			console.log('replacing old table!!!')
 			let oldTable = this.parts[key];
 			let oldRefs = this.refs[key];
 			//console.log(oldRefs);
 			if (isdef(oldRefs)) {
 				oldRefs.map(x => {
-					//console.log('tableX',this.id,'deleting ref', x);
+					console.log('tableX',this.id,'deleting ref', x);
 					deleteRSG(x);
 				});
 				delete this.refs[key];
 			}
+
 			oldTable.innerHTML = tNew.innerHTML;
 		} else {
 			this.elem.appendChild(tNew);
@@ -1414,30 +1407,39 @@ class MK {
 		}
 		return this;
 	}
-	tableY(o, keys, key = 'table') {
+	tableNoAttach(o, keys, key = 'table') {
 		let replace = isdef(this.parts[key]);
 
-		let res = tableElemY(o, keys);
+		let res = tableElemX(o, keys);
 		//console.log(res)
 		let tNew = res.table;
 		let rNew = res.refs.map(x => x.id);
 		tNew.name = key;
 
 		if (replace) {
+			console.log('replacing old table!!!')
 			let oldTable = this.parts[key];
 			let oldRefs = this.refs[key];
 			//console.log(oldRefs);
-			if (isdef(oldRefs)) { oldRefs.map(x => deleteRSG(x)); delete this.refs[key]; }
+			if (isdef(oldRefs)) {
+				oldRefs.map(x => {
+					console.log('tableX',this.id,'deleting ref', x);
+					deleteRSG(x);
+				});
+				delete this.refs[key];
+			}
+
 			oldTable.innerHTML = tNew.innerHTML;
 		} else {
 			this.elem.appendChild(tNew);
-			this.attach();
+			//this.attach();
 			this.parts[key] = tNew;
 		}
 
 		if (!isEmpty(res)) {
 			makeRefs(this.id, res.refs);
 			this.refs[key] = rNew; //keep list of refs for key
+			//console.log(this.id,key,this.refs[key])
 		}
 		return this;
 	}

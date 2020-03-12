@@ -155,56 +155,6 @@ function mapOMap(omap, pool) {
 
 
 
-//#region older code not separating ui creation and layout!
-function showPictoDivCentered(key, area, color = 'blue', sz = 50) { 
-	let d = pictoDiv(key, color, sz, sz); 
-	mAppend(area,d);
-	posCIC(d); 
-	return d;
-}
-function showPictoDiv(key, area, color = 'blue', x = 0, y = 0, w = 50, h = 0) { 
-	let d = pictoDiv(key, color, w, h ? h : w); 
-	mAppend(area, d); 
-	mPos(d, x, y); 
-	return d; 
-}
-function addPictoDiv(key, area, color = 'blue', w = 50, h = 0) {
-	let d = pictoDiv(key, color, w, h ? h : w);
-	mAppend(area, d);
-	return d;
-}
-function showPicLabel(key, label, area, color = 'blue', x = 0, y = 0, sz = 50, gap = 4) {
-	console.log(key, label, area, color, x, y, sz, gap)
-	let dOuter = mCreate('div');
-	let wOuter = sz;
-	let wInner = sz - 2 * gap;
-
-	mStyle(dOuter, {
-		color: 'black',
-		width: wOuter,
-		left: x,
-		top: y,
-		padding: 0,
-		position: 'absolute',
-		'text-align': 'center',
-		'background-color': randomColor(),
-		display: 'inline'
-	});
-	let dPic = addPictoDiv(key, dOuter, color, wInner);
-	mStyle(dPic, { margin: gap, 'margin-bottom': 1 })
-	let dText = mAppendText(dOuter, label);
-	dText.classList.add('truncate');
-	mStyle(dText, { 'margin-bottom': gap, width: wOuter });
-	area=asElem(area);
-	mPosRel(area);
-	mAppend(area, dOuter);
-}
-function showPicLabelCentered(key, label, area, color = 'blue', sz = 50, gap = 4) {
-	let d=showPicLabel(key,label,area,color,0,0,sz,gap);
-}
-//#endregion older code not separating ui creation and layout!
-
-
 
 
 

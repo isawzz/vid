@@ -1,11 +1,3 @@
-function hexhex(w,h){ return o=>hex123(o,w,h);}
-function hex123(o){
-	
-
-}
-
-
-
 
 
 

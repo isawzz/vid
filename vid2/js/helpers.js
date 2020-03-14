@@ -963,7 +963,10 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 		let pBounds = getBounds(dParent);
 		w = pBounds.width + 'px';
 		h = pBounds.height + 'px';
-
+		if (pBounds.width == 0){
+			w='100%';
+			h='100%';
+		}
 		//console.log('--- addSvgg: CORRECTING MISSING WIDTH AND HEIGHT ON PARENT ---', dParent.id,w,h);
 
 		// svg1.setAttribute('width', pBounds.width + 'px');

@@ -26,7 +26,7 @@ function makeCardMK(oid, o, areaName) {
 	mk.cat = DOMCATS[mk.domType];
 	let parent = UIS[idArea]; //hand area
 	let idParent = parent.id;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	parent.children.push(id);
 
 	mk.o = o;
@@ -212,7 +212,7 @@ function makeDeckSuccess(oid, o, areaName) {
 	mobj.parts.elem = mobj.elem;
 	mobj.domType = getTypeOf(mobj.elem);
 	mobj.cat = DOMCATS[mobj.domType];
-	mobj.idParent = areaName;
+	mobj.loc = areaName;
 	UIS[areaName].children.push(id);
 	//console.log('******** vor link', id, oid)
 	listKey(IdOwner, id[2], id);

@@ -1,0 +1,30 @@
+
+views:
+  - areaTable:
+      rsgType: gridLayout #existing function
+      layout: [areaMain areaOpps,areaPlayer]
+  - playerArea:
+      rsgType: gridLayout
+      layout: []
+  - areaOppsList:
+      rsgType: areaForeach
+      layout: vertical
+      gsmType: opponent
+      pool: players #default pool is table
+      postfix: self.name
+
+  #following 2 sections can be ommitted because default!
+  - areaPlayer:
+      rsgType: playerArea
+  - areaMain:
+      rsgType: area 
+
+type:
+  playerArea:
+    declare
+#after this have areas named areaMain,areaOpps.Player1,areaOpps.Player2...,areaPlayer      
+
+placement:
+
+
+

@@ -13,7 +13,7 @@ function rMergeSpec() {
 	// document.getElementById('SPEC').innerHTML = '<pre id="spec-result"></pre>';
 	// document.getElementById("spec-result").innerHTML = JSON.stringify(SPEC, undefined, 2);
 
-	if (SHOW_SPEC_CODE_DATA) mById('SPEC').innerHTML = '<pre>"' + jsonToYaml(SPEC) + '"</pre>';
+	if (SHOW_SPEC) mById('SPEC').innerHTML = '<pre>"' + jsonToYaml(SPEC) + '"</pre>';
 
 
 	//console.log(defaultSpec.color,userSpec.color,SPEC.color)

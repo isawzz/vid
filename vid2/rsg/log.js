@@ -13,7 +13,7 @@ function logGetDiv(plid) {
 		d.id = id;
 		LOG[plid] = d;
 	}
-	d.style.maxHeight = getBounds('table').height+'px';
+	d.style.maxHeight = getBounds('areaTable').height+'px';
 	return d;
 }
 function logClearAll() { LOG = {}; clearElement('logDiv'); LOGDIVS = []; }

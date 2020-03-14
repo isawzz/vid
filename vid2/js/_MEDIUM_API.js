@@ -15,7 +15,7 @@ function makeArea(areaName, idParent) {
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(mk.elem);
 	mk.cat = DOMCATS[mk.domType];
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 	mk.attach();
@@ -207,7 +207,7 @@ function layoutCardsOverlapping(mkHand, mkCardList) {
 	//now have to attach cards to hand!
 	let iz = 10;
 	for (const card of mkCardList) {
-		card.idParent = mkHand.id;
+		card.loc = mkHand.id;
 		card.attach('body');
 		card.zIndex = card.elem.style.zIndex = iz;
 		iz += 1;

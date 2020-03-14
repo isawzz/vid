@@ -850,7 +850,8 @@ class MK {
 		return name; //this is not executed! name out of scope!!!!!!!
 	}
 	_handler(ev) {
-		//console.log(ev)
+		//console.log(ev,this)
+		//if (this.oid == '9') console.log(ev,this)
 		ev.stopPropagation();
 		let eventName = ev.type;
 		if (!this.isEnabled) return;
@@ -950,7 +951,7 @@ class MK {
 	}
 	high(pname = 'elem', elIfMiss = true) {
 		if (this.rsg < 100) {
-			//console.log('container!');
+			console.log('container! high');
 			return;
 		} //TODO!!!!!!!!!!! ^^^
 		if (this.cat == 'g') {
@@ -975,6 +976,10 @@ class MK {
 
 	}
 	unhigh(pname = 'elem', elIfMiss = true) {
+		if (this.rsg < 100) {
+			console.log('container! unhigh');
+			return;
+		} //TODO!!!!!!!!!!! ^^^
 		if (this.cat == 'g') { 
 			//console.log('unhigh', this); 
 			this.removeClass(this.elem, 'high'); 
@@ -1134,14 +1139,14 @@ class MK {
 	}
 	setFullSize() {
 		//sets size to fill parent completely
-		let parent = UIS[this.idParent]; if (nundef(parent)) return;
+		let parent = UIS[this.loc]; if (nundef(parent)) return;
 		this.setSize(parent.w, parent.h);
 		this.setPos(0, 0);
 	}
 	setBounds(x, y, w, h, unit = '%') {
 		//console.log('setBounds',x,y,w,h,unit)
 		let el = this.elem;
-		//console.log(el,this.idParent)
+		//console.log(el,this.loc)
 		// el.style.position = 'absolute';
 		// el.style.left='100px';
 		// el.style.top='100px';
@@ -1181,7 +1186,7 @@ class MK {
 		return this;
 	}
 	centerInDiv() {
-		this.parent = UIS[this.idParent];
+		this.parent = UIS[this.loc];
 
 		if (isdef(this.parent)) {
 			let d = this.elem;
@@ -1451,9 +1456,9 @@ class MK {
 	attach(partName) {
 		if (!this.isAttached) {
 			this.isAttached = true;
-			let parentMS = UIS[this.idParent];
+			let parentMS = UIS[this.loc];
 			let parentElem;
-			if (!parentMS) parentElem = mById(this.idParent);
+			if (!parentMS) parentElem = mById(this.loc);
 			else {
 				parentElem = isdef(partName) && isdef(parentMS.parts[partName]) ? parentMS.parts[partName] : parentMS.elem;
 			}
@@ -1464,16 +1469,16 @@ class MK {
 	detach(partName) {
 		if (this.isAttached) {
 			this.isAttached = false;
-			let parentMS = UIS[this.idParent];
+			let parentMS = UIS[this.loc];
 			let parentElem;
-			if (!parentMS) parentElem = mById(this.idParent);
+			if (!parentMS) parentElem = mById(this.loc);
 			else {
 				parentElem = isdef(partName) && isdef(parentMS.parts[partName]) ? parentMS.parts[partName] : parentMS.elem;
 			}
-			// let parentMS = UIS[this.idParent];
+			// let parentMS = UIS[this.loc];
 			// let parentElem = isdef(partName) && isdef(parentMS.parts[partName])?parentMS.parts[partName]:parentMS.elem;
 			parentElem.removeChild(this.elem);
-			// UIS[this.idParent].elem.removeChild(this.elem); 
+			// UIS[this.loc].elem.removeChild(this.elem); 
 		}
 		return this;
 	}
@@ -1501,7 +1506,7 @@ class MK {
 
 		this.elem = null;
 		this.isAttached = false;
-		let parent = UIS[this.idParent];
+		let parent = UIS[this.loc];
 		if (parent) removeInPlace(parent.children, this.id);
 	}
 	len() { return this.elem.children.length; }

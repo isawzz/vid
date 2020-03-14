@@ -8,6 +8,24 @@ var UPD={}; //all oids that have already been processed
 var PRES={};
 var DONE={};
 
+//#region access objects:
+function getVisual(oid){
+	let mk = UIS[getMainId(oid)]; //legacy!elim as soon as all mks created in library and factory
+	if (mk || USE_OLD_GRID_FUNCTIONS) return mk;
+	let oids = oid2ids[oid];
+	if (!oids || !IdOwner.m) return null;
+	let id = intersection(IdOwner.m,oid2ids[oid])[0]; 
+	return UIS[id];
+}
+function getVisuals(oid){
+	let mk = UIS[getMainId(oid)]; //legacy!elim as soon as all mks created in library and factory
+	if (mk || USE_OLD_GRID_FUNCTIONS) return mk;
+	let oids = oid2ids[oid];
+	if (!oids || !IdOwner.m) return null;
+	return intersection(IdOwner.m,oid2ids[oid]).map(x=>UIS[x]); 
+}
+
+
 function registerUiFor(mk,ui){mk.elem=ui;mk.elem.id=mk.id;mk.parts.elem=ui;mk.domType = getTypeOf(ui);mk.cat=DOMCATS[mk.domType];}
 function registerObject(o, idType, loc, rsgType) {
 	// o must have oid (in path notation) and o

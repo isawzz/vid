@@ -27,9 +27,9 @@ async function loadAssets(resetLocalStorage) {
 
 	allGamesC = await vidCache.load('allGames', route_allGames);
 	allGames = vidCache.asDict('allGames');
-	//console.log(allGames)
+	console.log('allGames',GAME,allGames[GAME]);
 	playerConfig = stubPlayerConfig(allGames); //stub to get player info
-
+	console.log('playerConfig',playerConfig[GAME]);
 	// console.log('testCards', testCards['green2']);
 	// console.log('c52', c52['card_2C']);
 	// console.log('icons', iconChars.crow);
@@ -50,7 +50,7 @@ async function loadSpecAndCode() {
 		userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);// last 2 params: reload, useLocal
 
 		url = TEST_PATH + GAME + '/data' + DATA_VERSION + '_' + initialPath + '.yaml';
-		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url)); // last 2 params: reload, useLocal
+		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url), true, false); // last 2 params: reload, useLocal
 		serverData = vidCache.asDict('_initial_' + initialPath);
 
 	} else {
@@ -70,7 +70,7 @@ async function loadSpecAndCode() {
 	loadCode(userCode.asText);
 	serverData = vidCache.asDict('_initial_' + initialPath);
 
-	if (!SHOW_SPEC_CODE_DATA) return;
+	if (!SHOW_CODE_DATA) return;
 
 	//timit.showTime('*** DONE ***');
 	// document.getElementById('userSpec').innerHTML = '<pre>' + userSpec.asText + '</pre>'; //PERFECT!!!!!!!!!!

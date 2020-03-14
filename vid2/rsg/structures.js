@@ -1,5 +1,5 @@
 //*** RSG structure types ***
-const RSGTYPES={board:1,hand:2,field:101,edges:102,corner:103};//unter 100:container types
+const RSGTYPES = { board: 1, hand: 2, field: 101, edge: 102, corner: 103 };//unter 100:container types
 const CARD_SZ = 80;
 const LABEL_SZ = 40;
 const FIELD_SZ = 160;
@@ -102,7 +102,70 @@ function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
 	//fields,edges,corners are g elements within board g
 
 
-	// *** stage 2: prep area div (loc 'table') as flexWrap ***
+	// *** stage 2: prep area div (loc 'areaTable') as flexWrap ***
+	//let area = mBy(loc);// 
+	let area = stage2_prepArea(loc);
+
+	timit.showTime('stage 2 done');
+	// *** stage 3: prep container div/svg/g (board) as posRel, size wBoard,hBoard ***
+	let container = stage3_prepContainer(area); //mColor(container, 'transparent'); //container is appended to area!!!!!!!
+
+	let svgContainer = gSvg();
+	let style = `margin:0;padding:0;position:absolute;top:0px;left:0px;width:100%;height:100%;border-radius:${gap}px;`;
+	svgContainer.setAttribute('style', style);
+	container.appendChild(svgContainer);
+
+	let gContainer = gG();
+	svgContainer.appendChild(gContainer);
+
+	board.ui = board.div = container;
+	board.svg = svgContainer;
+	board.g = gContainer; gContainer.id = board.id; //this counts as loc for board elements
+	registerUiFor(mk, container);
+
+	let [wTotal, hTotal] = [wBoard + 2 * gap, hBoard + 2 * gap];
+	mStyle(container, { width: wTotal, height: hTotal, 'border-radius': gap });
+	gContainer.style.transform = "translate(50%, 50%)"; //geht das schon vor append???
+	//console.log(wTotal, hTotal);
+
+	timit.showTime('stage 3 done');
+	// *** stage 4: layout! means append & positioning = transforms... ***
+	layoutGridInfo(board.g, fields, corners, edges, fw, fh);
+
+
+}
+function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
+
+	//hab hiermit board,fields,corners,edges dicts mit {o,oid,info}
+
+	// *** stage 0: sizing info ***
+	let size = 100;//FIELD_SZ;//sollte multiple of 4 sein! weil wdef=4
+	let gap = 4;
+
+	let [fw, fh, wField, hField] = [size / board.info.wdef, size / board.info.hdef, size - gap, size - gap];
+	let szCorner = Math.max(wField / 4, 20);
+	let [wBoard, hBoard] = [fw * board.info.w + szCorner, fh * board.info.h + szCorner];
+
+	// *** stage 1: convert objects into uis ***
+
+	let pal = getTransPalette('silver');
+	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];
+
+	let mk = registerObject(board, 'm', loc, RSGTYPES.board);
+
+	for (const oid in fields) { let o = fields[oid]; let el = gG(); fieldFunc(el, wField, hField); gBg(el, fieldColor); o.ui = el; registerObject(o, 'm', mk.id, RSGTYPES.field); }
+	for (const oid in edges) { let o = edges[oid]; let el = gG(); gFg(el, edgeColor, 10); o.ui = el; registerObject(o, 'm', mk.id, RSGTYPES.edge); }
+	for (const oid in corners) { let o = corners[oid]; let el = gG(); agCircle(el, szCorner); gBg(el, nodeColor); o.ui = el; registerObject(o, 'm', mk.id, RSGTYPES.corner); }
+
+	//uis sind board,fields,corners,edges .map(x=>x.ui)
+	timit.showTime('stage 1 done');
+
+	//area is div element treated as always (flexWrap)
+	//container=board is a div (posRel) with svg and g inside =>3 containers!
+	//fields,edges,corners are g elements within board g
+
+
+	// *** stage 2: prep area div (loc 'areaTable') as flexWrap ***
 	//let area = mBy(loc);// 
 	let area = stage2_prepArea(loc);
 
@@ -121,7 +184,7 @@ function generalGrid(board, fields, corners, edges, loc, fieldFunc) {
 	board.ui = board.div = container;
 	board.svg = svgContainer;
 	board.g = gContainer; gContainer.id = board.id; //this counts as loc for board elements
-	registerUiFor(mk,container);
+	registerUiFor(mk, container);
 
 	let [wTotal, hTotal] = [wBoard + 2 * gap, hBoard + 2 * gap];
 	mStyle(container, { width: wTotal, height: hTotal, 'border-radius': gap });

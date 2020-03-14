@@ -24,12 +24,12 @@ function makeDeckMS(oid, o, deck1, areaName, x, y) {
 	// mk.parent = UIS[areaName];
 	// //console.log(mk.parent)
 	// mk.parentDiv = div;
-	// mk.idParent = areaName;
+	// mk.loc = areaName;
 
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(mk.elem);
 	mk.cat = DOMCATS[mk.domType];
-	mk.idParent = areaName;
+	mk.loc = areaName;
 	UIS[areaName].children.push(id);
 	mk.isa.deck = true;
 	//console.log('******** vor link', id, oid)
@@ -60,7 +60,7 @@ function makeDomArea(domel) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = domel.parentNode.id;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 	mk.isAttached = true;
@@ -75,7 +75,7 @@ function makeDrawingArea(id, idArea, addToUIS = false) {
 	mk.id = id;
 
 	let idParent = idArea;
-	mk.idParent = idArea;
+	mk.loc = idArea;
 	let parent = UIS[idParent];
 	if (parent) parent.children.push(id);
 	let parentElem = parent ? parent.elem : document.getElementById(idArea);
@@ -116,7 +116,7 @@ function makeDrawingElement(id, idDrawingArea, addToUIS = false) {
 	mk.cat = DOMCATS[mk.domType];
 
 	let idParent = idDrawingArea;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	let parent = UIS[idParent];
 	if (parent) parent.children.push(id);
 
@@ -152,7 +152,7 @@ function makeCard_dep(oid, o, areaName) {
 	mk.cat = DOMCATS[mk.domType];
 	let parent = UIS[idArea]; //hand area
 	let idParent = parent.id;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	parent.children.push(id);
 
 	mk.o = o;
@@ -178,7 +178,7 @@ function makeRefs(idParent, refs) {
 		mk.parts.elem = mk.elem;
 		mk.domType = getTypeOf(domel);
 		mk.cat = DOMCATS[mk.domType];
-		mk.idParent = idParent;
+		mk.loc = idParent;
 		let parent = UIS[idParent];
 		parent.children.push(id);
 		mk.isAttached = true;
@@ -204,7 +204,7 @@ function makeAux(s, oid, areaName, directParent) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = areaName;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	// let parent = UIS[idParent];
 	// parent.children.push(id);
 
@@ -233,7 +233,7 @@ function _makeDefault(id, oid, o, areaName, title) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = areaName;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 
 	//ACHTUNG!!! default area is NOT part of UIS!!!!!!!!! it is chrome
 	let parent = mById(idParent);
@@ -266,7 +266,7 @@ function makeDefaultAction(boat, areaName, html) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	// let idParent = areaName;
-	mk.idParent = areaName;
+	mk.loc = areaName;
 	//let parent = mById(areaName);//UIS[idParent];
 
 	//parent.children.push(id);
@@ -297,12 +297,18 @@ function makeDefaultAction(boat, areaName, html) {
 }
 
 function getBoardElementStandardType(mk) {
-	return mk.isa.corner ? 'corner' : mk.isa.field ? 'field' : 'edge';
+	return mk.isa.corner||mk.rsg==103 ? 'corner' : mk.isa.field||mk.rsg==101 ? 'field' : 'edge';
 }
+
+function createVisual(oid,o){
+
+}
+
+
 function makeMainBoardElementVisual(oid, o) {
 	//examples are: building(road,settlement), robber
 	//main objects are only made if loc on board element!
-	//console.log(oid, o);
+	console.log(oid, o);
 	//depending on size, will be labeled w/ any simple field val, or oid if none
 
 	//TODO: das muss geaendert werden!!!
@@ -318,12 +324,12 @@ function makeMainBoardElementVisual(oid, o) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let locElem = getVisual(o.loc._obj);
-	let parent = UIS[locElem.idParent]; //board should be parent, not board element!!!
-	//console.log('parent', parent);
-	//console.log('locElem', locElem);
+	console.log(locElem);
+	let parent = UIS[locElem.loc]; //board should be parent, not board element!!!
+	console.log('board mk is',parent);
 
 	let idParent = parent.id;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	parent.children.push(id);
 
 	mk.o = o;
@@ -345,7 +351,10 @@ function makeMainBoardElementVisual(oid, o) {
 	let percent = Number(sizeInfo[1]);
 	let sz = (baseValue * percent) / 100;
 
+	console.log('locElem',locElem,'sizeInfo',sizeInfo,sizeInfo[0])
+
 	//default piece for field,node is circle of size sz w/ symbol in middle
+	console.log('::::::::::::::::::::::boardElemType',boardElemType);
 	if (boardElemType != 'edge') {
 		makePictoPiece(mk, o, sz, color)
 		mk.setPos(locElem.x, locElem.y);
@@ -400,7 +409,7 @@ function makeMainPlayer(oid, o, areaName) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = areaName;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 

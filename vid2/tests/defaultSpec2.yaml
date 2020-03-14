@@ -1,4 +1,4 @@
-tableSize: [500, 400]
+tableSize: [200,200]
 
 layout: [
   'z z z o',
@@ -71,6 +71,7 @@ players:
   defaultArea: a_d_players
 
 pieceSizeRelativeToLoc:
+  default: 
   corner: ['w',100]
   field: ['w', 30]
   edge: ['length',100]

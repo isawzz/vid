@@ -8,10 +8,11 @@ function rPresentDefault() {
 			let otype = o.obj_type;
 
 			//if no main visual has been created for this oid, try creating one
-			let mk = getVisual(oid);
+			let mk = getVisual(oid); //^^^NEW!
 			let mkDefault = getDefaultVisual(oid);
 			if (!mk) {
-				if ('loc' in o && isBoardElement(o.loc._obj) &&  SPEC.useLocPropertyForPlacement) mk = makeMainBoardElementVisual(oid, o);
+				// if ('loc' in o && isBoardElement(o.loc._obj) &&  SPEC.useLocPropertyForPlacement) mk = makeMainBoardElementVisual(oid, o);
+				if ('loc' in o &&  SPEC.useLocPropertyForPlacement) mk = makeMainBoardElementVisual(oid, o);
 			}
 			if (!mk && !mkDefault && SPEC.table.createDefault != false) {
 				mkDefault = makeDefaultObject(oid, o, SPEC[kPool].defaultArea);
@@ -25,7 +26,7 @@ function rPresentDefault() {
 			//means show relevant properties as specified in SPEC
 			if (mk) {
 				if (o.loc && SPEC.useLocPropertyForPlacement) _presentLocationChange(oid, o, mk, isTable);
-				//console.log('presenting main!',oid)
+				//console.log(route_counter,'_______________presenting main!',oid,mk)
 				if (otype in mappingTypes && SPEC.ignoreStructureTypesInPresentation) continue;
 				//console.log(otype,otype in mappingTypes, SPEC.ignoreStructureTypesInPresentation)
 				presentMain(oid, o, mk);
@@ -80,6 +81,7 @@ function _presentLocationChange(oid, o, mk) {
 	
 }
 function presentMain(oid, o, mk, isTableObject = true) {
+	//return;
 	let validKeys = computePresentedKeys(o, isTableObject);
 	//console.log(validKeys);
 

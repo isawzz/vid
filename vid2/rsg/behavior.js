@@ -1,7 +1,7 @@
 //UI generation simple
 var COND = {};
 var FUNCS = {};
-function rPresentBehaviors() {
+function rBehaviorCode() {
 	
 	//console.log('________________rBehaviors');
 	for (const key of ['table','players']) {

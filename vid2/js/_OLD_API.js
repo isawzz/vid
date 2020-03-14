@@ -10,13 +10,14 @@ function makeBoard(idBoard, o, areaName) {
 	// let domel = addSvggViewbox(UIS[areaName].elem, id, { originInCenter: true });
 	//console.log(areaName)
 	let domel = addSvgg(UIS[areaName].elem, id, { originInCenter: true });
-
+	domel.setAttribute('fill','yellow');
+	
 	mk.elem = domel;
 	mk.parts.elem = mk.elem;
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = areaName;
-	mk.idParent = areaName;
+	mk.loc = areaName;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
@@ -46,7 +47,7 @@ function makeBoardElement(oid, o, idBoard, elType) {
 	mk.domType = getTypeOf(domel);
 	mk.cat = DOMCATS[mk.domType];
 	let idParent = idBoard;
-	mk.idParent = idParent;
+	mk.loc = idParent;
 	let parent = UIS[idParent];
 	parent.children.push(id);
 
@@ -97,19 +98,19 @@ function makeVisual(mk, x, y, w, h, color, shape, { x1, y1, x2, y2 } = {}) {
 }
 
 //#region von infobox
-const IB_PARENT = 'table';
+const IB_PARENT = 'areaTable';
 function calcMainVisualPosCenterInGameArea(mk) {
 	//let area = UIS[IB_PARENT];
 
 	//mobj parent could be someuser area inside but not fully covering IB_PARENT
-	//let parent = UIS[mk.idParent];
+	//let parent = UIS[mk.loc];
 	//if this parent does not have coords, look at his parent
-	//if (nundef(parent.x)) parent = UIS[parent.idParent];
+	//if (nundef(parent.x)) parent = UIS[parent.loc];
 
 	let dInfobox = mById(IB_PARENT);
 	//dInfobox.style.position = 'absolute';
 
-	let parent = mById(mk.idParent);
+	let parent = mById(mk.loc);
 	let bParent = getBounds(parent);
 	let bIb = getBounds(dInfobox);
 	let bMK = getBounds(mk.elem);

@@ -93,8 +93,8 @@ function updatePlayerConfig() {
 function openTab(button) {
 	//console.log('opening',cityName)
 	var i, tabcontent, tablinks;
-	let selected = button.textContent;
-	//console.log(button, button.textContent);
+	let selected = button.textContent + 'Tab';
+	//console.log(button, button.textContent,selected,mBy(selected));
 	tabcontent = document.getElementsByClassName('tabcontent');
 	for (i = 0; i < tabcontent.length; i++) { tabcontent[i].style.display = 'none'; }
 	tablinks = document.getElementsByClassName('tablinks');

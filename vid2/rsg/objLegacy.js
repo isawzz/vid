@@ -95,7 +95,7 @@ function defaultVisualExists(oid) { return firstCond(oid2ids[oid], x => x[0] == 
 function someVisualExists(oid) { return firstCond(oid2ids[oid], x => x[0] == 'd' || x[0] == 'm'); }
 function mainVisualExists(oid) { return firstCond(oid2ids[oid], x => x[0] == 'm'); }
 function isBoardElementObject(o) { return o.edges || o.corners; }
-function isBoardElement(oid) { let mk = getVisual(oid); return mk && mk.idParent[2] == 's'; }
+function isBoardElement(oid) { let mk = getVisual(oid); return mk && mk.loc[2] == 's'; }
 function isBoardObject(o) { return o.map && o.fields; }
 function isDeckObject(o) { return isdef(o.deck_count); }
 function isField(o) { return o.neighbors; }

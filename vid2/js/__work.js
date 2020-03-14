@@ -1,3 +1,47 @@
+function gridLayout(layout){
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function setBodyColor(){
+	let color = SPEC.color && SPEC.color.theme?SPEC.color.theme:"#668dff";
+	document.body.style.backgroundColor = color;
+	let fg = colorIdealText(color)
+	document.body.style.color = fg;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -87,10 +131,6 @@ function cardHandCompact(objectPool, loc, o, oid, path, oHand) {
 	//console.log('have to present',ids,'in area',loc)
 }
 //TODO
-
-
-
-
 
 
 //#region old code UNUSED!!!!!!!!!!!!!!!!!
@@ -209,13 +249,16 @@ function addVisuals(board, { f2nRatio = 4, opt = 'fitRatio', gap = 4, margin = 2
 	//if fieldColor is a color, field members will just be given that bg, and they wont have an ipal or iPalette
 	//if fieldColor is undefined, in getMemberColors the default colors will be set which are from board palette (board will inherit palette if not set!)
 	//same for nodeColor, edgeColor
-	let area = UIS[board.idParent];
+	let area = UIS[board.loc];
 	let div = area.elem;
+	console.log(area.elem)
+	mStyle(div,{width:400,height:400,position:'relative'});
 	let dim = getBounds(div);
 
-	w = dim.width; //NEIN, hier muss ich aendern!!!!
-	h = dim.height;
-	//area.setBounds(0,0,800,800);
+	w = Math.max(dim.width,400); //NEIN, hier muss ich aendern!!!!
+	h = Math.max(dim.height,300);
+	//area.setBounds(0,0,400,400);
+	console.log(dim)
 
 	let pal = getTransPalette('silver');
 	[fieldColor, nodeColor, edgeColor] = [pal[1], 'dimgray', pal[5]];

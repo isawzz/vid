@@ -1,9 +1,10 @@
-tableSize: [400, 300]
 layout: [
   " M ",
+  " p ",
 ]
 layout_alias:
   M: board
+  p: players
 
 #mappings generate structures or lists, or can be used as a shortcut for simple behaviors
 mappings: #form: obj_type.property1.property2...

@@ -82,8 +82,8 @@ function _startGame() {
 	_startStep();
 
 }
-var t_total=0;
-var t_avg=0;
+var t_total = 0;
+var t_avg = 0;
 function _startStep() {
 
 	//addCardsToMainPlayer(3);
@@ -107,44 +107,65 @@ function _startStep() {
 		logUpdateVisibility(GAMEPLID, serverData.players);
 		prevGamePlid = GAMEPLID;
 	}
+	if (PLAYMODE == 'hotseat' && serverData.waiting_for) {
+		presentWaitingFor();
+		return;
+	}
 
+	clearBeforePresent();
 	if (RUNTEST && TESTING) { runTest(); return; }
 
-
-	//static part of spec
-	rAreas();
-	//rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
-
-	timit.init('***');
-	// timit.showTime('*mappings');
-	rMappings();
-
 	//present
-	mkMan.presentationStart();
+	mkMan.presentationStart(); //clears DONE
+
+	
+	
+	
+	
+	
+	
+
+	
+	rAreas(); //SPEC layout component 	>>add this to areas in spec: rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
+return;
+	rMappings(); //parse mappings in spec >placement vielleicht: find roots? to start presentation
+
 	rPresentMappings();
-	//return;
-	// timit.showTime('mappings done...')
-	t_total += timit.getTotalTimeElapsed();
-	t_avg = t_total/route_counter;
-	timit.showTime('*presentation done! ...'+t_avg);
-	//console.log('route_counter',route_counter)
+
+	rBehaviorCode(); //should enter completed oids in DONE dict
+
+	rPresentDefault(); // fall back presentation acc to global options
 
 
 
-	rPresentBehaviors(); //should enter completed oids in DONE dict
 
-	rPresentDefault();//???
-	//return;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	rPresentStatus();
 	rPresentLog();
 
 
-	if (serverData.options) { presentActions(); getReadyForInteraction(); }
-	else if (serverData.waiting_for) { presentWaitingFor(); }
+
+	if (serverData.options) {
+		presentActions();
+		getReadyForInteraction(); 
+	} else if (serverData.waiting_for) { presentWaitingFor(); }
 	else if (serverData.end) { rPresentEnd(); }
 
-	//zoom_on_resize('actions', 'table', 'logDiv', 30);
+	//zoom_on_resize('actions', 'areaTable', 'logDiv', 30);
 
 }
 
@@ -153,13 +174,13 @@ function _startStep() {
 //#region helpers
 function fillActions(areaName, boats, availHeight) {
 	//console.log('________fillActions: availHeight',availHeight);
-	let bds=getBounds('table');
+	let bds = getBounds('areaTable');
 	//console.log(bds.width,bds.height);
-	let bds1=getBounds('actions');
+	let bds1 = getBounds('actions');
 	//console.log(bds1.width,bds1.height);
-	let max=Math.max(bds.height+25,bds1.height);
-	availHeight = max>0?max:300;
-	if (availHeight<50) availHeight=50;
+	let max = Math.max(bds.height + 25, bds1.height);
+	availHeight = max > 0 ? max : 300;
+	if (availHeight < 50) availHeight = 50;
 	//console.log(availHeight);
 
 	let nActions = boats.length;
@@ -199,7 +220,7 @@ function findGamePlayer() {
 }
 function getReadyForInteraction() { startInteraction(); }
 
-var removedActions=[];
+var removedActions = [];
 async function interaction(action, data) {
 	if (action == INTERACTION.selected) {
 		timit.init('*send action');

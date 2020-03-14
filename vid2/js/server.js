@@ -16,7 +16,7 @@ async function route_allGames() {
 	return res;
 }
 async function route_c52() {
-	return await route_rsg_asset('c52', 'yaml'); //'/vid0/static/rsg/assets/c52.yaml');
+	return await route_rsg_asset('c52', 'yaml');
 }
 async function route_iconChars() {
 	let gaIcons = await route_rsg_asset('gameIconCodes');
@@ -87,8 +87,8 @@ async function route_restart(username, seed = SEED) {
 }
 async function route_status(username) { return await route_server_js('/status/' + username); }
 async function route_rsg_asset(filename, ext = 'yml') {
-	let url = '/vid0/static/rsg/assets/' + filename + '.' + ext;
-	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assets as well!
+	let url = '/assets/' + filename + '.' + ext;
+	let response = await route_path_yaml_dict(url); //TODO: depending on ext, treat other assts as well!
 	return response;
 }
 async function route_server_js(url) {

@@ -17,7 +17,7 @@ const USE_OLD_GRID_FUNCTIONS = false;// true | false
 //testing: always reloads uspec, code, and data!
 const RUNTEST = false; // true | false
 const TESTING = true; // true | false
-const TEST_PATH = '/vid2/tests/';
+const TEST_PATH = '/tests/';
 const DSPEC_VERSION = 3;
 const USPEC_VERSION = '2a';
 const CODE_VERSION = 1;

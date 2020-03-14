@@ -1,7 +1,0 @@
-tableSize: [1000, 1000]
-layout: [m, m, m, m, p, o, t]
-layout_alias: 
-  m: map
-  p: playerHand
-  o: others
-  t: table

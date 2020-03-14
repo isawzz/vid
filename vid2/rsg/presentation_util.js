@@ -297,10 +297,10 @@ function makeDefaultAction(boat, areaName, html) {
 }
 
 function getBoardElementStandardType(mk) {
-	return mk.isa.corner||mk.rsg==103 ? 'corner' : mk.isa.field||mk.rsg==101 ? 'field' : 'edge';
+	return mk.isa.corner || mk.rsg == 103 ? 'corner' : mk.isa.field || mk.rsg == 101 ? 'field' : 'edge';
 }
 
-function createVisual(oid,o){
+function createVisual(oid, o) {
 
 }
 
@@ -326,7 +326,7 @@ function makeMainBoardElementVisual(oid, o) {
 	let locElem = getVisual(o.loc._obj);
 	console.log(locElem);
 	let parent = UIS[locElem.loc]; //board should be parent, not board element!!!
-	console.log('board mk is',parent);
+	console.log('board mk is', parent);
 
 	let idParent = parent.id;
 	mk.loc = idParent;
@@ -344,17 +344,18 @@ function makeMainBoardElementVisual(oid, o) {
 	//console.log('isEdge',locElem.isa.edge)
 	//if (locElem.isa.edge) //console.log(locElem.w,locElem.h,locElem)
 	//console.log('........locElem.isa',locElem.isa);
-	let boardElemType = getBoardElementStandardType(locElem);
-	let sizeInfo = SPEC.pieceSizeRelativeToLoc[boardElemType];
+	let boardElemType, sizeInfo;
+	boardElemType = getBoardElementStandardType(locElem);
+	sizeInfo = SPEC.pieceSizeRelativeToLoc[boardElemType];
 
 	let baseValue = locElem[sizeInfo[0]];
 	let percent = Number(sizeInfo[1]);
 	let sz = (baseValue * percent) / 100;
 
-	console.log('locElem',locElem,'sizeInfo',sizeInfo,sizeInfo[0])
+	console.log('locElem', locElem, 'sizeInfo', sizeInfo, sizeInfo[0])
 
 	//default piece for field,node is circle of size sz w/ symbol in middle
-	console.log('::::::::::::::::::::::boardElemType',boardElemType);
+	console.log('::::::::::::::::::::::boardElemType', boardElemType);
 	if (boardElemType != 'edge') {
 		makePictoPiece(mk, o, sz, color)
 		mk.setPos(locElem.x, locElem.y);

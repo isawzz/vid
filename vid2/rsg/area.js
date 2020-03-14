@@ -1,5 +1,6 @@
 var colorPalette;
-var areaSubTypes = {};
+var allAreas = {}; //by id
+var areaSubTypes = {}; //by subTypes, eg., stats,farms
 
 function rAreas() {
 
@@ -31,7 +32,7 @@ function createGridLayout(d, layout) {
 	let m = [];
 	let maxNum = 0;
 	let areaNames = [];
-	console.log('layout',layout)
+	console.log('layout', layout)
 	for (const line of layout) {
 		let letters = line.split(' ');
 		let arr = [];
@@ -69,7 +70,7 @@ function createAreas(d, areaNames, prefix) {
 	for (const areaName of areaNames) {
 		//create this area
 		let d1 = document.createElement('div');
-		let id = prefix+'.'+areaName;
+		let id = prefix + '.' + areaName;
 		d1.id = id;
 
 		d1.style.gridArea = areaName;
@@ -81,15 +82,28 @@ function createAreas(d, areaNames, prefix) {
 		//if this area is listed in areaTypes, need to create additional layout!
 		if (SPEC.areaTypes[areaName]) {
 			//areaName zB opps
-			let atype = SPEC.areaTypes[areaName]; 
+			let atype = SPEC.areaTypes[areaName];
 			console.log(atype);
-			if (atype.owner){
-				console.log(atype.owner);
-				// let owner = serverData[atype.owner.gsm]
+			if (atype.foreach) {
+				console.log(atype.foreach); // its a string gsm.players.opponent
+				let pool = serverData[atype.foreach.pool];
+				if (pool) {
+					let selProp = atype.foreach.selectionProperty;
+					let selVal = atype.foreach.selectionValue;
+					let nameProp = atype.foreach.nameProperty;
+					for (const oid in pool) {
+						let o = pool[oid];
+						if (o[selProp] == selVal) {
+							//create sub area 
+							let name = o[nameProp];
+
+						}
+					}
+				}
+				return;
 			}
-			return;
-			createLayout(id,atype.layout)
-		}else{
+			createLayout(id, atype.layout)
+		} else {
 			//need to enter leaf area id into areaSubTypes[areaName]!!!
 			//=>suche function dafuer! 
 		}
@@ -98,51 +112,7 @@ function createAreas(d, areaNames, prefix) {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//unused code!
-function recAreas(areaDict) {
-	for (const a in areaDict) {
-		let d = mBy(a);
-		let aufteilung = areaDict[a];
-		let layout = aufteilung.layout;
-		let more = {};
-		for (const otherKeys in aufteilung) {
-			if (otherKeys == 'layout') continue;
-			more[otherKeys] = aufteilung[otherKeys];
-		}
-
-		createLayout(d, layout, more);
-	}
-}
-function expandNames(prefix, dict) {
-	let newDict = {};
-	for (const k in dict) {
-		newDict[prefix + '_' + k] = dict[k];
-	}
-	return newDict;
-}
-
-
-//fe spec
+//working previous version: works with uspec1.yaml
 function rAreas_0() {
 	let color = SPEC.color.theme;
 	document.body.style.backgroundColor = color;
@@ -180,6 +150,31 @@ function rAreas_0() {
 		UIS[areaName] = { elem: d1, children: [] };
 		d.appendChild(d1);
 	}
+}
+function rPlayerStatsAreas() {
+
+	if (nundef(serverData.players)) return;
+
+	if (nundef(SPEC.playerStatsAreas)) return;
+	let loc = SPEC.playerStatsAreas.loc;
+	//loc has to be existing area in layout!
+	let dOthers = mById(loc);
+	if (nundef(dOthers)) return;
+	//console.log('object to be mapped is',omap);
+	let func = SPEC.playerStatsAreas.type;
+
+	let objects = [];
+	for (const plid in serverData.players) {
+		let o = serverData.players[plid];
+		if (plid != GAMEPLID) {
+			o.id = plid;
+			objects.push(o)
+		}
+	}
+	let areaNames = objects.map(x => x.name);
+	//console.log('objects',objects,'\nareaNames',areaNames);
+	//console.log('func',window[func].name,'\nloc',loc);
+	let structObject = window[func](areaNames, loc);
 }
 
 //#region helpers
@@ -240,30 +235,5 @@ function collapseSmallLetterAreas(m, d) {
 
 
 
-function rPlayerStatsAreas() {
-
-	if (nundef(serverData.players)) return;
-
-	if (nundef(SPEC.playerStatsAreas)) return;
-	let loc = SPEC.playerStatsAreas.loc;
-	//loc has to be existing area in layout!
-	let dOthers = mById(loc);
-	if (nundef(dOthers)) return;
-	//console.log('object to be mapped is',omap);
-	let func = SPEC.playerStatsAreas.type;
-
-	let objects = [];
-	for (const plid in serverData.players) {
-		let o = serverData.players[plid];
-		if (plid != GAMEPLID) {
-			o.id = plid;
-			objects.push(o)
-		}
-	}
-	let areaNames = objects.map(x => x.name);
-	//console.log('objects',objects,'\nareaNames',areaNames);
-	//console.log('func',window[func].name,'\nloc',loc);
-	let structObject = window[func](areaNames, loc);
-}
 
 

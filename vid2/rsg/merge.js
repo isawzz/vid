@@ -1,5 +1,6 @@
 //#region merge spec
 function rMergeSpec() {
+	//let safeSpec={table:{},players:{},pieceSizeRelativeToLoc:{  corner: ['w',100],  field: ['w', 30],  edge: ['length',100]}}}	
 	SPEC = deepmerge(defaultSpec, userSpec, { arrayMerge: overwriteMerge });
 
 	//need to correct areas because it should NOT be merged!!!

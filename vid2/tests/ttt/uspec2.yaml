@@ -1,17 +1,24 @@
-areas1:
-  table: #die gibt's schon!
-    layout: [MainBoard opps, gamePlayer]
-    opps:
-      layout: [stats, buildings]
-    gamePlayer: 
-      layout: [stats, buildings, Hand ]
-    buildings: #implicit: one for each layout that has 'buildings'
-      layout: [farms, estates chateaus]
+#version 0:
+layout: [ M o, p o]
 
-placement: #aus areas werden auch 'types' gemacht
+layout_alias:
+  M: MainBoard
+  p: gamePlayer
+  o: opps
+
+playerStatsAreas:  #standard setting
+  type: columnGrid
+  loc: opps
+
+#version 1:
+placement: #area:content
+  obj_type:
+    Board: MainBoard
+    opponent: opps
+    GamePlayer: gamePlayer
   MainBoard: Board
   opps: opponent
-  gamePlayer: gamePlayer
+  gamePlayer: GamePlayer
   stats: [vps coins hand_size max_hand_size]
   farms: Farm
   estates: Estate

@@ -1,30 +1,39 @@
+areas1:
+  table: #die gibt's schon!
+    layout: [MainBoard opps, gamePlayer]
+    opps:
+      layout: [stats, buildings]
+    gamePlayer: 
+      layout: [stats, buildings, Hand ]
+    buildings: #implicit: one for each layout that has 'buildings'
+      layout: [farms, estates chateaus]
 
-views:
-  - areaTable:
-      rsgType: gridLayout #existing function
-      layout: [areaMain areaOpps,areaPlayer]
-  - playerArea:
-      rsgType: gridLayout
-      layout: []
-  - areaOppsList:
-      rsgType: areaForeach
-      layout: vertical
-      gsmType: opponent
-      pool: players #default pool is table
-      postfix: self.name
+placement: #aus areas werden auch 'types' gemacht
+  MainBoard: Board
+  opps: opponent
+  gamePlayer: GamePlayer
+  stats: [vps coins hand_size max_hand_size]
+  farms: Farm
+  estates: Estate
+  chateaus: Chateau
 
-  #following 2 sections can be ommitted because default!
-  - areaPlayer:
-      rsgType: playerArea
-  - areaMain:
-      rsgType: area 
-
-type:
-  playerArea:
-    declare
-#after this have areas named areaMain,areaOpps.Player1,areaOpps.Player2...,areaPlayer      
-
-placement:
-
-
+visualize:
+  Board:
+    type: quadGrid
+  Farm:
+  Estate:
+  Chateau:
+    type: cardHand
+  Card:
+    type: c52
+    map:
+      rank: gsm.short_name
+      suit: spades
+  Tick:
+    type: visual #default type, could omit!
+    map:
+      width: 80
+      text: gsm.symbol
+      fontSize: rsg.width
+      color: gsm._player  
 

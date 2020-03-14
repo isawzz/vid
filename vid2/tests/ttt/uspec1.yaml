@@ -1,7 +1,5 @@
-layout: [
-  " M ",
-  " p ",
-]
+layout: [M, p]
+
 layout_alias:
   M: board
   p: players

@@ -14,8 +14,9 @@ function rPresentDefault() {
 				// if ('loc' in o && isBoardElement(o.loc._obj) &&  SPEC.useLocPropertyForPlacement) mk = makeMainBoardElementVisual(oid, o);
 				if ('loc' in o &&  SPEC.useLocPropertyForPlacement) mk = makeMainBoardElementVisual(oid, o);
 			}
-			if (!mk && !mkDefault && SPEC.table.createDefault != false) {
-				mkDefault = makeDefaultObject(oid, o, SPEC[kPool].defaultArea);
+			if (!mk && !mkDefault && SPEC.table && SPEC.table.createDefault != false) {
+				let loc =SPEC[kPool] && SPEC[kPool].defaultArea?SPEC[kPool].defaultArea:'a_d_objects';
+				mkDefault = makeDefaultObject(oid, o, loc );
 				//console.log(mkDefault)
 			}
 

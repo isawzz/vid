@@ -118,35 +118,28 @@ function _startStep() {
 	//present
 	mkMan.presentationStart(); //clears DONE
 
-	
-	
-	
-	
-	
-	
 
-	
-	rAreas(); //SPEC layout component 	>>add this to areas in spec: rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
-return;
-	rMappings(); //parse mappings in spec >placement vielleicht: find roots? to start presentation
+	let VERSION = 0;
 
-	rPresentMappings();
+	if (VERSION == 0) {
 
-	rBehaviorCode(); //should enter completed oids in DONE dict
+		rAreas_0();
+		rPlayerStatsAreas();
 
-	rPresentDefault(); // fall back presentation acc to global options
+		rMappings(); //parse mappings in spec >placement vielleicht: find roots? to start presentation
+
+		rPresentMappings();
+
+		//rBehaviorCode(); //should enter completed oids in DONE dict
+
+		//rPresentDefault(); // fall back presentation acc to global options
 
 
+	} else if (VERSION == 1) {
 
+		rAreas(); //SPEC layout component 	>>add this to areas in spec: rPlayerStatsAreas(); //=> uncomment for new spec (uspec2.yaml): will be done in rAreas
 
-
-
-
-
-
-
-
-
+	}
 
 
 
@@ -161,7 +154,7 @@ return;
 
 	if (serverData.options) {
 		presentActions();
-		getReadyForInteraction(); 
+		getReadyForInteraction();
 	} else if (serverData.waiting_for) { presentWaitingFor(); }
 	else if (serverData.end) { rPresentEnd(); }
 

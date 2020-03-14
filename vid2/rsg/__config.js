@@ -19,7 +19,7 @@ const RUNTEST = false; // true | false
 const TESTING = true; // true | false
 const TEST_PATH = '/vid2/tests/';
 const DSPEC_VERSION = 3;
-const USPEC_VERSION = 4;
+const USPEC_VERSION = '2a';
 const CODE_VERSION = 1;
 const DATA_VERSION = 1;
 

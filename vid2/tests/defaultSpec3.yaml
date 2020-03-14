@@ -10,7 +10,7 @@ areas:
   p: players
 
 color:
-  theme: 'green'
+  theme: '#c9af98'
 
 collapseEmptySmallLetterAreas: false
 shadeAreaBackgrounds: true

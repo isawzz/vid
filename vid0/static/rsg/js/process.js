@@ -2,15 +2,15 @@
 function processData(data) {
 	// timit.showTime('start processing');
 	//preProcessData(data);
-	console.log('processData')
+	//console.log('processData')
 
 	if (G.end) {
 		//noch von voriger runde!
-		console.log(USERNAME, 'has G.end!!!!')
+		//console.log(USERNAME, 'has G.end!!!!')
 		stopBlinking('a_d_status');
 		stopInteraction();
 		clearLog();
-		console.log('signals:', G.signals)
+		//console.log('signals:', G.signals)
 		//delete G.signals.receivedEndMessage;
 	}
 	S.gameInProgress = true;
@@ -123,7 +123,7 @@ function processPlayers(data) {
 				if (id != G.previousPlayer) G.playerChanged = true;
 
 				//console.log(id,'isMyPlayer?',isMyPlayer(id))
-				//if (G.previousPlayer) console.log(G.previousPlayer,'isMyPlayer?',isMyPlayer(G.previousPlayer))
+				//if (G.previousPlayer) //console.log(G.previousPlayer,'isMyPlayer?',isMyPlayer(G.previousPlayer))
 				//console.log(id,'isFrontAIPlayer?',isFrontAIPlayer(id))
 
 				//console.log('G.player is',G.player)
@@ -132,11 +132,11 @@ function processPlayers(data) {
 					G.playerIndex = S.players[id].index;
 					canProceed = true;
 				} else {
-					console.log('this must be multiplayer mode!!! OR i will never get here hopefully!!!!!!!!!!!!!!!!')
-					console.log('playmode:', PLAYMODE, S.settings.playmode);
-					console.log('I am', G.player, 'player changed:', G.playerChanged)
-					console.log('processPlayers: waiting for', G.serverData.waiting_for);
-					console.log('NOT MY TURN!!! HAVE TO WAIT!!!');
+					//console.log('this must be multiplayer mode!!! OR i will never get here hopefully!!!!!!!!!!!!!!!!')
+					//console.log('playmode:', PLAYMODE, S.settings.playmode);
+					//console.log('I am', G.player, 'player changed:', G.playerChanged)
+					//console.log('processPlayers: waiting for', G.serverData.waiting_for);
+					//console.log('NOT MY TURN!!! HAVE TO WAIT!!!');
 				}
 
 			}
@@ -233,11 +233,11 @@ function expand1_99(x) {
 	//console.log('expand1_99 input', tsRec(x))
 	//console.log('expand1_99');
 	if (isList(x)) {
-		console.log('expand1_99: x should be dict BUT is a list', x);
+		//console.log('expand1_99: x should be dict BUT is a list', x);
 	}
 	if (isDict(x)) { // TODO:  || isList(x)) {
 		// if (isList(x)) {
-		// 	console.log('process: list',x)
+		// 	//console.log('process: list',x)
 		// }
 		if ('_set' in x) {
 			//console.log('handleSet wird aufgerufen')

@@ -11,6 +11,7 @@ var firstDomLoad = null;
 async function _start() {
 
 	timit = new TimeIt(getFunctionCallerName());
+	timit.tacit();
 	// vidCache = new LazyCache(true);
 	// vidCache_dep = new VidCache_dep();
 
@@ -38,7 +39,7 @@ async function _start() {
 		//START HERE!!!! have iconChars,allGames,gcs
 		timit.showTime('nach loadAllGames_dep+loadIcons')
 		gcsAuto();
-		console.log(gcs,GAME)
+		//console.log(gcs,GAME)
 		S.gameConfig = gcs[GAME];
 		_startNewGame('starter');
 
@@ -122,7 +123,7 @@ function loginView() {
 function lobbyView() {
 	//document.body.style.transform = null; //'scale('+1+')'; //.5)'; //+(percent/100)+")";
 
-	console.log('lobby view!')
+	//console.log('lobby view!')
 	view = 'lobby';
 	hideLogin();
 	showLobby();
@@ -150,9 +151,9 @@ function getUsernameForPlayer(id) {
 	return uname;
 }
 function getPlidForUsername(username) {
-	console.log('getPlidForUsername',username)
+	//console.log('getPlidForUsername',username)
 	let players = S.gameConfig.players;
-	console.log(players)
+	//console.log(players)
 	let pl = firstCond(players, x => x.username == username);
 	let res = pl.id;
 	return res;
@@ -213,7 +214,7 @@ function isMyPlayer(id) {
 }
 function isFrontAIPlayer(id) {
 	if (USE_BACKEND_AI) return false;
-	console.log('!!!!!!!!!isFrontAIPlayer: should NOT get here if USE_BACKEND_AI==' + USE_BACKEND_AI);
+	//console.log('!!!!!!!!!isFrontAIPlayer: should NOT get here if USE_BACKEND_AI==' + USE_BACKEND_AI);
 	let players = S.gameConfig.players;
 	let pl = firstCond(players, x => x.id == id);
 	let playerType = pl.playerType;
@@ -236,7 +237,7 @@ function loadIconChars(callbacks = []) {
 				if (isdef(faChars[k])) faKeys.push(k);
 				iconChars[k] = gaChars[k];
 			}
-			// console.log('common keys:',commonKeys);
+			// //console.log('common keys:',commonKeys);
 			timit.showTime('loaded icons codes')
 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
 		});

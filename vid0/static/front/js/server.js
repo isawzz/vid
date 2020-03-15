@@ -14,17 +14,17 @@ function sendAction(boat, callbacks) {
 	});
 }
 function sendGetAllGames(callback) {
-	console.log('halloooooooo')
+	//console.log('halloooooooo')
 	if (USE_ALL_GAMES_ROUTE) { sendGetAllGamesFromServer(callback); }
 	else { sendGetAllGamesFromYaml(callback); }
 }
 function sendGetAllGamesFromYaml(callback) {
 	_sendRouteJS('/game/available', glist => {
 		let chain = [];
-		console.log(glist);//glist is a list!!!
+		//console.log(glist);//glist is a list!!!
 		for (const g of glist) chain.push({ cmd: '/games/' + g + '/info.yaml', f: loadYML, data: null });
 		_cmdChainSend(chain, res => {
-			console.log(res);//res is a list of JSON objects 
+			//console.log(res);//res is a list of JSON objects 
 			let info = {};
 			res.map(x => info[x.short_name] = x);
 			if (callback) callback(info); // (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
@@ -89,7 +89,7 @@ function sendStatus(username, callbacks) {
 function sendStatusNewGame() { sendStatus(USERNAME, [gameStep]); }
 
 function preProcessData(data){
-	console.log('preprocess:',data.players);
+	//console.log('preprocess:',data.players);
 	for (const plid in data.players) {
 		let pl = data.players[plid];
 		pl.obj_type = plid == plidSendStatus ? 'GamePlayer' : 'opponent';

@@ -63,7 +63,10 @@ function _tableUpdate() {
 			//object o has been removed, this is 
 		}
 
-		if (isStructuralElement(oid)) continue; //eg., boards not updated! (checks for map property)
+		if (isStructuralElement(oid)) {
+			//console.log('not updating:',oid,'(structural element)')
+			continue; //eg., boards not updated! (checks for map property)
+		}
 
 		let changedProps = G.tableUpdated[oid].summary;
 		//console.log('changed properties for',oid,changedProps);
@@ -75,6 +78,7 @@ function _tableUpdate() {
 		if (!isDeckObject(o) && mobj) { // (isDeckObject checks for deck_count property)
 
 			if (S.settings.userBehaviors) {
+				//console.log('run behaviors for',oid,o.obj_type)
 				updatedVisuals = runBehaviors(oid, G.table, TABLE_UPDATE);
 			}
 
@@ -309,6 +313,10 @@ function presentWaitingFor() {
 	//hier komm ich nur her wenn es mein turn war
 	//also kann switchen wenn entweder der pl me ist oder eine FrontAI
 	//console.log(G.serverData)
+	if (G.serverData.error){
+		alert(error.type + ' '+ error.msg);
+		return;
+	}
 	let pl = G.serverData.waiting_for[0];
 	if (nundef(G.previousWaitingFor) || G.previousWaitingFor != pl) {
 		//now waiting for a new player!!!

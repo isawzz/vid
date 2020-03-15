@@ -314,7 +314,7 @@ function presentWaitingFor() {
 	//also kann switchen wenn entweder der pl me ist oder eine FrontAI
 	//console.log(G.serverData)
 	if (G.serverData.error){
-		alert(error.type + ' '+ error.msg);
+		alert(G.serverData.error.type+' '+G.serverData.error.msg);
 		return;
 	}
 	let pl = G.serverData.waiting_for[0];

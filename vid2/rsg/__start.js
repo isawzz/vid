@@ -112,11 +112,11 @@ function _startStep() {
 		return;
 	}
 
-	clearBeforePresent();
+	clearDOM();
 	if (RUNTEST && TESTING) { runTest(); return; }
 
 	//present
-	mkMan.presentationStart(); //clears DONE
+	mkMan.clearDONE(); //clears DONE
 
 
 	let VERSION = 0;

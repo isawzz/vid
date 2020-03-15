@@ -13,11 +13,11 @@ function rMappings() {
 	if (nundef(mappings)) return false;
 	mappings = dict2list(mappings, 'id').map(x => { let k = stringBefore(x.id, '.'); mappingTypes[k] = x[k] = true; return x; });
 	//mappingsInitialized = {};
-	//console.log('mappings', mappings, mappingTypes);
+	console.log('mappings', mappings, mappingTypes);
 }
 function rPresentMappings() {
-	//let bds=getBounds('others');
-	//console.log('---------------------------',bds.height);
+	// let bds=getBounds('opps');
+	// console.log('---------------------------',bds.height);
 	
 	if (isdef(serverData.players)) {
 		//console.log('------------------presentMappings',GAMEPLID);

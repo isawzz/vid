@@ -16,12 +16,12 @@ const USE_OLD_GRID_FUNCTIONS = false;// true | false
 //when testing, uses files in tests/GAME/uspecN and codeN
 //testing: always reloads uspec, code, and data!
 const RUNTEST = false; // true | false
-const TESTING = true; // true | false
+const TESTING = false; // true | false
 const TEST_PATH = '/tests/';
 const DSPEC_VERSION = 3;
 const USPEC_VERSION = '2a';
 const CODE_VERSION = 1;
-const DATA_VERSION = 1;
+const SERVERDATA_VERSION = 1;
 
 //ONLY used when NOT testing:
 var VERSION = '_02'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!

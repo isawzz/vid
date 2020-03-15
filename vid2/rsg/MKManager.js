@@ -60,10 +60,8 @@ function registerObject(o, idType, loc, rsgType) {
 }
 
 class MKManager{
-	constructor(){
-		this.clear();
-	}
-	clear(){
+	clear(){this.clearUIS();this.clearDONE();}
+	clearUIS(){
 		UIS = {}; // holds MS objects 
 		IdOwner = {}; //lists of ids by owner
 		id2oids = {}; // { uid : list of server object ids (called oids) }
@@ -73,7 +71,7 @@ class MKManager{
 	}
 	getDone(oid){return DONE[oid];}
 	setDone(oid){DONE[oid]=true;}
-	presentationStart(){DONE={};}
+	clearDONE(){DONE={};}
 }
 
 //#region helpers: linking UIS ...

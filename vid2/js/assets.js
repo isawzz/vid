@@ -49,7 +49,7 @@ async function loadSpecAndCode() {
 		url = TEST_PATH + GAME + '/code' + CODE_VERSION + '.js';
 		userCodeC = await vidCache.load('userCode', async () => await route_path_asText_dict(url), true, false);// last 2 params: reload, useLocal
 
-		url = TEST_PATH + GAME + '/data' + DATA_VERSION + '_' + initialPath + '.yaml';
+		url = TEST_PATH + GAME + '/data' + SERVERDATA_VERSION + '_' + initialPath + '.yaml';
 		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url), true, false); // last 2 params: reload, useLocal
 		serverData = vidCache.asDict('_initial_' + initialPath);
 

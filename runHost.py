@@ -358,14 +358,6 @@ def vid0_path(path):
 	res = send_from_directory('', path)
 	return res
 
-# @app.route('/spec/<game>')
-# def vid0_spec(game):
-# 	path = userSpecPath(game,'yaml',None)
-# 	f=open(path, "r")
-# 	txt = f.read()
-# 	# print(txt)
-# 	return txt
-
 @app.route('/behaviors/<game>')
 def vid0_code(game):
 	path = userSpecPath(game,'js',None)
@@ -406,16 +398,21 @@ def vid0_save_UI_code(game,code,v=None):
 
 #endregion
 
-#region front vid1 and vid2
+#region front vid2 and vid3
 @app.route('/')
+@app.route('/3')
+def rootvid3():
+	return send_from_directory('vid3', 'index.html')
+
 @app.route('/2')
 def rootvid2():
+	# return app.send_static_file('vid1/index.html')
 	return send_from_directory('vid2', 'index.html')
 
-@app.route('/1')
-def rootvid1():
-	# return app.send_static_file('vid1/index.html')
-	return send_from_directory('vid1', 'index.html')
+@app.route('/<path:path>')
+def vid2_path(path):
+	res = send_from_directory('', path)
+	return res
 
 @app.route('/text/<path:path>')
 def rootsimTextPath(path):

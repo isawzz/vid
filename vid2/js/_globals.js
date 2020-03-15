@@ -1,6 +1,7 @@
 //session data
 var timit = null;
 var vidCache = null;
+var mkMan = null
 //#region caches 
 var allGamesC = null;
 var playerConfigC = null;
@@ -40,11 +41,13 @@ var LOGDIVS = [];
 
 
 //step data
-var mkMan = null; //manages UIS
 var tupleGroups = null;
 var prevGamePlid = null;
 var prevWaitingFor = null; //needed to update header info when waiting for several players in a row
 
+//counters and test vars
+var t_total = 0;
+var t_avg = 0;
 
 
 

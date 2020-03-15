@@ -38,7 +38,7 @@ function runTest() {
 //#endregion
 
 //#region control flow
-async function _startSession(resetLocalStorage = false) {
+async function _startSession(resetLocalStorage = INIT_CLEAR_LOCALSTORAGE) {
 
 	timit = new TimeIt('*timer', TIMIT_SHOW); // [true] | false (false fuer tacit)
 

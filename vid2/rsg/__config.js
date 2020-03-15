@@ -11,7 +11,7 @@ const DSPEC_VERSION = 3;
 const USPEC_VERSION = '2a';
 const CODE_VERSION = 1;
 const SERVERDATA_VERSION = 1;
-const TEST_PATH = '/ztests/';
+const TEST_PATH = '/zdata/';
 
 //ONLY used when NOT testing:
 var VERSION = '_02'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!

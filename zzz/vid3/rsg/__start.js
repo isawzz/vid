@@ -1,50 +1,5 @@
 window.onload = () => _startSession();
 
-//#region control flow
-async function _startSession(resetLocalStorage = INIT_CLEAR_LOCALSTORAGE) {
-
-	timit = new TimeIt('*timer', TIMIT_SHOW); 
-	mkMan = new MKManager();
-
-	await loadAssets(resetLocalStorage);
-	timit.showTime('*load asset and server done!');
-
-	addEventListener('keyup', keyUpHandler);
-	addEventListener('keydown', keyDownHandler);
-
-	await _startNewGame();
-
-	openTab(mById(STARTING_TAB_OPEN));
-}
-async function _startNewGame(game) {
-	//need to reload spec & code!
-
-	if (isdef(game)) GAME = game;
-	setGamePlayer(USERNAME_ORIG);
-	mappingsClear();
-	mById('actions').style.setProperty('min-width', null);
-
-	await loadSpecAndCode();
-
-	updatePlayerConfig(); //sets colors for current players from initial serverData
-
-	_startGame();
-}
-function _startGame() {
-
-	stopBlinking('status');
-	// hide('passToNextPlayerUI'); //will be used for pass&play mode later!
-	// hide('freezer');
-
-	logClearAll();
-	scenarioQ = [];
-
-	rMergeSpec();
-
-	_startStep();
-
-}
-//#endregion
 function _startStep() {
 
 	//addCardsToMainPlayer(3);

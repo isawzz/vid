@@ -1,48 +1,11 @@
 window.onload = () => _startSession();
 
-//#region testing
-function getOlist() {
-	let keyList = ['female', 'male', 'spy', 'frog', 'fairy'];
-	let olist = [];
-	for (const k of keyList) {
-		olist.push({ key: k, label: k, color: randomColor() });
-	}
-	return olist;
-}
-var testCounter = 100;
-function stressTest01(area) {
-	timit.showTime('*test')
-	let n = 500;
-	for (let index = 0; index < n; index++) {
-		showPictoDivCentered('crow', area, randomColor(), n + 25 - index); //ok
-	}
-	timit.showTime('*test done...');
-	if (testCounter > 0) { testCounter -= 1; setTimeout(_startStep, 0); }
-	else {
-		let t = timit.getTotalTimeElapsed();
-		console.log('avg msecs per cycle:', t / 100, 'cycle size:', n)
-	}
-}
-function layRow(olist, area, size = 50, gap = 4) {
-	let res = [];
-	let w = size, x = gap;
-	olist.map(o => {
-		let d = showPictoDiv(o.key, area, o.color, x, gap, w);
-		res.push(d);
-		x += w + gap;
-	});
-	return res;
-}
-function runTest() {
-}
-//#endregion
-
 //#region control flow
 async function _startSession(resetLocalStorage = INIT_CLEAR_LOCALSTORAGE) {
 
-	timit = new TimeIt('*timer', TIMIT_SHOW); // [true] | false (false fuer tacit)
+	timit = new TimeIt('*timer', TIMIT_SHOW);
+	mkMan = new MKManager();
 
-	//resetLocalStorage = true; //********** true for LOCALSTORAGE CLEAR!!!!! */
 	await loadAssets(resetLocalStorage);
 	timit.showTime('*load asset and server done!');
 
@@ -51,12 +14,11 @@ async function _startSession(resetLocalStorage = INIT_CLEAR_LOCALSTORAGE) {
 
 	await _startNewGame();
 
-	openTab(mById('bPlayers'));
-
-	//	makeCard52_test(1, null, { key: 'green2', area: 'decks' });
+	openTab(mById(STARTING_TAB_OPEN));
 }
 async function _startNewGame(game) {
 	//need to reload spec & code!
+
 	if (isdef(game)) GAME = game;
 	setGamePlayer(USERNAME_ORIG);
 	mappingsClear();
@@ -71,7 +33,7 @@ async function _startNewGame(game) {
 function _startGame() {
 
 	stopBlinking('status');
-	// hide('passToNextPlayerUI');
+	// hide('passToNextPlayerUI'); //will be used for pass&play mode later!
 	// hide('freezer');
 
 	logClearAll();
@@ -84,12 +46,16 @@ function _startGame() {
 }
 var t_total = 0;
 var t_avg = 0;
+//#endregion
 function _startStep() {
 
 	//addCardsToMainPlayer(3);
 
+	//#region prelims
 	//reset_zoom_on_resize();
-	clearStep();
+	PREFERRED_CARD_HEIGHT = 0;
+	pageHeaderClearAll();
+	mkMan.clear(); //all new UI data each step for now!
 
 	if (serverData.error) {
 		alert(serverData.error.type + ' ' + serverData.error.msg);
@@ -107,17 +73,22 @@ function _startStep() {
 		logUpdateVisibility(GAMEPLID, serverData.players);
 		prevGamePlid = GAMEPLID;
 	}
+
 	if (PLAYMODE == 'hotseat' && serverData.waiting_for) {
 		presentWaitingFor();
 		return;
 	}
 
-	clearDOM();
+	for (const name of ['actions', 'status', 'areaTable', 'a_d_objects', 'a_d_players']) clearElement(name);
+	mById('status').innerHTML = 'status';
+
 	if (RUNTEST && TESTING) { runTest(); return; }
 
 	//present
 	mkMan.clearDONE(); //clears DONE
 
+
+	//#endregion
 
 	let VERSION = 0;
 
@@ -161,8 +132,6 @@ function _startStep() {
 	//zoom_on_resize('actions', 'areaTable', 'logDiv', 30);
 
 }
-
-//#endregion
 
 //#region helpers
 function fillActions(areaName, boats, availHeight) {

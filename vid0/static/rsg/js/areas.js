@@ -142,12 +142,12 @@ function initDom() {
 	measureMSTree(ROOT); //each div is measured: x,y,w,h
 	// timit.showTime('...measure tree');
 
-	// if (!firstDomLoad) {
-	// 	initZoom();
-	// 	zoom_on_resize('a_d_header');
-	// 	zoom_on_wheel_alt();
-	// 	firstDomLoad = true;
-	// }
+	if (!firstDomLoad) {
+		initZoom();
+		zoom_on_resize('a_d_header');
+		zoom_on_wheel_alt();
+		firstDomLoad = true;
+	}
 }
 function createMSTree(mobj) {
 	let areas = mobj.elem.children;

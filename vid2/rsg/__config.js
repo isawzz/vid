@@ -4,7 +4,8 @@ var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const TESTING = true; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
-const RUNTEST = false; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
+const RUNTEST = true; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
+const USE_NON_TESTING_DATA = true; //uses spec,code from /games instead of uspec...
 
 //*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
 const DSPEC_VERSION = 3;
@@ -13,18 +14,13 @@ const CODE_VERSION = 1;
 const SERVERDATA_VERSION = 1;
 const TEST_PATH = '/zdata/';
 
-//ONLY used when NOT testing:
+//ONLY used when *** NOT testing: ***
 var VERSION = '_02'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
 var CACHE_DEFAULTSPEC = false;
 var CACHE_USERSPEC = false;
 var CACHE_CODE = false;
 const CACHE_INITDATA = false;
 const USE_ALL_GAMES_ROUTE = false; // true | false //false means directly loading game infos from info.yaml
-
-
-
-
-
 
 //might change but unlikely:
 const INIT_CLEAR_LOCALSTORAGE = false; // true | false //tru will delete complete localStorage at _startSession

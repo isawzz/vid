@@ -7,7 +7,7 @@ const PLAYER_CONFIG_FOR_MULTIPLAYER = ['me', 'human', 'human'];
 
 const USE_LOCAL_STORAGE = true; // true | false
 
-//ONLY used when NOT testing:
+//ONLY used when *** NOT testing: ***
 const VERSION = '_ui'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
 const CACHE_DEFAULTSPEC = false;
 const CACHE_USERSPEC = false;

@@ -15,7 +15,7 @@ V = {
 // }
 TABLE_UPDATE = {
 	resources_numbers: (oid, o, phase) => {
-		if (o.obj_type == 'hex') { return { f: 'setup_field', vis: [oid] }; }
+		if (o.obj_type == 'Field') { return { f: 'setup_field', vis: [oid] }; }
 	},
 	ports: (oid, o, phase) => {
 		if (o.obj_type == 'Corner') { return { f: 'setup_port', vis: [oid] }; }
@@ -34,7 +34,9 @@ PLAYER_UPDATE = {
 };
 
 FUNCS = {
-	test: ()=>{console.log('catan code loaded correctly................');},
+	test: ()=>{
+		console.log('catan code loaded correctly................');
+	},
 	setup_field: (oid, o, field) => {
 		if (nundef(o.res)) { field.setBg(V.colors.desert); }
 		else {
@@ -82,4 +84,4 @@ FUNCS = {
 
 
 
-//FUNCS.test();
+FUNCS.test();

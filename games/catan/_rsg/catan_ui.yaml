@@ -1,6 +1,6 @@
 SETTINGS:
   #deckDetection: false
-  gameAreaSize: [1000, 800]
+  gameAreaSize: [600, 500]
   table:
     optin: [res, num, building, port]
   pieceSizeRelativeToLoc:
@@ -27,19 +27,19 @@ SETTINGS:
 STRUCTURES:
   M:
     location: a_d_game
-    bounds: [0, 0, 800, 600, px]
+    bounds: [0, 0, 500, 400, px]
     structure: 
       type: detectBoard
   DevCards:
     location: a_d_game
-    bounds: [0, 600, 800, 200, px]
+    bounds: [0, 400, 500, 100, px]
     color: '#00FFFF0D'
   Stats:
     location: a_d_game
-    bounds: [800, 0, 200, 800, px]
+    bounds: [500, 0, 100, 500, px]
     color: '#00FF000D'
       
 
 
-CODE: catan_ui_orig
+#CODE: catan_ui_orig
 

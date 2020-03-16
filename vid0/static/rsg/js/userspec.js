@@ -89,10 +89,24 @@ function presentSpecAndCode(callbacks = []) {
 function redrawScreen() {
 	checkCleanup_II();
 
+	//console.log('use behaviors', S.settings.userBehaviors, FUNCS);
 	if (S.settings.userBehaviors) {
-		//console.log('geht in user behaviors in redrawScreen')
-		loadScript(S.path.script, proceedRedraw);
-	} else proceedRedraw();
+		//load code again!
+		// loadCode(userCode.asText,setUserSpecAndCode);
+		loadCode0(userCode.asText, 'setUserSpecAndCode();proceedRedraw();', () => {
+			console.log('setting code now!')
+			setUserSpecAndCode();
+			proceedRedraw();
+			// console.log(onCodeLoaded)
+			// if (onCodeLoaded) onCodeLoaded();
+		});
+		console.log('userCode', userCode);
+	}
+	else	proceedRedraw();
+	// 	//console.log('geht in user behaviors in redrawScreen')
+	// 	restoreBehaviors
+	// 	loadScript(S.path.script, proceedRedraw);
+	// } else proceedRedraw();
 }
 function proceedRedraw() {
 	flags.specAndDOM = true;
@@ -162,8 +176,10 @@ function onClickSpecAndCode() {
 	S.settings.openTab = 'Oslo';
 	redrawScreen();
 }
-function onClickReloadSpec() {
-	loadUserSpec([loadUserCode, presentSpecAndCode, redrawScreen]);
+async function onClickReloadSpec() {
+	await loadSpecAndCode();
+	presentSpecAndCode();
+	redrawScreen();
 }
 
 function loadUserSpec(callbacks = []) {
@@ -184,20 +200,6 @@ function loadUserSpec(callbacks = []) {
 	});
 }
 
-// function loadUserSpecNE(callbacks = []) {
-// 	sendRoute('/get_UI_spec/' + GAME, d1 => {
-// 		try {
-// 			//console.log('back from loadUserSpec',d1)
-// 			S.user.spec = JSON.parse(d1);
-// 			S.user.specText = d1;
-// 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
-// 		} catch{
-// 			S.user.spec = null;
-// 			S.user.specText = 'null';
-// 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
-// 		}
-// 	});
-// }
 function loadUserCode(callbacks = []) {
 	//timit.showTime(getFunctionCallerName());
 	let fname = S.user.spec ? S.user.spec.CODE : null;
@@ -219,45 +221,38 @@ function loadUserCode(callbacks = []) {
 	}
 }
 
-
-//________________________________________test code unused!
-//usage:
-// if (iNeedSomeMore) {
-// 	Script.load("myBigCodeLibrary.js"); // includes code for myFancyMethod();
-// 	myFancyMethod(); // cool, no need for callbacks!
-// }
-var Script = {
-	_loadedScripts: [],
-	include: function (script) {
-		// include script only once
-		if (this._loadedScripts.include(script)) {
-			return false;
-		}
-		// request file synchronous
-		var code = new Ajax.Request(script, {
-			asynchronous: false,
-			method: "GET",
-			evalJS: false,
-			evalJSON: false
-		}).transport.responseText;
-		// eval code on global level
-		if (Prototype.Browser.IE) {
-			window.execScript(code);
-		} else if (Prototype.Browser.WebKit) {
-			$$("head").first().insert(Object.extend(
-				new Element("script", {
-					type: "text/javascript"
-				}), {
-				text: code
-			}
-			));
-		} else {
-			window.eval(code);
-		}
-		// remember included script
-		this._loadedScripts.push(script);
-	}
-};
+// var Script = {
+// 	_loadedScripts: [],
+// 	include: function (script) {
+// 		// include script only once
+// 		if (this._loadedScripts.include(script)) {
+// 			return false;
+// 		}
+// 		// request file synchronous
+// 		var code = new Ajax.Request(script, {
+// 			asynchronous: false,
+// 			method: "GET",
+// 			evalJS: false,
+// 			evalJSON: false
+// 		}).transport.responseText;
+// 		// eval code on global level
+// 		if (Prototype.Browser.IE) {
+// 			window.execScript(code);
+// 		} else if (Prototype.Browser.WebKit) {
+// 			$$("head").first().insert(Object.extend(
+// 				new Element("script", {
+// 					type: "text/javascript"
+// 				}), {
+// 				text: code
+// 			}
+// 			));
+// 		} else {
+// 			window.eval(code);
+// 		}
+// 		// remember included script
+// 		this._loadedScripts.push(script);
+// 	}
+// };
 
 
 

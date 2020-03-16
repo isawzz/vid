@@ -48,7 +48,7 @@ async function route_test_userSpec(url) {
 function loadCode(game,text){
 	//console.log('text',text)
 	var scriptTag = document.createElement("script");
-	scriptTag.onload = () => //console.log('code for', game, 'loaded');
+	scriptTag.onload = () => console.log('code for', game, 'loaded');
 	scriptTag.setAttribute("type", "text/javascript");
 	scriptTag.innerHTML = text; // "//console.log('HALLOOOOOOOOOO DU!!!!!!!');";
 	document.getElementsByTagName("body")[0].appendChild(scriptTag);

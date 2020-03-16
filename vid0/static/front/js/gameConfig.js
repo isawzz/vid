@@ -69,6 +69,7 @@ function closeGameConfig() {
 	hide('bLobbyCancel');
 }
 function ensureAllGames(callbacks = []) {
+	//console.log(allGames)
 	if (allGames == null) {
 		sendGetAllGames(d => {
 			allGames = d;

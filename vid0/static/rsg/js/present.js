@@ -57,6 +57,7 @@ function _tableUpdate() {
 	//console.log('___________________TABLE UPDATE')
 	for (const oid in G.tableUpdated) {
 		let o = G.table[oid];
+		//console.log('table update',oid)
 		if (nundef(o)) {
 			//console.log('NON-EXISTING OBJECT!!!!!',oid,'has been removed!');
 			continue;

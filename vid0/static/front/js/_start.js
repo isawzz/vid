@@ -2,18 +2,15 @@ var commandChain = [];
 var maxZIndex = 110;
 var iconChars = null;
 var firstDomLoad = null;
-// var vidCache = null;
-// var vidCache_dep = null; 
 
 //#region testing
 //#endregion
 
-async function _start() {
+async function _startSession() {
 
-	timit = new TimeIt(getFunctionCallerName());
-	timit.tacit();
-	// vidCache = new LazyCache(true);
-	// vidCache_dep = new VidCache_dep();
+	timit = new TimeIt(getFunctionCallerName(),TIMIT_SHOW);
+
+	await loadAssets();
 
 	//#region testing
 	// timit.showTime('vor');
@@ -34,7 +31,7 @@ async function _start() {
 
 	//timit.showTime('vor loadAllGames_dep+loadIcons')
 	//await loadAllGames_dep();
-	_initServer([loadIconChars, ensureAllGames, () => {
+	_initServer([ensureAllGames, () => {
 
 		//START HERE!!!! have iconChars,allGames,gcs
 		timit.showTime('nach loadAllGames_dep+loadIcons')
@@ -70,7 +67,7 @@ function _startLogin() { loginView(); }
 
 function _startLobby() { lobbyView(); }
 
-function _startNewGame(role = 'starter') {
+async function _startNewGame(role = 'starter') {
 	gameView();
 	//console.log('starting as',role,'multiplayer=',isReallyMultiplayer);
 
@@ -88,8 +85,13 @@ function _startNewGame(role = 'starter') {
 	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
 	id2uids = {}; // { uid : list of mobj ids related to same oid }
 
-	let sendCommandChain = role == 'starter' ? sendInitNewGame : sendStatusNewGame;
-	loadUserSpec([loadUserCode, sendCommandChain]);
+	let initFunc = (role == 'starter') ? sendInitNewGame : sendStatusNewGame;
+	await loadSpecAndCode();
+	//console.log('hallo');
+	if (TESTING) stubSendInitNewGame(role == 'starter');
+	else initFunc();
+
+
 
 }
 function _startRestartSame() {
@@ -246,7 +248,7 @@ function loadIconChars(callbacks = []) {
 
 function setIsReallyMultiplayer() {
 	let gc = S.gameConfig;
-	
+
 	// if any of the players is not front ai and is not me, is real multiplayer game and has to be announced!!!
 	let players = gc.players;
 	let foreign = firstCond(players, x => !isMyPlayer(x.id) && x.playerType == 'human');

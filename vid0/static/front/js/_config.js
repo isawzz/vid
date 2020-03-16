@@ -5,7 +5,45 @@ var SEED = 1;
 //var AI_TYPE = 'random';
 const PLAYER_CONFIG_FOR_MULTIPLAYER = ['me', 'human', 'human'];
 
+const USE_LOCAL_STORAGE = true; // true | false
+
+//ONLY used when NOT testing:
+const VERSION = '_ui'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
+const CACHE_DEFAULTSPEC = false;
+const CACHE_USERSPEC = false;
+const CACHE_CODE = false;
+const CACHE_INITDATA = true;
+
+//*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
+const TESTING = false; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
+const RUNTEST = false; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
+const USE_NON_TESTING_DATA = true;
+
+const DSPEC_VERSION = 3;
+const USPEC_VERSION = '2a';
+const CODE_VERSION = 1;
+const SERVERDATA_VERSION = 1;
+const TEST_PATH = '/zdata/';
+
+//might change but unlikely:
+const INIT_CLEAR_LOCALSTORAGE = false; // true | false //tru will delete complete localStorage at _startSession
+const USE_MAX_PLAYER_NUM = false; // true | false
+const STARTING_TAB_OPEN = 'bPlayers'; // bObjects | bPlayers | bSettings
+const TIMIT_SHOW = false; // true | false
+const SHOW_SERVER_ROUTE = false; // true | false
+const SHOW_SERVER_RETURN = false; // true | false
+const SHOW_CODE_DATA = false; // true | false
+const SHOW_SPEC = true; // true | false
+const USE_OLD_GRID_FUNCTIONS = false;// true | false
 const USE_ALL_GAMES_ROUTE = false; //set true if route /game/info works again! if false loads info.yaml directly
+
+//#region cache options
+// 
+// const CACHE_ASSETS = true; // true | false
+// const CACHE_DEFAULT_SPEC_CODE = false; // true | false
+// const CACHE_SERVERDATA = false; // true | false
+
+//#region server options
 const USE_SOCKETIO = false;
 const USE_BACKEND_AI = true;
 const IS_MIRROR = false;

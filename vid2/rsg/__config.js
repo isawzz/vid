@@ -26,9 +26,6 @@ const USE_ALL_GAMES_ROUTE = false; // true | false //false means directly loadin
 
 
 
-
-
-
 //might change but unlikely:
 const INIT_CLEAR_LOCALSTORAGE = false; // true | false //tru will delete complete localStorage at _startSession
 const USE_MAX_PLAYER_NUM = false; // true | false

@@ -257,7 +257,7 @@ table:
     - _obj: '3'
     - 
     - 
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -289,7 +289,7 @@ table:
     - _obj: '4'
     - _obj: '0'
     - 
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -321,7 +321,7 @@ table:
     - _obj: '5'
     - _obj: '1'
     - 
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -353,7 +353,7 @@ table:
     - _obj: '7'
     - 
     - 
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -386,7 +386,7 @@ table:
     - _obj: '8'
     - _obj: '3'
     - _obj: '0'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -418,7 +418,7 @@ table:
     - _obj: '9'
     - _obj: '4'
     - _obj: '1'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -450,7 +450,7 @@ table:
     - _obj: '10'
     - _obj: '5'
     - _obj: '2'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -482,7 +482,7 @@ table:
     - 
     - 
     - 
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -514,7 +514,7 @@ table:
     - _obj: '12'
     - _obj: '7'
     - _obj: '3'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -546,7 +546,7 @@ table:
     - _obj: '13'
     - _obj: '8'
     - _obj: '4'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -578,7 +578,7 @@ table:
     - _obj: '14'
     - _obj: '9'
     - _obj: '5'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -610,7 +610,7 @@ table:
     - _obj: '15'
     - _obj: '10'
     - _obj: '6'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -642,7 +642,7 @@ table:
     - 
     - 
     - _obj: '7'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -674,7 +674,7 @@ table:
     - _obj: '16'
     - _obj: '12'
     - _obj: '8'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -706,7 +706,7 @@ table:
     - _obj: '17'
     - _obj: '13'
     - _obj: '9'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -738,7 +738,7 @@ table:
     - _obj: '18'
     - _obj: '14'
     - _obj: '10'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -770,7 +770,7 @@ table:
     - 
     - 
     - _obj: '12'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -802,7 +802,7 @@ table:
     - 
     - _obj: '16'
     - _obj: '13'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White
@@ -834,7 +834,7 @@ table:
     - 
     - _obj: '17'
     - _obj: '14'
-    obj_type: hex
+    obj_type: Field
     visible:
       _set:
       - _player: White

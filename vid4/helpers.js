@@ -1802,6 +1802,17 @@ const fieldSorter = fields => (a, b) =>
 function first(arr) {
 	return arr.length > 0 ? arr[0] : null;
 }
+function fisherYates(array) {
+	var rnd, temp;
+
+	for (var i = array.length - 1; i; i--) {
+		rnd = Math.random() * i | 0;
+		temp = array[i];
+		array[i] = array[rnd];
+		array[rnd] = temp;
+	}
+	return array;
+}
 function allCondDict(d, func) {
 	let res = [];
 	for (const k in d) { if (func(d[k])) res.push(k); }
@@ -1982,6 +1993,7 @@ function sameList(l1, l2) {
 function sameStringify(o1, o2) {
 	return JSON.stringify(o1) == JSON.stringify(o2);
 }
+function shuffle(arr){return fisherYates(arr);}
 function sortBy(arr, key) {
 	//console.log(jsCopy(arr))
 	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1));

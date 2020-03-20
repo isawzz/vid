@@ -1,13 +1,17 @@
-//using keys, restructured code a bit
+//using keys, assets, divs for opps,table,players,  full serverData in use! 
 window.onload = () => _start();
 
-var body, div, colors, iColor, dServerData, dPrevServerData, sDataUpdated;
+var divRsg, divTable,divPlayer,divOpps, colors, iColor, dServerData, dPrevServerData, sDataUpdated;
 
-function _start() {
-	initialServerData();
+async function _start() {
+	await loadAssets();
+	await loadSpec();
+	await loadCode();
+	await loadInitialServerData();
+	dServerData = serverData; 
 
 	initUI();
-	body.select('button').text('STEP').on('click', step);
+	d3.select('button').text('STEP').on('click', step);
 
 	initPresentation();
 }
@@ -65,7 +69,7 @@ function updateSelection(d) {
 	console.log('______ *** updateSelection *** ')
 	console.log('data', d.map(x => x.id)); //d is odict2olist(updatedServerData,'id'), each item has 'id'
 
-	let virtualSelection = div.selectAll("div");
+	let virtualSelection = divTable.selectAll("div");
 	let n = virtualSelection.size();
 	console.log('n', n, 'd.len', d.length, 'color', colors[iColor])
 
@@ -74,7 +78,7 @@ function updateSelection(d) {
 		binding = virtualSelection.data(d).enter().append('div');
 		console.log('*binding.nodes()', binding.nodes());
 	} else {
-		binding = div.selectAll("div").data(d, x => x.id);
+		binding = divTable.selectAll("div").data(d, x => x.id);
 		console.log('...binding.nodes()', binding.nodes());
 		//leave other nodes unchanged: no exit() clause!
 	}
@@ -86,15 +90,35 @@ function initialServerData() {
 	dServerData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
 	dPrevServerData = [];
 }
-function initPresentation() { updateSelection(odict2olist(dServerData)); }
+function initPresentation() { 
+	let lst=dict2olist(dServerData);
+	console.log('__________ lst',lst);
+	updateSelection(lst); 
+}
 function initUI() {
-	body = d3.select('body');
+	divRsg = d3.select('#rsg');
 	document.title = 'HA!';
-	div = body.select('div');
+
+	divTable = divRsg.select('#table');
+
+	divPlayer = divRsg.select('#player');
+	divOpps = {};
+	let dOpps = divRsg.select('#opps');
+	for(const plid in playerConfig[GAME].players){
+		let dPlid=dOpps.append('div').attr('id',plid);
+		divOpps[plid]=dPlid;
+	}
+
 	colors = ['blue', 'red', 'green', 'purple', 'black', 'white'];
 	iColor = 0;
 }
-function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); }
+function updateUI(data){
+	let d = mBy('SERVERDATA');
+	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
+	else console.log('serverData',data);
+
+}
+function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); updateUI(dServerData); }
 
 
 

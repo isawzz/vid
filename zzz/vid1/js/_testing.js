@@ -15,7 +15,7 @@ async function loadTest(nUspec, nCode, nServerData) {
 
 	url = CODE_PATH + 'code' + nCode + '.js';
 	userCode = await vidCache.load('userCode', async() =>{ return {asText: await route_path_text(url)};}); //route_userCode(GAME, fname));//, true); //set true to reload from server!
-	loadCode(GAME, userCode.live.asText);
+	loadCode_dep(GAME, userCode.live.asText);
 
 	url = SERVERDATA_PATH + 'data' + nServerData + '.yaml';
 	serverDataCache = initialData[GAME] = await vidCache.load('data' + nServerData, async() => await route_path_yaml_dict(url)); //, true); //set true to reload from server

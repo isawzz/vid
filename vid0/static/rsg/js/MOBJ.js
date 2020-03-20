@@ -225,7 +225,7 @@ class MOBJ {
 		weight = ''
 	} = {}) {
 
-		//console.log('MS.text: family:',family,'txt',txt)
+		//console.log('MSOB.text: family:',family,'txt',txt)
 		if (this.cat == 'd') {
 
 			if (isEmpty(txt)) {
@@ -326,7 +326,7 @@ class MOBJ {
 
 		let res = { el: r, w: wText };
 		this.texts.push(res);
-		//console.log('MS.text done: res',res)
+		//console.log('MSOB.text done: res',res)
 		//console.log(r)
 		return res;
 	}
@@ -1437,7 +1437,7 @@ class MOBJ {
 
 	//#region admin/general
 
-	//attach/detach does NOT remove or add to MS parent, just its domel! (for former, use: switchParent NOT_IMPL)
+	//attach/detach does NOT remove or add to MSOB parent, just its domel! (for former, use: switchParent NOT_IMPL)
 	attach(partName) { 
 		if (!this.isAttached) { 
 			this.isAttached = true; 

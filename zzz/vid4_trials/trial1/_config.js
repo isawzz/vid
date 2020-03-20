@@ -3,8 +3,8 @@ var GAME = 'ttt'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
-const TESTING = false; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
-const RUNTEST = false; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
+const TESTING = true; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
+const RUNTEST = true; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
 const USE_NON_TESTING_DATA = true; //uses spec,code from /games instead of uspec...
 const USE_LOCAL_STORAGE = true; // true | false
 
@@ -23,10 +23,21 @@ var CACHE_CODE = false;
 const CACHE_INITDATA = false;
 const USE_ALL_GAMES_ROUTE = false; // true | false //false means directly loading game infos from info.yaml
 
-//might change but unlikely:
+// important vars
+var SPEC = null; //merged userSpec and defaultSpec
+var GAMEPLID = null; //game player id
+var PGAMEPLID = null; //prev game player id
+
+// performance *** TIMER ***
+var timit;
+const TIMIT_SHOW = false; // true | false
+var t_total = 0;
+var t_avg = 0;
+
+//settings that might change but unlikely:
 const INIT_CLEAR_LOCALSTORAGE = false; // true | false //tru will delete complete localStorage at _startSession
 const USE_MAX_PLAYER_NUM = false; // true | false
-const TIMIT_SHOW = false; // true | false
+const VERBOSE = true; // true | false
 const SHOW_SERVER_ROUTE = false; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
 const SHOW_CODE_DATA = false; // true | false
@@ -53,11 +64,7 @@ const NGROK = null;// 'http://ee91c9fa.ngrok.io/'; // null;//'http://f3629de0.ng
 
 //achtung!!! NO / at end!!!!!!!
 const SERVER = IS_MIRROR ? 'http://localhost:5555' : FLASK ? (NGROK ? NGROK : 'http://localhost:' + PORT) : 'http://localhost:5005';
-
-var SPEC = null; //merged userSpec and defaultSpec
-var GAMEPLID = null;
-const USERNAME_ORIG = USERNAME;
-
 const PLAYER_CONFIG_FOR_MULTIPLAYER = ['me', 'human', 'human'];
+const USERNAME_ORIG = USERNAME;
 
 

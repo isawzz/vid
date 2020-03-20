@@ -112,7 +112,7 @@ function pictoHand(objectPool, loc, o, oid, path, oDict) {
 		let card = { name: k, desc: oDict[k] };
 		oCardList.push(card);
 	}
-	//let oCardList = dict2list(oCardDict, 'id');
+	//let oCardList = odict2olist(oCardDict);
 	//console.log('_______________\ncardList', oCardList, oDict);
 	return;
 
@@ -148,7 +148,7 @@ function cardHand_dep(objectPool, loc, o, oid, path, oHand) {
 	}
 	let oCardDict = {};
 	for (const id of ids) { oCardDict[id] = objectPool[id]; }
-	let oCardList = dict2list(oCardDict, 'id');
+	let oCardList = odict2olist(oCardDict);
 	// //console.log('_______________\nhave to present', ids, 'in area', mkHand.id);
 
 

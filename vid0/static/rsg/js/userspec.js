@@ -92,7 +92,7 @@ function redrawScreen() {
 	//console.log('use behaviors', S.settings.userBehaviors, FUNCS);
 	if (S.settings.userBehaviors) {
 		//load code again!
-		// loadCode(userCode.asText,setUserSpecAndCode);
+		// loadCode_dep(userCode.asText,setUserSpecAndCode);
 		loadCode0(userCode.asText, 'setUserSpecAndCode();proceedRedraw();', () => {
 			console.log('setting code now!')
 			setUserSpecAndCode();
@@ -112,7 +112,7 @@ function proceedRedraw() {
 	flags.specAndDOM = true;
 	let xdata = G.serverData;
 	G = { table: {}, players: {}, signals: {} }; //server objects
-	UIS = {}; // holds MS objects 
+	UIS = {}; // holds MSOB objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
 	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
@@ -200,6 +200,7 @@ function loadUserSpec(callbacks = []) {
 	});
 }
 
+//not used anymore!!!
 function loadUserCode(callbacks = []) {
 	//timit.showTime(getFunctionCallerName());
 	let fname = S.user.spec ? S.user.spec.CODE : null;
@@ -214,6 +215,7 @@ function loadUserCode(callbacks = []) {
 		//S.path.script = '/games/' + allGames[S.settings.game].name + '/' + fname + '.js';
 		loadScript(S.path.script, dScript => {
 			loadText(S.path.script, code => {
+				console.log('script.onload DOES WORK!!!!!!!!!!!!')
 				S.user.script = code;
 				if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
 			});

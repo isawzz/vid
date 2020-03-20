@@ -1,7 +1,111 @@
+//#region DOM 1 liners A list divs
+function asElem(x) { return isString(x) ? mBy(x) : x; }
+function asList(x) { return isList(x) ? x : [x]; }
+function mAppend(d, child) { d.appendChild(child); }
+function mBg(d, color) { d.style.backgroundColor = color; }
+function mBy(id) { return document.getElementById(id); }
+function mClass(d) { for (let i = 1; i < arguments.length; i++) d.classList.add(arguments[i]); }
+function mCreate(tag) { return document.createElement(tag); }
+function mDestroy(elem) { if (isString(elem)) elem = mById(elem); elem.parentNode.removeChild(elem); }
+function mDiv(dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); return d; }
+function mDivPosAbs(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPos(d, x, y); return d; }
+function mDivPosRel(x = 0, y = 0, dParent = null) { let d = mCreate('div'); if (dParent) mAppend(dParent, d); mPosRel(d, x, y); return d; }
+function mFg(d, color) { d.style.color = color; }
+function mFlex(d) { d.style.display = 'flex'; d.style.flexWrap = 'wrap'; }
+function mFlex1(d) { d.style.display = 'flex'; d.style.flexWrap = 'wrap'; d.style.flex = 1; }
+function mLabel(label) {
+	//choice a) fontsize nach length berechnen
+	//b) 
+	let ch = iconChars[key];
+	let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
+	let text = String.fromCharCode('0x' + ch);
+	let d = mTextDiv(text);
+	d.style.setProperty('font-family', family);
+	return d;
+}
+function mPic(key) {
+	let ch = iconChars[key];
+	let family = (ch[0] == 'f' || ch[0] == 'F') ? 'pictoFa' : 'pictoGame';
+	let text = String.fromCharCode('0x' + ch);
+	let d = mTextDiv(text);
+	d.style.setProperty('font-family', family);
+	return d;
+}
+function mMarginAuto(d) { d.style.setProperty('margin', 'auto'); }
+function mPos(d, x, y, unit = 'px') { mStyle(d, { left: x, top: y, position: 'absolute' }, unit); }
+function mPosAbs(d) { d.style.position = 'absolute'; }
+function mPosRel(d, x, y, unit) { d.style.position = 'relative'; if (isdef(x)) mStyle(d, { left: x, top: y }, unit); }
+function mRot(d, angle) { d.style.transform = 'rotate(' + angle + 'deg)'; }
+function mSize(d, w, h, unit = 'px') { mStyle(d, { width: w, height: h }, unit); }
+function mSizePic(d, w, h = 0, unit = 'px') { return mStyle(d, { 'font-size': h / 2, 'font-weight': 900, 'padding-top': h / 4, 'text-align': 'center', 'box-sizing': 'border-box', width: w, height: h ? h : w }, unit); }
+function mStyle(elem, styles, unit = 'px') { for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } }
+function mTextDiv(text, dParent = null) { let d = mCreate('div'); d.innerHTML = text; return d; }
+//#endregion
+
+//#region SVG 1 liners A list shapes G
+function gCreate(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+function gPos(g, x, y) { g.style.transform = `translate(${x}px, ${y}px)`; }
+function gBg(g, color) { g.setAttribute('fill', color); }
+function gFg(g, color, thickness) { g.setAttribute('stroke', color); if (thickness) g.setAttribute('stroke-width', thickness); }
+function gSvg() { return gCreate('svg'); } //document.createElementNS('http://www.w3.org/2000/svg', 'svg'); }
+function gG() { return gCreate('g'); }// document.createElementNS('http://www.w3.org/2000/svg', 'g'); }
+function gHex(w, h) { let pts = size2hex(w, h); return gPoly(pts); }
+function gPoly(pts) { let r = gCreate('polygon'); if (pts) r.setAttribute('points', pts); return r; }
+function gRect(w, h) { let r = gCreate('rect'); r.setAttribute('width', w); r.setAttribute('height', h); r.setAttribute('x', -w / 2); r.setAttribute('y', -h / 2); return r; }
+function gEllipse(w, h) { let r = gCreate('ellipse'); r.setAttribute('rx', w / 2); r.setAttribute('ry', h / 2); return r; }
+function gLine(x1, y1, x2, y2) { let r = gCreate('line'); r.setAttribute('x1', x1); r.setAttribute('y1', y1); r.setAttribute('x2', x2); r.setAttribute('y2', y2); return r; }
+
+function agCircle(g, sz) { let r = gEllipse(sz, sz); g.appendChild(r); return r; }
+function agEllipse(g, w, h) { let r = gEllipse(w, h); g.appendChild(r); return r; }
+function agHex(g, w, h) { let pts = size2hex(w, h); return agPoly(g, pts); }
+function agPoly(g, pts) { let r = gPoly(pts); g.appendChild(r); return r; }
+function agRect(g, w, h) { let r = gRect(w, h); g.appendChild(r); return r; }
+function agLine(g, x1, y1, x2, y2) { let r = gLine(x1, y1, x2, y2); g.appendChild(r); return r; }
+
+//endregion
+
+//#region 1 liners B list
+function mEnsure(d) { return isString(d) ? mById(d) : d; }
+function mAppendS(d, child) { d = mEnsure(d); if (d) d.appendChild(child); return child; }
+function mAppendText(d, text) { let dText = mCreate('div'); dText.innerHTML = text; d.appendChild(dText); return dText; }
+function mAppendTextS(d, text) { let dText = mCreate('div'); dText.innerHTML = text; mAppendS(d, dText); return dText; }
+function mAppPos(d, child) { d.style.position = 'relative'; return mAppend(d, child); }
+function mAppPosS(d, child) { d = ensure(d); d.style.position = 'relative'; return mAppend(d, child); }
+function mBox(w, h, color, dParent = null) { let d = mDiv(dParent); return mStyle(d, { 'background-color': color, position: 'absolute', display: 'inline', width: w, height: h }); }
+
+function mById(id) { return document.getElementById(id); }
+function mColor(d, bg, fg = 'white') { return mStyle(d, { 'background-color': bg, 'color': fg }); }
+function mRemove(elem) { mDestroy(elem); }
+//function onMouseEnter(d, handler = null) { d3.on('mouse') }
+function mFont(d, fz) { d.style.setProperty('font-size', makeUnitString(fz, 'px')); }
+function mGap(d, gap) { d.style.setProperty('margin', gap + 'px'); }
+//function mPosAbs(d) { return mStyle(d, { position: 'absolute' }); }
+function mSzPic(d, sz, unit = 'px') { return mSizePic(d, sz, sz, unit); }
+function mStyleS(elem, styles, unit = 'px') { elem = mEnsure(elem); for (const k in styles) { elem.style.setProperty(k, makeUnitString(styles[k], unit)); } return elem; }
+//#endregion
+
+//#region 1 liners positioning...
+function posTL(d) { mPos(d, 0, 0) }
+function posTR(d) { mStyle(d, { right: 0, top: 0, position: 'absolute' }); }
+function posBL(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); }
+function posBLR(d) { mStyle(d, { left: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
+function posBR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); }
+function posBRR(d) { mStyle(d, { right: 0, bottom: 0, position: 'absolute' }); mRot(d, 180); }
+function posCIC(d) { d = mEnsure(d); d.classList.add('centerCentered'); }
+function posCICT(d) { d = mEnsure(d); d.classList.add('centerCenteredTopHalf'); }
+function posCICB(d) { d = mEnsure(d); d.classList.add('centerCenteredBottomHalf'); }
+//#endregion
+
+//#region Timit
 class TimeIt {
-	constructor(msg) {
+	constructor(msg, showOutput = true) {
+		this.showOutput = showOutput;
 		this.init(msg);
-		this.showOutput = true;
+	}
+	getTotalTimeElapsed() {
+		let tNew = new Date();
+		let tDiffStart = tNew.getTime() - this.namedTimestamps.start.getTime();
+		return tDiffStart;
 	}
 	tacit() { this.showOutput = false; }
 	timeStamp(name) {
@@ -13,8 +117,7 @@ class TimeIt {
 	}
 	reset() { this.init('timing start') }
 	init(msg) {
-		this.t = new Date(); //new Date().getTime();
-		//this.showOutput = true;
+		this.t = new Date();
 		if (this.showOutput) console.log('___', msg);
 		this.namedTimestamps = { start: this.t };
 	}
@@ -47,6 +150,8 @@ class TimeIt {
 		if (this.showOutput) console.log('___ ' + tDiff + ' msecs', msg, 'to EOC (total: ' + tDiffStart + ')');
 	}
 }
+//#endregion
+
 //#region colors
 var colorDict = null; //for color names, initialized when calling anyColorToStandardStyle first time
 function anyColorToStandardString(cAny, a, allowHsl = false) {
@@ -610,6 +715,16 @@ function getPalette(color, type = 'shade') {
 	color = anyColorToStandardString(color);
 	return colorPalShade(color);
 }
+function getTransPalette(color = '#000000') {
+	let res = [];
+	for (const alpha of [.0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1]) res.push(colorTrans(color, alpha));
+	return res;
+}
+function getTransPalette9(color = '#000000') {
+	let res = [];
+	for (const alpha of [.1, .2, .3, .4, .5, .6, .7, .8, .9]) res.push(colorTrans(color, alpha));
+	return res;
+}
 function HSLAToRGBA(hsla, isPct) {
 	//if isPct == true, will output 'rgb(xx%,xx%,xx%)' umgerechnet in % von 255
 	let ex = /^hsla\(((((([12]?[1-9]?\d)|[12]0\d|(3[0-5]\d))(\.\d+)?)|(\.\d+))(deg)?|(0|0?\.\d+)turn|(([0-6](\.\d+)?)|(\.\d+))rad)(((,\s?(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2},\s?)|((\s(([1-9]?\d(\.\d+)?)|100|(\.\d+))%){2}\s\/\s))((0?\.\d+)|[01]|(([1-9]?\d(\.\d+)?)|100|(\.\d+))%)\)$/i;
@@ -760,7 +875,6 @@ function setCSSVariable(varName, val) {
 //#endregion
 
 //#region DOM: creating divs: 2020
-
 function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, className, styleStr, border, rounding, gap, margin, padding, float, textAlign, fz }) {
 	let d1 = document.createElement('div');
 	if (isdef(dParent)) dParent.appendChild(d1); else dParent = null;
@@ -797,7 +911,7 @@ function addDivU({ id, dParent, w, h, unit, fg, bg, position, x, y, html, classN
 	}
 	if (isdef(margin)) d1.style.setProperty('margin', makeUnitString(margin, 'px'));
 	if (isdef(padding)) d1.style.setProperty('padding', makeUnitString(padding, 'px'));
-	if (float) d1.style.float = float;
+	if (float) d1.style.setProperty('float', float);
 	if (textAlign) d1.style.textAlign = textAlign;
 	if (isdef(fz)) d1.style.setProperty('fontSize', makeUnitString(fz, 'px'));
 
@@ -810,11 +924,18 @@ function addDivPosTo(dParent, x = 0, y = 0, w = 100, h = 100, unit = '%', bg = '
 	return addDivU({ dParent: dParent, x: x, y: y, w: w, h: h, unit: unit, position: position, bg: bg });
 }
 function createElementFromHTML(htmlString) {
-  var div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
+	//console.log('---------------',htmlString)
+	var div = document.createElement('div');
+	div.innerHTML = htmlString.trim();// '<div>halloooooooooooooo</div>';// htmlString.trim();
 
-  // Change this to div.childNodes to support multiple top-level nodes
-  return div.firstChild; 
+	// Change this to div.childNodes to support multiple top-level nodes
+	//console.log(div.firstChild)
+	return div.firstChild;
+}
+function makeUnitString(nOrString, unit = 'px', defaultVal = '100%') {
+	if (nundef(nOrString)) return defaultVal;
+	if (isNumber(nOrString)) nOrString = '' + nOrString + unit;
+	return nOrString;
 }
 //code 2019
 function addDiv(dParent, { html, w = '100%', h = '100%', bg, fg, border, rounding, margin, padding, float, position, x, y, textAlign, fontSize }) {
@@ -835,7 +956,26 @@ function addFlexGridDiv(dParent) { return addDivU({ dParent: dParent, className:
 //#region DOM: creating g elements
 function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter = false } = {}) {
 	//div dParent gets an svg and inside a g, returns g
+	//dParent must have its bounds width and height set
 	let svg1 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+	if (!dParent.style.width || !dParent.style.height) {
+		let pBounds = getBounds(dParent);
+		w = pBounds.width + 'px';
+		h = pBounds.height + 'px';
+		if (pBounds.width == 0){
+			w='100%';
+			h='100%';
+		}
+		//console.log('--- addSvgg: CORRECTING MISSING WIDTH AND HEIGHT ON PARENT ---', dParent.id,w,h);
+
+		// svg1.setAttribute('width', pBounds.width + 'px');
+		// svg1.setAttribute('height', pBounds.height + 'px');
+		// dParent.style.setProperty('width', pBounds.width + 'px');
+		// dParent.style.setProperty('height', pBounds.height + 'px');
+	}
+	if (!dParent.style.position) dParent.style.position = 'relative';
+
 	svg1.setAttribute('width', w);
 	svg1.setAttribute('height', h);
 	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
@@ -848,6 +988,41 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 	svg1.appendChild(g1);
 	// if (originInCenter) { g1.style='transform:translate(50%, 50%)'; } //works!
 	// if (originInCenter) { g1.setAttribute('class', 'gCentered'); } //works! but: relies on class gCentered
+	// console.log('____________________________')
+	// console.log(getBounds(svg1))
+	// console.log(getBounds(dParent))
+	if (originInCenter) { g1.style.transform = "translate(50%, 50%)"; } //works!
+
+	return g1;
+}
+function addSvggViewbox(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter = false } = {}) {
+	//div dParent gets an svg and inside a g, returns g
+	//dParent must have its bounds width and height set
+	let svg1 = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+	if (!dParent.style.width || !dParent.style.height) {
+		let pBounds = getBounds(dParent);
+		w = pBounds.width + 'px';
+		h = pBounds.height + 'px';
+	}
+	if (!dParent.style.position) dParent.style.position = 'relative';
+
+	svg1.setAttribute('width', w);
+	svg1.setAttribute('height', h);
+	svg1.setAttribute('viewBox', "0 0 433 375");
+	let style = 'margin:0;padding:0;position:absolute;top:0px;left:0px;';
+	if (bg) style += 'background-color:' + bg;
+	svg1.setAttribute('style', style);
+	dParent.appendChild(svg1);
+
+	let g1 = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+	if (gid) g1.id = gid;
+	svg1.appendChild(g1);
+	// if (originInCenter) { g1.style='transform:translate(50%, 50%)'; } //works!
+	// if (originInCenter) { g1.setAttribute('class', 'gCentered'); } //works! but: relies on class gCentered
+	// console.log('____________________________')
+	// console.log(getBounds(svg1))
+	// console.log(getBounds(dParent))
 	if (originInCenter) { g1.style.transform = "translate(50%, 50%)"; } //works!
 
 	return g1;
@@ -855,7 +1030,7 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 
 //#endregion
 
-//#region DOM: coordinate and bounds helpers
+//#region DOM: coordinate and bounds helpers, text measuring!
 function myFunction() {
 	console.log('onresize!!!');
 	//for(const id of [])
@@ -867,6 +1042,11 @@ function actualTop(elem, relToParent = false, elRelTo) { return Math.round(getBo
 function actualCenter(elem, relToParent = false, elRelTo) {
 	let b = getBounds(elem, relToParent, elRelTo);
 	return { x: Math.round(b.left + b.width / 2), y: Math.round(b.top + b.height / 2) };
+}
+function calcNumRowsFitting(dParent, maxHeight, html) {
+	let sz = getTextSize(html, dParent);
+	//console.log('line height as per calcNumRowsFitting',sz.h);
+	return maxHeight / (sz.h + 2);
 }
 function getRelBounds(elem, elRel) {
 	let b1 = elem.getBoundingClientRect();
@@ -894,6 +1074,21 @@ function getRelCoords(ev, elem) {
 	let y = ev.pageY - elem.offset().top;
 	//console.log('coords rel to',elm,':',x,y);
 	return { x: x, y: y };
+}
+function getTextSize(s = 'hallo', parentDivOrId) {
+	var newDiv = document.createElement("div");
+	newDiv.innerHTML = s;
+	newDiv.style.cssText = "position:fixed; top:-9999px; opacity:0;"
+	if (isdef(parentDivOrId)) {
+		if (isString(parentDivOrId)) parentDivOrId = document.getElementById(parentDivOrId);
+		parentDivOrId.appendChild(newDiv);
+	} else {
+		document.body.appendChild(newDiv);
+	}
+	height = newDiv.clientHeight;
+	width = newDiv.clientWidth;
+	newDiv.parentNode.removeChild(newDiv)
+	return { w: width, h: height };
 }
 function getTextWidth(text, font) {
 	// re-use canvas object for better performance
@@ -970,6 +1165,7 @@ function makeDroppable(target) {
 
 //#region DOM: hierarchy, parent, children...
 function clearElement(elem) {
+	//console.log(elem);
 	if (isString(elem)) elem = document.getElementById(elem);
 	if (window.jQuery == undefined) { elem.innerHTML = ''; return elem; }
 	while (elem.firstChild) {
@@ -1112,18 +1308,88 @@ function show(elem) {
 
 //#endregion
 
-//#region file IO
+//#region DOM: load code, fire event
+function loadCode_dep(text) {
+	if (isdef(text)) text = text.trim();
+	if (isEmpty(text)) {
+		//console.log('text is empty!!! no script loaded!');
+		return;
+	}
+	//console.log('text', text);
+
+	var scriptTag = document.createElement("script");
+	scriptTag.onload = () => console.log('code loaded.....');
+	scriptTag.setAttribute("type", "text/javascript");
+	scriptTag.innerHTML = text;
+	document.getElementsByTagName("body")[0].appendChild(scriptTag);
+}
+
+function loadCode0(text,codeToRunWhenScriptLoaded=null,callback=null) {
+	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaalo')
+	if (isdef(text)) text = text.trim();
+	if (isEmpty(text)) {
+		console.log('code is empty!!! no script loaded!');
+		if (callback) callback();
+		return;
+	}
+	//console.log('text', text);
+
+	var scriptTag = document.createElement("script");
+	//scriptTag.onload = () => {console.log('123 code loaded.....'); if (callback) callback();}; //DOESNT WORK!!!
+	scriptTag.setAttribute("type", "text/javascript");
+	// const userProg = document.createElement('script')
+	scriptTag.text = callback? [text, codeToRunWhenScriptLoaded].join('\n'):text;
+	//document.head.appendChild(userProg)	text
+	//scriptTag.innerHTML = text;
+	document.getElementsByTagName("body")[0].appendChild(scriptTag);
+}
 function fireClick(node) {
 	if (document.createEvent) {
 		var evt = document.createEvent('MouseEvents');
 		evt.initEvent('click', true, false);
+		console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
 		node.dispatchEvent(evt);
 	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
 		node.fireEvent('onclick');
 	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
 		node.onclick();
 	}
 }
+function fireWheel(node) {
+	if (document.createEvent) {
+		var evt = document.createEvent('MouseEvents');
+		evt.initEvent('wheel', true, false);
+		console.log('fireClick: createEvent and node.dispatchEvent exist!!!', node)
+		node.dispatchEvent(evt);
+	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+function fireKey(k, { control, alt, shift } = {}) {
+	console.log('fireKey called!' + document.createEvent)
+	if (document.createEvent) {
+		// var evt = document.createEvent('KeyEvents');
+		// evt.initEvent('keyup', true, false);
+		console.log('fireKey: createEvent and node.dispatchEvent exist!!!', k, control, alt, shift);
+		//el.dispatchEvent(new Event('focus'));
+		//el.dispatchEvent(new KeyboardEvent('keypress',{'key':'a'}));
+		window.dispatchEvent(new KeyboardEvent('keypress', { key: '+', ctrlKey: true }));
+	} else if (document.createEventObject) {
+		console.log('fireClick: createEventObject and node.fireEvent exist!!!', node)
+		node.fireEvent('onclick');
+	} else if (typeof node.onclick == 'function') {
+		console.log('fireClick: node.onclick exists!!!', node)
+		node.onclick();
+	}
+}
+
+//#region file IO
 function downloadFile(jsonObject, filenameNoExt) {
 	json_str = JSON.stringify(jsonObject);
 	saveFileAtClient(filenameNoExt + ".json", "data:application/json", new Blob([json_str], { type: "" }));
@@ -1132,7 +1398,7 @@ function downloadFile(jsonObject, filenameNoExt) {
 function saveFileAtClient(name, type, data) {
 	// Function to download data to a file
 	//usage:
-	// json_str = JSON.stringify(G);
+	// json_str = JSON.stringify(someObject);
 	// saveFileAtClient("yourfilename.json", "data:application/json", new Blob([json_str], {type: ""}));
 
 	console.log(navigator.msSaveBlob);
@@ -1161,6 +1427,16 @@ function saveFileAtClient(name, type, data) {
 	// 	window.URL.revokeObjectURL(url);
 	// 	a.remove();
 	// }, 500);
+}
+function jsonToYaml(o) {
+	// this is your json object
+	//JSONObject jsonobject = new JSONObject(map);
+	// get json string
+	let y = jsyaml.dump(o);
+	return y;
+	//  let text= JSON.stringify(o); //o.toString(4);
+	//  let di = jsyaml.load(text);
+	//  let y = jsyaml.dump(di);
 }
 //#endregion
 
@@ -1605,26 +1881,11 @@ function lastCondDictPlusKey(dict, func) {
 
 	return null;
 }
-function listKey(d, lastKey, val, uniqueValues = true) {
-	// if (lastKey == '0') { //Number(lastKey)){
-	// 	console.log('//////dict', d);
-	// 	console.log('lastKey', lastKey);
-	// 	console.log('val', val, 'uniqueValues', uniqueValues)
-	// 	console.log('d[lastKey]', d[lastKey]);
-	// }
-	if (nundef(d[lastKey])) {
-		d[lastKey] = [];
-	}
-	if (uniqueValues) {
-		addIf(d[lastKey], val);
-	} else {
-		d[lastKey].push(val);
-	}
-	// if (lastKey == '0') {
-	// 	console.log('ende: d[lastKey]', jsCopy(d[lastKey]));
-	// 	console.log('dict',jsCopy(d))
-	// }
-	return d[lastKey];
+function listKey(d, key, val, uniqueValues = true) {
+	//adds val to array d[key], if d[key] does not exist, it is created
+	if (nundef(d[key])) { d[key] = []; }
+	if (uniqueValues) { addIf(d[key], val); } else { d[key].push(val); }
+	return d[key];
 }
 function lookup(dict, keys) {
 	let d = dict;
@@ -1648,6 +1909,11 @@ function parseDictionaryName(s) {
 	if (!odict || typeof odict != 'object') return null;
 	if (o_keys.length > 1) odict = lookup(odict, o_keys.slice(1));
 	return odict;
+}
+function parsePropertyPath(odict, s) {
+	if (isEmpty(s)) return odict;
+	let o_keys = s.split('.');
+	return lookup(odict, o_keys);
 }
 function propDiffSimple(o_old, o_new, props = null) {
 	//berechne diff in props
@@ -1791,6 +2057,13 @@ function randomColor(s = 100, l = 70, a = 1) {
 	//s,l in percent, a in [0,1], returns hsla string
 	var hue = Math.random() * 360;
 	return hslToHslaString(hue, s, l, a);
+}
+function randomHexColor() {
+	let s = '#';
+	for (let i = 0; i < 6; i++) {
+		s += chooseRandom(['f', 'c', '9', '6', '3', '0']);
+	}
+	return s;
 }
 function randomNumber(min = 0, max = 100) {
 	return Math.floor(Math.random() * (max - min + 1)) + min; //min and max inclusive!
@@ -1971,11 +2244,12 @@ function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }
 function nundef(x) { return x === null || x === undefined; }
 
-//#region faster version of getValueArray
+//faster version of getValueArray
 function getElements(o, elKey = '_obj', arrKey = '_set') {
 	// {_set:[{_obj:1},{_obj:2},...]} ==> [1,2,..]
-	let res=o[arrKey]?o[arrKey]:o;
-	if (isList(res) && res.length>0) return res[0][elKey]?res.map(x=>x[elKey]):res;
+	if (!o) return [];
+	let res = o[arrKey] ? o[arrKey] : o;
+	if (isList(res) && res.length > 0) return res[0][elKey] ? res.map(x => x[elKey]) : res;
 	else return [];
 }
 function getValueArray(o, elKey = 'obj', arrKey = '_set') {

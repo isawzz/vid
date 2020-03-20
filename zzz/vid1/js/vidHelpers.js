@@ -45,7 +45,7 @@ async function route_test_userSpec(url) {
 		return { asText: '' }; //empty spec!
 	}
 }
-function loadCode(game,text){
+function loadCode_dep(game,text){
 	//console.log('text',text)
 	var scriptTag = document.createElement("script");
 	scriptTag.onload = () => //console.log('code for', game, 'loaded');

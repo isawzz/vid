@@ -1497,7 +1497,7 @@ function deepmerge(target, source, optionsArgument) {
 		return mergeObject(target, source, optionsArgument)
 	}
 }
-function dict2list(d, keyName = 'key') {
+function odict2olist(d, keyName = 'key') {
 	//d assumed to be dictionary with values are objects!!!!
 	let res = [];
 	for (const key in d) {
@@ -1985,7 +1985,7 @@ function getValueArray(o, elKey = 'obj', arrKey = '_set') {
 		raw = raw[arrKey];
 	}
 	if (isDict(raw)) {
-		raw = dict2list(raw);
+		raw = odict2olist(raw);
 	}
 	if (!isList(raw)) return [];
 	if (raw.length > 0 && raw[0][elKey]) {

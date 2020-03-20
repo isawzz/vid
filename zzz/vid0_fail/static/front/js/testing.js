@@ -135,7 +135,7 @@ function onClick1(ev, ms, part) {
 }
 //#endregion
 
-// #region testing new MS API
+// #region testing new MSOB API
 function drawTest(board, num) {
 	clearElement(board.elem);
 	let d = 10;

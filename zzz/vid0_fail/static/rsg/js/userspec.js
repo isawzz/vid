@@ -95,7 +95,7 @@ function proceedRedraw() {
 	flags.specAndDOM = true;
 	let xdata = G.serverData;
 	G = { table: {}, players: {}, signals: {} }; //server objects
-	UIS = {}; // holds MS objects 
+	UIS = {}; // holds MSOB objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
 	oid2ids = {}; // { oid : list of ms ids (called ids or uids) }

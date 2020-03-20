@@ -133,7 +133,7 @@ function initDom() {
 	// timit.showTime(getFunctionCallerName());
 	ROOT = makeRoot();
 
-	createMSTree(ROOT); //existing DOM wrapped in MS, each area stored in UIS
+	createMSTree(ROOT); //existing DOM wrapped in MSOB, each area stored in UIS
 	// timit.showTime('...mobj tree built');
 
 	simpleColors(S.settings.color.theme);

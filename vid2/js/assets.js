@@ -67,7 +67,7 @@ async function loadSpecAndCode() {
 	defaultSpec = vidCache.asDict('defaultSpec');
 	userSpec = vidCache.asDict('userSpec');
 	userCode = vidCache.asDict('userCode');
-	loadCode(userCode.asText);
+	loadCode_dep(userCode.asText);
 	serverData = vidCache.asDict('_initial_' + initialPath);
 
 	if (!SHOW_CODE_DATA) return;

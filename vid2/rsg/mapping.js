@@ -11,7 +11,9 @@ function rMappings() {
 	//mappingTypes = {};
 	mappings = SPEC.mappings;
 	if (nundef(mappings)) return false;
-	mappings = dict2list(mappings, 'id').map(x => { let k = stringBefore(x.id, '.'); mappingTypes[k] = x[k] = true; return x; });
+	let lst = odict2olist(mappings);
+	console.log('_______________',mappings,lst);
+	mappings = odict2olist(mappings).map(x => { let k = stringBefore(x.id, '.'); mappingTypes[k] = x[k] = true; return x; });
 	//mappingsInitialized = {};
 	console.log('mappings', mappings, mappingTypes);
 }

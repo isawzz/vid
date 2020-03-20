@@ -8,7 +8,7 @@ function gestalte(sel, color) { sel.text(cardFace); sel.style('color', color); }
 
 function modifyServerData() {
 	dPrevServerData = jsCopy(dServerData);
-	serverData = dict2list(dServerData, 'id');
+	serverData = odict2olist(dServerData);
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T'];
 	let keys = Object.keys(dServerData);
 	let nChange = randomNumber(1, keys.length);
@@ -27,7 +27,7 @@ function modifyServerData() {
 }
 function modifyServerDataRandom() {
 	dPrevServerData = jsCopy(dServerData);
-	//serverData = dict2list(dServerData, 'id'); //nicht mehr gebrauch!!!
+	//serverData = odict2olist(dServerData); //nicht mehr gebrauch!!!
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T','A','9'];
 
 	let keys = Object.keys(dServerData);
@@ -55,7 +55,7 @@ function modifyServerDataRandom() {
 }
 function updateSelection(d) {
 	console.log('______ *** updateSelection *** ')
-	console.log('data', d.map(x=>x.id)); //d is dict2list(updatedServerData,'id'), each item has 'id'
+	console.log('data', d.map(x=>x.id)); //d is odict2olist(updatedServerData,'id'), each item has 'id'
 
 	let virtualSelection = div.selectAll("div");
 	let n = virtualSelection.size();
@@ -75,11 +75,11 @@ function updateSelection(d) {
 	iColor = (iColor + 1) % colors.length;
 }
 
-function init() { updateSelection(dict2list(dServerData, 'id')); }
+function init() { updateSelection(odict2olist(dServerData)); }
 function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); }
 
 var dServerData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
-var serverData = dict2list(dServerData, 'id'); //NUR in modifyServerData gebraucht!!!
+var serverData = odict2olist(dServerData); //NUR in modifyServerData gebraucht!!!
 var dPrevServerData = [];
 var sDataUpdated;
 

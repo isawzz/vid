@@ -1,4 +1,4 @@
-//#region new MS API
+//#region new MSOB API
 function _setRectDims(r, w, h, dx, dy) {
 	r.setAttribute('width', w);
 	r.setAttribute('height', h);

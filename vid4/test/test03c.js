@@ -8,7 +8,7 @@ function gestalte(sel, color) { sel.text(cardFace); sel.style('color', color); }
 
 function modifyServerData() {
 	dPrevServerData = jsCopy(dServerData); 
-	serverData = dict2list(dServerData, 'id');
+	serverData = odict2olist(dServerData);
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T'];
 	let keys = Object.keys(dServerData);
 	let nChange = randomNumber(1, keys.length);
@@ -23,7 +23,7 @@ function modifyServerData() {
 }
 function updateSelection(d) {
 	console.log('______ *** updateSelection *** ')
-	console.log('data', d); //d is dict2list(updatedServerData,'id'), each item has 'id'
+	console.log('data', d); //d is odict2olist(updatedServerData,'id'), each item has 'id'
 
 	let virtualSelection = div.selectAll("div");
 	let n = virtualSelection.size();
@@ -44,7 +44,7 @@ function updateSelection(d) {
 }
 
 var dServerData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' } };
-var serverData = dict2list(dServerData, 'id');
+var serverData = odict2olist(dServerData);
 var dPrevServerData = [];
 var sDataUpdated;
 

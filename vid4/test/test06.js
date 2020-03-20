@@ -1,10 +1,14 @@
-//using keys, restructured code a bit
+//using keys, assets
 window.onload = () => _start();
 
 var body, div, colors, iColor, dServerData, dPrevServerData, sDataUpdated;
 
-function _start() {
-	initialServerData();
+async function _start() {
+	await loadAssets();
+	await loadSpec();
+	await loadCode();
+	await loadInitialServerData();
+	dServerData = serverData.table; //only usingtable data for this!!!
 
 	initUI();
 	body.select('button').text('STEP').on('click', step);
@@ -94,7 +98,13 @@ function initUI() {
 	colors = ['blue', 'red', 'green', 'purple', 'black', 'white'];
 	iColor = 0;
 }
-function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); }
+function updateUI(data){
+	let d = mBy('SERVERDATA');
+	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
+	else console.log('serverData',data);
+
+}
+function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); updateUI(dServerData); }
 
 
 

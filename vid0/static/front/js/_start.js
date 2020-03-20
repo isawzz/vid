@@ -79,7 +79,7 @@ async function _startNewGame(role = 'starter') {
 
 	S.user = {};
 	G = { table: {}, players: {}, signals: {} }; //server objects
-	UIS = {}; // holds MS objects 
+	UIS = {}; // holds MSOB objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
 	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }
@@ -170,7 +170,7 @@ function inferPlayerColorFromNameOrInit(plid, index) {
 function initRSGData() {
 	S.user = {};
 	G = { table: {}, players: {} }; //server objects
-	UIS = {}; // holds MS objects 
+	UIS = {}; // holds MSOB objects 
 	IdOwner = {}; //lists of ids by owner
 	id2oids = {}; // { uid : list of server object ids (called oids) }
 	oid2ids = {}; // { oid : list of mobj ids (called ids or uids) }

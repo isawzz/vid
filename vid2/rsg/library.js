@@ -135,7 +135,7 @@ function mapOMap(omap, pool) {
 		}
 		// let odict = {};
 		// for (const id of ids) { odict[id] = pool[id]; }
-		// olist = dict2list(odict, 'id');
+		// olist = odict2olist(odict);
 	} else {
 		for (const k in omap) {
 			let item = { key: k, value: omap[k] };

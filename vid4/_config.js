@@ -5,8 +5,8 @@ var SEED = 1;
 
 const TESTING = true; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
 const RUNTEST = true; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
-const USE_NON_TESTING_DATA = true; //uses spec,code from /games instead of uspec...
-const USE_LOCAL_STORAGE = true; // true | false
+const USE_NON_TESTING_DATA = false; //uses spec,code from /games instead of /zdata
+const USE_LOCAL_STORAGE = true; // true | false //localStorage is cleared when false!!!!!
 
 //*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
 const DSPEC_VERSION = 3;
@@ -25,8 +25,6 @@ const USE_ALL_GAMES_ROUTE = false; // true | false //false means directly loadin
 
 // important vars
 var SPEC = null; //merged userSpec and defaultSpec
-// var SDATA = null; //serverData *** row serverData belong to assets module!
-// var PSDATA = null; //prevServerData *** row serverData belong to assets module!
 var GAMEPLID = null; //game player id
 var PGAMEPLID = null; //prev game player id
 
@@ -37,12 +35,13 @@ var t_total = 0;
 var t_avg = 0;
 
 //settings that might change but unlikely:
-const INIT_CLEAR_LOCALSTORAGE = false; // true | false //tru will delete complete localStorage at _startSession
+//const INIT_CLEAR_LOCALSTORAGE = false; // true | false >>see above USE_LOCAL_STORAGE
 const USE_MAX_PLAYER_NUM = false; // true | false
 const VERBOSE = true; // true | false
-const SHOW_SERVER_ROUTE = false; // true | false
+const SHOW_SERVER_ROUTE = true; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
-const SHOW_CODE_DATA = false; // true | false
+const SHOW_CODE = false; // true | false
+const SHOW_SERVERDATA = true; // true | false
 const SHOW_SPEC = true; // true | false
 const USE_OLD_GRID_FUNCTIONS = false;// true | false
 const STARTING_TAB_OPEN = 'bPlayers'; // bObjects | bPlayers | bSettings
@@ -68,5 +67,6 @@ const NGROK = null;// 'http://ee91c9fa.ngrok.io/'; // null;//'http://f3629de0.ng
 const SERVER = IS_MIRROR ? 'http://localhost:5555' : FLASK ? (NGROK ? NGROK : 'http://localhost:' + PORT) : 'http://localhost:5005';
 const PLAYER_CONFIG_FOR_MULTIPLAYER = ['me', 'human', 'human'];
 const USERNAME_ORIG = USERNAME;
+
 
 

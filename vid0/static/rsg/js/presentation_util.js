@@ -1,4 +1,4 @@
-//#region create MS 
+//#region create MSOB 
 function makeVisual(mobj, x, y, w, h, color, shape, { x1, y1, x2, y2 } = {}) {
 	//console.log('makeVisual', x, y, w, h, color, shape, x1, y1, x2, y2);
 	if (shape == 'circle') {
@@ -682,7 +682,7 @@ function transformToString(k, val, refs) {
 }
 //#endregion
 
-//#region delete MS 
+//#region delete MSOB 
 function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
 function deleteRSG(id) {
 	//console.log('deleting',id)

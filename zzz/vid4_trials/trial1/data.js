@@ -60,7 +60,7 @@ class _Assets0 {
 
 function modifyServerData() {
 	dPrevServerData = jsCopy(dServerData);
-	serverData = dict2list(dServerData, 'id');
+	serverData = odict2olist(dServerData);
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T'];
 	let keys = Object.keys(dServerData);
 	let nChange = randomNumber(1, keys.length);
@@ -79,7 +79,7 @@ function modifyServerData() {
 }
 function modifyServerDataRandom() {
 	dPrevServerData = jsCopy(dServerData);
-	//serverData = dict2list(dServerData, 'id'); //nicht mehr gebrauch!!!
+	//serverData = odict2olist(dServerData); //nicht mehr gebrauch!!!
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
 
 	let keys = Object.keys(dServerData);
@@ -113,7 +113,7 @@ async function getCode() { }
 async function getSpec() { }
 async function getServerData() {
 	var dServerData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
-	var serverData = dict2list(dServerData, 'id'); //NUR in modifyServerData gebraucht!!!
+	var serverData = odict2olist(dServerData); //NUR in modifyServerData gebraucht!!!
 	var dPrevServerData = [];
 	var sDataUpdated;
 

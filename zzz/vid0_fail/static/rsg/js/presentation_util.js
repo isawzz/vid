@@ -1,4 +1,4 @@
-//#region create MS 
+//#region create MSOB 
 function makeDeckMS(oid, o, deck1, areaName, x, y) {
 	//oid = getUID();
 	let id = 'm_t_' + oid; //oid;
@@ -648,7 +648,7 @@ function transformToString(k, val, refs) {
 }
 //#endregion
 
-//#region delete MS 
+//#region delete MSOB 
 function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
 function deleteRSG(id) {
 	//console.log('deleting',id)

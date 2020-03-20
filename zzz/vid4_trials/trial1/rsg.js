@@ -14,7 +14,7 @@ function gestalte(sel, color) { sel.text(cardFace); sel.style('color', color); }
 
 function updateSelection(d) {
 	console.log('______ *** updateSelection *** ')
-	console.log('data', d.map(x=>x.id)); //d is dict2list(updatedServerData,'id'), each item has 'id'
+	console.log('data', d.map(x=>x.id)); //d is odict2olist(updatedServerData,'id'), each item has 'id'
 
 	let virtualSelection = div.selectAll("div");
 	let n = virtualSelection.size();
@@ -41,7 +41,7 @@ class Rsg0{
 		this.list = null;
 	}
 	augment(o){
-		this.list = dict2list(o,'id');
+		this.list = odict2olist(o,'id');
 		//return this.list;
 	}
 	present(){

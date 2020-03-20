@@ -26,7 +26,7 @@ async function _startGame() {
 }
 //#endregion
 
-function init() { updateSelection(dict2list(dServerData, 'id')); }
+function init() { updateSelection(odict2olist(dServerData)); }
 function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); }
 
 async function _startStep() {

@@ -62,7 +62,7 @@ function registerObject(o, idType, loc, rsgType) {
 class MKManager{
 	clear(){this.clearUIS();this.clearDONE();}
 	clearUIS(){
-		UIS = {}; // holds MS objects 
+		UIS = {}; // holds MSOB objects 
 		IdOwner = {}; //lists of ids by owner
 		id2oids = {}; // { uid : list of server object ids (called oids) }
 		oid2ids = {}; // { oid : list of mk ids (called ids or uids) }
@@ -105,7 +105,7 @@ function unlink(id) {
 	delete id2oids[id];
 }
 
-//#region delete MS 
+//#region delete MSOB 
 function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
 function deleteRSG(id) {
 	console.log('deleting',id)

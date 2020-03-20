@@ -96,6 +96,126 @@ function posCICT(d) { d = mEnsure(d); d.classList.add('centerCenteredTopHalf'); 
 function posCICB(d) { d = mEnsure(d); d.classList.add('centerCenteredBottomHalf'); }
 //#endregion
 
+class LazyCache {
+	constructor(resetStorage = false) {
+		this.caches = {};
+		if (resetStorage) localStorage.clear(); //*** */
+	}
+	get(key) { return this.caches[key]; }
+
+	asDict(key) { return this.caches[key].live; }
+
+	getRandom(key) { let d = this.asDict(key); return chooseRandom(Object.values(d)); }
+	getRandomKey(key) { return getRandomKey(this.asDict(key)); }
+	getFirstKey(key, cond) { return firstCondDictKeys(this.asDict(key), cond); }
+
+	invalidate(...keys) { for (const k of keys) if (this.caches[k]) this.caches[k].invalidate(); }
+
+	async load(primKey, loaderFunc, reload = false, useLocal = true) {
+		let cd = new CacheDict(primKey, { func: loaderFunc }, useLocal);
+		this.caches[primKey] = cd;
+		if (reload) await cd.reload(); else await cd.load();
+
+		let handler = {
+			get: function (target, name) { return target.live[name]; },
+			set: function (target, name, val) { target.live[name] = val; return true; },
+			has: function (target, name) { return name in target.live; },
+			delete: function (target, name) { return delete target.live[name]; },
+		};
+		let proxy = new Proxy(cd, handler);
+		return proxy;
+	}
+}
+
+class CacheDict {
+	constructor(primKey, { func = null } = {}, useLocal = true) {
+		this.primKey = primKey; //this is key under which object is stored in localStorage/indexedDB
+		this.func = func;
+		this.live = null;
+		this.useLocal = useLocal;
+	}
+	async load() {
+		if (this.live) return this;
+		return this._local() || await this._server();
+	}
+	invalidate() {
+		//delete local copy and live
+		localStorage.removeItem(this.primKey); //*** */
+		this.live = null;
+	}
+	async reload() { this.invalidate(); return await this.load(); }
+
+	_local() {
+		if (!this.useLocal) return null;
+		//console.log('....from local', this.primKey);
+		let res = localStorage.getItem(this.primKey); //**** */
+		if (res) this.live = JSON.parse(res);
+		return res;
+	}
+
+	async _server() {
+		//console.log('....from server', this.primKey);
+		if (this.func) {
+			this.live = await this.func();
+			//console.log('after call: live',this.live)
+			if (this.useLocal) localStorage.setItem(this.primKey, JSON.stringify(this.live)); //*** */
+		}
+		return this.func;
+	}
+
+}
+class ScriptLoader {
+	constructor(options) {
+		this.protocol = document.location.protocol;
+		this.global = 'Segment';
+		this.isLoaded = false;
+	}
+
+	loadScript() {
+		return new Promise((resolve, reject) => {
+			// Create script element and set attributes
+			const script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.async = true;
+			script.src = `${this.protocol}//${this.src}`;
+
+			// Append the script to the DOM
+			const el = document.getElementsByTagName('script')[0];
+			el.parentNode.insertBefore(script, el);
+
+			// Resolve the promise once the script is loaded
+			script.addEventListener('load', () => {
+				this.isLoaded = true;
+				resolve(script);
+			})
+
+			// Catch any errors while loading the script
+			script.addEventListener('error', () => {
+				reject(new Error(`${this.src} failed to load.`));
+			})
+		})
+	}
+	load(src) {
+		console.log(src)
+		if (startsWith(src, 'http')) src = stringAfter(src, '://');
+		this.src = src;
+		return new Promise(async (resolve, reject) => {
+			if (!this.isLoaded) {
+				try {
+					await this.loadScript();
+					resolve(window[this.global]);
+				} catch (e) {
+					reject(e);
+				}
+			} else {
+				resolve(window[this.global]);
+			}
+		})
+	}
+}
+
+
+
 //#region Timit
 class TimeIt {
 	constructor(msg, showOutput = true) {
@@ -963,9 +1083,9 @@ function addSvgg(dParent, gid, { w = '100%', h = '100%', bg, fg, originInCenter 
 		let pBounds = getBounds(dParent);
 		w = pBounds.width + 'px';
 		h = pBounds.height + 'px';
-		if (pBounds.width == 0){
-			w='100%';
-			h='100%';
+		if (pBounds.width == 0) {
+			w = '100%';
+			h = '100%';
 		}
 		//console.log('--- addSvgg: CORRECTING MISSING WIDTH AND HEIGHT ON PARENT ---', dParent.id,w,h);
 
@@ -1309,7 +1429,7 @@ function show(elem) {
 //#endregion
 
 //#region DOM: load code, fire event
-function loadCode(text) {
+function loadCode_dep(text) {
 	if (isdef(text)) text = text.trim();
 	if (isEmpty(text)) {
 		//console.log('text is empty!!! no script loaded!');
@@ -1323,7 +1443,7 @@ function loadCode(text) {
 	scriptTag.innerHTML = text;
 	document.getElementsByTagName("body")[0].appendChild(scriptTag);
 }
-function loadCode0(text,codeToRunWhenScriptLoaded=null,callback=null) {
+function loadCode0(text, codeToRunWhenScriptLoaded = null, callback = null) {
 	//console.log('haaaaaaaaaaaaaaaaaaaaaaaaaalo')
 	if (isdef(text)) text = text.trim();
 	if (isEmpty(text)) {
@@ -1337,7 +1457,7 @@ function loadCode0(text,codeToRunWhenScriptLoaded=null,callback=null) {
 	//scriptTag.onload = () => {console.log('123 code loaded.....'); if (callback) callback();}; //DOESNT WORK!!!
 	scriptTag.setAttribute("type", "text/javascript");
 	// const userProg = document.createElement('script')
-	scriptTag.text = callback? [text, codeToRunWhenScriptLoaded].join('\n'):text;
+	scriptTag.text = callback ? [text, codeToRunWhenScriptLoaded].join('\n') : text;
 	//document.head.appendChild(userProg)	text
 	//scriptTag.innerHTML = text;
 	document.getElementsByTagName("body")[0].appendChild(scriptTag);
@@ -1772,7 +1892,32 @@ function deepmerge(target, source, optionsArgument) {
 		return mergeObject(target, source, optionsArgument)
 	}
 }
-function dict2list(d, keyName = 'key') {
+// function dict2list(d, keyName = 'id') {
+// 	//d assumed to be dictionary with values are objects!!!!
+// 	let res = [];
+// 	for (const key in d) {
+// 		let val = d[key];
+// 		let o;
+// 		if (isDict(val)) { o = jsCopy(o); } else { o = { value: val }; }
+// 		o[keyName] = key;
+// 		res.push(o);
+// 	}
+// 	return res;
+// }
+function dict2olist(d, keyName = 'id') {
+	//d assumed to be dictionary with values are objects!!!!
+	let res = [];
+	for (const key in d) {
+		let val = d[key];
+		let o;
+		//console.log(val);
+		if (isDict(val)) { o = jsCopy(val); } else { o = { value: val }; }
+		o[keyName] = key;
+		res.push(o);
+	}
+	return res;
+}
+function odict2olist(d, keyName = 'id') {
 	//d assumed to be dictionary with values are objects!!!!
 	let res = [];
 	for (const key in d) {
@@ -1993,7 +2138,7 @@ function sameList(l1, l2) {
 function sameStringify(o1, o2) {
 	return JSON.stringify(o1) == JSON.stringify(o2);
 }
-function shuffle(arr){return fisherYates(arr);}
+function shuffle(arr) { return fisherYates(arr); }
 function sortBy(arr, key) {
 	//console.log(jsCopy(arr))
 	arr.sort((a, b) => (a[key] < b[key] ? -1 : 1));
@@ -2270,7 +2415,7 @@ function getValueArray(o, elKey = 'obj', arrKey = '_set') {
 		raw = raw[arrKey];
 	}
 	if (isDict(raw)) {
-		raw = dict2list(raw);
+		raw = odict2olist(raw);
 	}
 	if (!isList(raw)) return [];
 	if (raw.length > 0 && raw[0][elKey]) {

@@ -20,6 +20,7 @@ function rMergeSpec() {
 	//console.log(defaultSpec.color,userSpec.color,SPEC.color)
 
 
+	//this is UI stuff!!!! do this later! when projecting SPEC
 	_initAutoplayToActionButtons();
 	_initCheatButtons();
 	_initScenarioButtons();

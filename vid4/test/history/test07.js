@@ -1,17 +1,20 @@
-//using keys, assets, divs for opps,table,players,  full serverData in use! 
+//using keys, assets, divs for opps,table,players
 window.onload = () => _start();
 
-var divRsg, divTable,divPlayer,divOpps, colors, iColor, dServerData, dPrevServerData, sDataUpdated;
+var divRsg, divTable,divPlayer,divOpps, colors, iColor, sData, dPrevServerData, sDataUpdated;
 
 async function _start() {
 	await loadAssets();
 	await loadSpec();
 	await loadCode();
 	await loadInitialServerData();
-	dServerData = serverData; 
+	sData = serverData.table; //only usingtable data for this!!!
 
 	initUI();
-	d3.select('button').text('STEP').on('click', step);
+	d3.select('button').text('STEP').on('click', gameStep);
+
+
+
 
 	initPresentation();
 }
@@ -19,10 +22,10 @@ async function _start() {
 function cardFace(d, i) { return 'para ' + i + ': card ' + d.rank; }
 function gestalte(sel, color) { sel.text(cardFace); sel.style('color', color); }
 function modifyServerData() {
-	dPrevServerData = jsCopy(dServerData);
-	let sDataList = odict2olist(dServerData);
+	dPrevServerData = jsCopy(sData);
+	let sDataList = odict2olist(sData);
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T'];
-	let keys = Object.keys(dServerData);
+	let keys = Object.keys(sData);
 	let nChange = randomNumber(1, keys.length);
 	console.log('>>>change', nChange, 'items!')
 	sDataUpdated = [];
@@ -38,11 +41,11 @@ function modifyServerData() {
 
 }
 function modifyServerDataRandom() {
-	dPrevServerData = jsCopy(dServerData);
+	dPrevServerData = jsCopy(sData);
 	//serverData = odict2olist(dServerData); //nicht mehr gebrauch!!!
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
 
-	let keys = Object.keys(dServerData);
+	let keys = Object.keys(sData);
 	let nChange = randomNumber(1, keys.length);
 	shuffle(keys);
 	console.log('>>>change', nChange, 'items!')
@@ -57,9 +60,9 @@ function modifyServerDataRandom() {
 		// dServerData[id].rank = ranks[(ranks.indexOf(r) + 1) % ranks.length];
 
 		//just choose random rank:
-		dServerData[id].rank = chooseRandom(ranks);
+		sData[id].rank = chooseRandom(ranks);
 
-		let o = { id: id, rank: dServerData[id].rank };
+		let o = { id: id, rank: sData[id].rank };
 		sDataUpdated.push(o);
 	}
 	shuffle(sDataUpdated);
@@ -87,14 +90,10 @@ function updateSelection(d) {
 	iColor = (iColor + 1) % colors.length;
 }
 function initialServerData() {
-	dServerData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
+	sData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
 	dPrevServerData = [];
 }
-function initPresentation() { 
-	let lst=dict2olist(dServerData);
-	console.log('__________ lst',lst);
-	updateSelection(lst); 
-}
+function initPresentation() { updateSelection(odict2olist(sData)); }
 function initUI() {
 	divRsg = d3.select('#rsg');
 	document.title = 'HA!';
@@ -118,7 +117,7 @@ function updateUI(data){
 	else console.log('serverData',data);
 
 }
-function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); updateUI(dServerData); }
+function gameStep() { modifyServerDataRandom(); updateSelection(sDataUpdated); updateUI(sData); }
 
 
 

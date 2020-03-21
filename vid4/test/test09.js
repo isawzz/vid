@@ -1,31 +1,64 @@
-//using keys, assets, divs for opps,table,players
+//using keys, assets, divs for opps,table,players, full serverData in use!, preProcessServerData
 window.onload = () => _start();
-
-var divRsg, divTable,divPlayer,divOpps, colors, iColor, dServerData, dPrevServerData, sDataUpdated;
+var divRsg, divTable, divPlayer, divOpps, colors, iColor, sData, dPrevServerData, sDataUpdated;
 
 async function _start() {
 	await loadAssets();
 	await loadSpec();
 	await loadCode();
-	await loadInitialServerData();
-	dServerData = serverData.table; //only usingtable data for this!!!
-
+	await loadInitialServerData(); 
+	//console.log('backfrom loadInitialServerData', serverData)
 	initUI();
-	d3.select('button').text('STEP').on('click', step);
-
-
-
-
-	initPresentation();
+	//console.log('after init UI')
+	d3.select('button').text('STEP').on('click', gameStep);
+	//console.log('after button adding')
+	gameStep();
 }
+function gameStep() {
 
+	console.log('haaaaaaaaaaaaaaalllllllllllo')
+	//have: serverData (processed), tupleGroups, SPEC, CODE available!
+
+	//here need to form some kind of list or dict of objects to be presented!!!!!
+	sData = serverData;
+
+
+	present(); //just presents now, no serverData modification!!!
+
+
+
+}
+function present() {
+	console.log('sData', sData)
+	let lst = dict2olist(sData);
+	console.log('__________ lst', lst);
+	updateSelection(lst);
+}
+function sendActionStub() {
+	//remember username sending action!
+	//set prevServerData=serverData (preProcessed from last round!)
+
+	//send an action
+	//get new serverData (raw)
+	//preProcess serverData
+
+	//=>inject diffcompare (serverData-prevServerData) ... should this include SPEC changes?
+	//package into: serverData+SPEC ==> object structure (should be forest but can start with simple dict of lists)
+	//what does this list of list contain?
+	//for each oid|path to be presented, contains 
+	//- list of augmented objects
+	//- layout (containerType) and area(=location) [zIndex?idParent?]
+	//- rsgType of items
+	//- for each item typeMappings/stringMappings for props in orig object => props needed by rsgType
+	//=>maybe inject diffcompare packages: only info to be presented should be compared???
+}
 function cardFace(d, i) { return 'para ' + i + ': card ' + d.rank; }
 function gestalte(sel, color) { sel.text(cardFace); sel.style('color', color); }
 function modifyServerData() {
-	dPrevServerData = jsCopy(dServerData);
-	let sDataList = odict2olist(dServerData);
+	dPrevServerData = jsCopy(sData);
+	let sDataList = odict2olist(sData);
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T'];
-	let keys = Object.keys(dServerData);
+	let keys = Object.keys(sData);
 	let nChange = randomNumber(1, keys.length);
 	console.log('>>>change', nChange, 'items!')
 	sDataUpdated = [];
@@ -41,11 +74,11 @@ function modifyServerData() {
 
 }
 function modifyServerDataRandom() {
-	dPrevServerData = jsCopy(dServerData);
+	dPrevServerData = jsCopy(sData);
 	//serverData = odict2olist(dServerData); //nicht mehr gebrauch!!!
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
 
-	let keys = Object.keys(dServerData);
+	let keys = Object.keys(sData);
 	let nChange = randomNumber(1, keys.length);
 	shuffle(keys);
 	console.log('>>>change', nChange, 'items!')
@@ -60,9 +93,9 @@ function modifyServerDataRandom() {
 		// dServerData[id].rank = ranks[(ranks.indexOf(r) + 1) % ranks.length];
 
 		//just choose random rank:
-		dServerData[id].rank = chooseRandom(ranks);
+		sData[id].rank = chooseRandom(ranks);
 
-		let o = { id: id, rank: dServerData[id].rank };
+		let o = { id: id, rank: sData[id].rank };
 		sDataUpdated.push(o);
 	}
 	shuffle(sDataUpdated);
@@ -90,10 +123,9 @@ function updateSelection(d) {
 	iColor = (iColor + 1) % colors.length;
 }
 function initialServerData() {
-	dServerData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
+	sData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
 	dPrevServerData = [];
 }
-function initPresentation() { updateSelection(odict2olist(dServerData)); }
 function initUI() {
 	divRsg = d3.select('#rsg');
 	document.title = 'HA!';
@@ -103,21 +135,20 @@ function initUI() {
 	divPlayer = divRsg.select('#player');
 	divOpps = {};
 	let dOpps = divRsg.select('#opps');
-	for(const plid in playerConfig[GAME].players){
-		let dPlid=dOpps.append('div').attr('id',plid);
-		divOpps[plid]=dPlid;
+	for (const plid in playerConfig[GAME].players) {
+		let dPlid = dOpps.append('div').attr('id', plid);
+		divOpps[plid] = dPlid;
 	}
 
 	colors = ['blue', 'red', 'green', 'purple', 'black', 'white'];
 	iColor = 0;
 }
-function updateUI(data){
+function updateUI(data) {
 	let d = mBy('SERVERDATA');
 	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
-	else console.log('serverData',data);
+	else console.log('serverData', data);
 
 }
-function step() { modifyServerDataRandom(); updateSelection(sDataUpdated); updateUI(dServerData); }
 
 
 

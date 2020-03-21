@@ -77,9 +77,9 @@ async function route_initGame(game, gc, username, seed = SEED) {
 		}
 		await fetch_wrapper(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
 	}
-	return await route_restart(username, seed);
+	return await route_begin_status(username, seed);
 }
-async function route_restart(username, seed = SEED) {
+async function route_begin_status(username, seed = SEED) {
 	await fetch_wrapper(SERVER + '/begin/' + seed);
 	let data = await route_status(username);
 	//console.log(data)

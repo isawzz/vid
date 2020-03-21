@@ -196,7 +196,7 @@ class ScriptLoader {
 		})
 	}
 	load(src) {
-		console.log(src)
+		//console.log(src)
 		if (startsWith(src, 'http')) src = stringAfter(src, '://');
 		this.src = src;
 		return new Promise(async (resolve, reject) => {
@@ -1747,6 +1747,7 @@ function getUID(pref = '') {
 //#endregion
 
 //#region io
+function consoutput() { console.log(...arguments);} 
 function error(msg) {
 	let fname = getFunctionsNameThatCalledThisFunction();
 	console.log(fname, 'ERROR!!!!! ', msg);

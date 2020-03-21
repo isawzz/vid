@@ -73,7 +73,7 @@ function onClickLobby() {
 async function onClickRestart() {
 	unfreezeUI();
 	setGamePlayer(USERNAME_ORIG);
-	if (TESTING) restoreServerData(); else serverData = await route_restart(USERNAME);
+	if (TESTING) restoreServerData(); else serverData = await route_begin_status(USERNAME);
 	_startGame();
 }
 function onClickRunToNextPlayer() {

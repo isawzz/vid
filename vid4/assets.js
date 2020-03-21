@@ -1,5 +1,6 @@
 var vidCache, allGames, playerConfig, iconChars, c52, testCards; //session data
-var defaultSpec, userSpec, userCode, serverData; //new game data
+var defaultSpec, userSpec, userCode, serverData, prevServerData, tupleGroups; //new game data
+var listOfUpdatedObjects;
 
 //#region API: loadAssets, loadSpec (also merges), loadCode (also activates), loadInitialServerData
 async function loadAssets() {
@@ -14,14 +15,14 @@ async function loadAssets() {
 
 	allGamesC = await vidCache.load('allGames', route_allGames);
 	allGames = vidCache.asDict('allGames');
-	//console.log('allGames', GAME, allGames[GAME]);
+	////console.log('allGames', GAME, allGames[GAME]);
 	playerConfig = stubPlayerConfig(allGames); //stub to get player info
-	// console.log('playerConfig', playerConfig[GAME]);
-	// console.log('testCards', testCards['green2']);
-	// console.log('c52', c52['card_2C']);
-	// console.log('icons', iconChars.crow);
-	// console.log('allGames', allGames.catan);
-	// console.log(vidCache);
+	// //console.log('playerConfig', playerConfig[GAME]);
+	// //console.log('testCards', testCards['green2']);
+	// //console.log('c52', c52['card_2C']);
+	// //console.log('icons', iconChars.crow);
+	// //console.log('allGames', allGames.catan);
+	// //console.log(vidCache);
 }
 async function loadSpec() {
 	if (TESTING) {
@@ -56,7 +57,7 @@ async function loadSpec() {
 
 	let d = mBy('SPEC');
 	if (d && SHOW_SPEC) { d.innerHTML = '<pre>' + jsonToYaml(SPEC) + '</pre>'; }
-	else console.log('SPEC',SPEC);
+	//else consoutput('SPEC',SPEC);
 
 }
 async function loadCode() {
@@ -75,12 +76,17 @@ async function loadCode() {
 	// document.getElementById('code').innerHTML = '<pre>"' + userCode.asText + '"</pre>'; //PERFECT!!!!!!!!!!
 	let d = mBy('CODE');
 	if (d && SHOW_CODE) { d.innerHTML = '<pre>' + userCode.asText + '</pre>'; }
-	else console.log('CODE',userCode.asText);
+	//else //console.log('CODE',userCode.asText);
 
-	testingHallo('hallo das geht wirklich!!!!!');
+	//testingHallo('hallo das geht wirklich!!!!!');
 }
-async function loadInitialServerData() {
+async function loadInitialServerData(unameStarts) {
 	let initialPath = GAME + (USE_MAX_PLAYER_NUM ? '_max' : '');
+
+	if (nundef(unameStarts)) unameStarts = USERNAME; else USERNAME = unameStarts;
+	////console.log('------------------',unameStarts,USERNAME)
+	plidSentStatus = getPlidForUsername(unameStarts);
+
 	if (TESTING) {
 		url = TEST_PATH + GAME + '/data' + SERVERDATA_VERSION + '_' + initialPath + '.yaml';
 		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url), true, false); // last 2 params: reload, useLocal
@@ -89,15 +95,93 @@ async function loadInitialServerData() {
 	}
 
 	serverData = vidCache.asDict('_initial_' + initialPath);
-
-	let d = mBy('SERVERDATA');
-	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(serverData.table) + '</pre>'; }
-	else console.log('serverData',serverData);
-
 	return serverData;
 }
-//preProcessServerData
-//sendAction
+function preProcessData(data){
+	//console.log('preprocess:',data.players, 'plidSentStatus',plidSentStatus);
+	for (const plid in data.players) {
+		let pl = data.players[plid];
+		pl.obj_type = plid == plidSentStatus ? 'GamePlayer' : 'opponent';
+	}
+	if (!data.options) tupleGroups = null; else tupleGroups = getTupleGroups(); 
+}
+function showServerData(){
+	let d = mBy('SERVERDATA');
+	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(serverData.table) + '</pre>'; }
+	//else consoutput('serverData',serverData);
+}
+async function sendAction(boat){
+	let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
+	let t = boat.tuple;
+	//console.log('tuple is:', t);
+	route += t.map(x => _pickStringForAction(x)).join('+');// /action/felix/91b7584a2265b1f5/loc-settlement/96
+	console.log('sending action...', route);
+	let result = await route_server_js(route);
+	console.log('server returned', result);
+	serverData = result;
+}
+async function sendActionStub(){
+	prevServerData = jsCopy(serverData);
+	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
+
+	listOfUpdatedObjects = [];
+
+	let keys = Object.keys(serverData);
+	let nChange = randomNumber(1, keys.length);
+	shuffle(keys);
+	//console.log('>>>change', nChange, 'items!')
+
+	for (let i = 0; i < nChange; i++) {
+		let id = keys[i];
+		//console.log('change rank of id', id)
+		serverData[id].rank = chooseRandom(ranks);
+		let o = { id: id, rank: serverData[id].rank };
+		listOfUpdatedObjects.push(o);
+	}
+	shuffle(listOfUpdatedObjects);
+
+}
+
+//not used yet!!!
+const CHG={none:0,removed:-1,created:1,updated:2};
+function computeDiffServerData(){
+
+	
+	//serverData is preProcessed serverData
+	//only props that will be presented
+
+	//=>take code from vid0!
+	//each table entry is given a special property: '@changes' and '@changeType' mit CHG.removed,created, oder updated
+	//do this for table and players
+	
+
+	// if (!G.table) G.table = {};
+	// G.tableCreated = [];
+	// G.tableRemoved = [];
+	// G.tableUpdated = {}; //updated also has prop change info
+
+	// if (data.table) {
+	// 	let allkeys = union(Object.keys(G.table), Object.keys(data.table));
+	// 	for (id of allkeys) {
+	// 		let o_new = id in data.table ? data.table[id] : null;
+	// 		let o_old = id in G.table ? G.table[id] : null;
+	// 		let changes = propDiffSimple(o_old, o_new); //TODO: could add prop filter here already!!!
+	// 		if (changes.hasChanged) {
+	// 			G.tableUpdated[id] = changes;
+	// 			if (nundef(o_old)) {
+	// 				G.tableCreated.push(id);
+
+	// 			} else if (nundef(o_new)) {
+	// 				G.tableRemoved.push(id);
+	// 				//console.log('removed:',id)
+	// 			}
+	// 		}
+	// 	}
+	// 	G.table = data.table;
+	// }
+
+	// prevServerData = serverData;
+}
 //sendStatus
 //oder koennte auch in preProcessServerData bereits das weitingFor handeln?!?
 //>>muss ich mir ueberlegen wo das hingehoert?
@@ -121,21 +205,21 @@ function stubPlayerConfig(gameInfo) {
 	gcs = {};
 	for (const gName in gameInfo) {
 		let info = gameInfo[gName]
-		//console.log(gName, info);
+		////console.log(gName, info);
 		let nPlayers = info.num_players[0]; // min player number, info.num_players.length - 1]; // max player number
 		if (USE_MAX_PLAYER_NUM) nPlayers = info.num_players[info.num_players.length - 1]; // max player number
 		let pls = {};
 		for (let i = 0; i < nPlayers; i++) {
 			let id = info.player_names[i];
 			pls[id] = { id: id, playerType: 'me', agentType: null, username: USERNAME + (i > 0 ? i : ''), index: i };
-			//console.log('player:', pl)
+			////console.log('player:', pl)
 			// pls.push(pl);
 		}
 		gcs[gName] = { numPlayers: nPlayers, players: pls };
 
 	}
 	return gcs;
-	//console.log('-------------------',gcs);
+	////console.log('-------------------',gcs);
 }
 function updatePlayerConfig() {
 	let keysPlayerColors = Object.keys(playerColors);
@@ -162,16 +246,16 @@ function updatePlayerConfig() {
 // routes
 async function route_allGames() {
 	let gameNames = await route_server_js('/game/available');
-	console.log('gamenames returned:', gameNames)
+	//console.log('gamenames returned:', gameNames)
 	let res = {};
 	for (const name of gameNames) {
-		console.log(name);
+		//console.log(name);
 		if (USE_ALL_GAMES_ROUTE) {
 			res[name] = await route_server_js('/game/info/' + name);
 		} else {
 			let url = '/games/' + name + '/info.yaml';
 			res[name] = await route_path_yaml_dict(url);// last 2 params: reload, useLocal
-			console.log('game info', name, res[name]);
+			//console.log('game info', name, res[name]);
 		}
 	}
 	return res;
@@ -228,7 +312,7 @@ async function route_initGame(game, gc, username, seed = SEED) {
 	await fetch_wrapper(SERVER + '/restart');
 	await fetch_wrapper(SERVER + '/game/select/' + game);
 	let nPlayers = gc.numPlayers;
-	//console.log(gc)
+	////console.log(gc)
 	// for (let i = 0; i < nPlayers; i++) {
 	for (plid in gc.players) {
 		let plInfo = gc.players[plid];
@@ -238,12 +322,12 @@ async function route_initGame(game, gc, username, seed = SEED) {
 		}
 		await fetch_wrapper(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
 	}
-	return await route_restart(username, seed);
+	return await route_begin_status(username, seed);
 }
-async function route_restart(username, seed = SEED) {
+async function route_begin_status(username, seed = SEED) {
 	await fetch_wrapper(SERVER + '/begin/' + seed);
 	let data = await route_status(username);
-	//console.log(data)
+	////console.log(data)
 	return data;
 }
 async function route_status(username) { return await route_server_js('/status/' + username); }
@@ -257,7 +341,7 @@ async function route_server_js(url) {
 	return await data.json();
 }
 async function route_server_text(url) {
-	//console.log(url, SERVER + url)
+	////console.log(url, SERVER + url)
 	let data = await fetch_wrapper(SERVER + url);
 	let text = await data.text();
 	return text;
@@ -276,7 +360,7 @@ async function route_path_asText_dict(url) {
 	let data = await fetch_wrapper(url);
 	let res = {};
 	res.asText = await data.text();
-	//console.log(res.asText)
+	////console.log(res.asText)
 	//res.asDict = JSON.parse(res.asText);//
 	return res; // await data.text();
 }
@@ -304,9 +388,9 @@ async function route_server(url) { await fetch_wrapper(SERVER + url); }
 var route_counter = 0;
 async function fetch_wrapper(url) {
 	route_counter += 1;
-	if (SHOW_SERVER_ROUTE) console.log(route_counter + ': route:' + url);
+	if (SHOW_SERVER_ROUTE) consoutput(route_counter + ': route:' + url);
 	let res = await fetch(url);
-	if (SHOW_SERVER_RETURN) console.log(route_counter + ': return:', res);
+	if (SHOW_SERVER_RETURN) consoutput(route_counter + ': return:', res);
 	return res;
 }
 
@@ -338,8 +422,113 @@ const playerColors = {
 const THEMES = ['#c9af98', '#2F4F4F', '#6B7A8F', '#00303F', 'rgb(3, 74, 166)', '#458766', '#7A9D96'];
 var iTHEME = 0;
 
+// tupleGroups
+function getTupleGroups() {
+	let act = serverData.options;
+
+	////console.log('options', act)
+	// json_str = JSON.stringify(act);
+	// saveFile("yourfilename.json", "data:application/json", new Blob([json_str], { type: "" }));
+
+	let tupleGroups = [];
+	for (const desc in act) {
+		let tg = { desc: desc, tuples: [] };
+		//let tuples = expand99(act[desc].actions);
+		let tuples = expand1_99(act[desc].actions);
+		////console.log('*** ', desc, '........tuples:', tuples);
+
+		if (tuples.length == 1 && !isList(tuples[0])) tuples = [tuples];
+		////console.log(tuples)
+		tg.tuples = tuples;
+		tupleGroups.push({ desc: desc, tuples: tuples });
+	}
+	////console.log('tupleGroups', tupleGroups);
+	return tupleGroups;
+}
+function expand1_99(x) {
+	////console.log('expand1_99 input', tsRec(x))
+	////console.log('expand1_99');
+	if (isList(x)) {
+		//console.log('expand1_99: x should be dict BUT is a list', x);
+	}
+	if (isDict(x)) { // TODO:  || isList(x)) {
+		// if (isList(x)) {
+		// 	//console.log('process: list',x)
+		// }
+		if ('_set' in x) {
+			////console.log('handleSet wird aufgerufen')
+			return handleSet(x._set);
+		} else if ('_tuple' in x) {
+			////console.log('handleTuple wird aufgerufen')
+			return handleTuple(x._tuple);
+		} else if ('type' in x) {
+			return handleAction(x);
+		} else { error('IMPOSSIBLE OBJECT', x); return null; }
+	} else { error('IMPOSSIBLE TYPE', x); return null; }
+}
+function handleSet(x) {
+	let irgend = x.map(expand1_99);
+	let res = stripSet(irgend);
+	return res;
+}
+function handleTuple(x) {
+	let irgend = x.map(expand1_99);
+	return multiCartesi(...irgend);
+}
+function handleAction(x) {
+	return [[x]];
+}
+function isActionElement(x) {
+	return typeof x == 'object' && 'type' in x;
+}
+function isListOfListOfActions(x) {
+	return isList(x) && x.length > 0 && isList(x[0]) && x[0].length > 0 && isActionElement(x[0][0]);
+}
+function cartesi(l1, l2) {
+	//l1,l2 are lists of list
+	let res = [];
+	for (var el1 of l1) {
+		for (var el2 of l2) {
+			res.push(el1.concat(el2));
+		}
+	}
+	return res;
+}
+function multiCartesi() {
+	//each arg is a list of list
+	let arr = Array.from(arguments);
+	if (arr.length > 2) {
+		return cartesi(arr[0], stripSet(multiCartesi(...arr.slice(1))));
+	} else if (arr.length == 2) return cartesi(arr[0], arr[1]);
+	else if (arr.length == 1) return arr[0];
+	else return [];
+}
+function stripSet(x) {
+	if (isListOfListOfActions(x)) return x;
+	else if (isActionElement(x)) return [[x]];
+	else if (isList(x) && isActionElement(x[0])) return [x];
+	else return [].concat(...x.map(stripSet));
+	//return isList(x)&&x.length>0?stripSet(x[0]):x;
+}
+
+//preProcessServerData
+
+
 // helpers
+function getUsernameForPlid(id) { return playerConfig[GAME].players[id].username;}
+function getPlidForUsername(username) {
+	let pl = firstCondDict(playerConfig[GAME].players, x => x.username == username);
+	// //console.log(getFunctionCallerName(),pl)
+	return pl;
+}
 function _getTestPathForPlayerNum() { return GAME + (USE_MAX_PLAYER_NUM ? '_max' : ''); }
+function _pickStringForAction(x) {
+	//x is a tuple element, eg., {type:'fixed', val:'pass'} or {ID: "0", val: "hex[0]", type: "obj"}
+	//console.log('pickStringForAction',x)
+	if (x.type == 'fixed') return x.val;
+	if (x.type == 'obj') return x.ID;
+	if (x.type == 'player') return x.val;
+}
 
 
 //#endregion

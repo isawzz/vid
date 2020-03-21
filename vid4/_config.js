@@ -4,9 +4,11 @@ var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const TESTING = true; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
-const RUNTEST = true; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
+const RUNTEST = false; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
 const USE_NON_TESTING_DATA = false; //uses spec,code from /games instead of /zdata
+const USER_SERVERDATA_STUB = false; // if true, need to jsCopy serverData to simulate new batch!
 const USE_LOCAL_STORAGE = true; // true | false //localStorage is cleared when false!!!!!
+var INCREMENTAL_UPDATE = true; // diff is run after preProcessing serverData!
 
 //*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
 const DSPEC_VERSION = 3;
@@ -38,11 +40,11 @@ var t_avg = 0;
 //const INIT_CLEAR_LOCALSTORAGE = false; // true | false >>see above USE_LOCAL_STORAGE
 const USE_MAX_PLAYER_NUM = false; // true | false
 const VERBOSE = true; // true | false
-const SHOW_SERVER_ROUTE = true; // true | false
+const SHOW_SERVER_ROUTE = false; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
 const SHOW_CODE = false; // true | false
-const SHOW_SERVERDATA = true; // true | false
-const SHOW_SPEC = true; // true | false
+const SHOW_SERVERDATA = false; // true | false
+const SHOW_SPEC = false; // true | false
 const USE_OLD_GRID_FUNCTIONS = false;// true | false
 const STARTING_TAB_OPEN = 'bPlayers'; // bObjects | bPlayers | bSettings
 //var OPEN_TAB = 'Seattle'; //S.settings.openTab = S_openTab; deprecated!

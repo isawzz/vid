@@ -283,7 +283,7 @@ function rPreProcessPlayers() {
 	//console.log(serverData.players)
 }
 
-function rPreProcessActions() { if (!serverData.options) tupleGroups = null; tupleGroups = getTupleGroups(); }
+function rPreProcessActions() { if (!serverData.options) tupleGroups = null; else tupleGroups = getTupleGroups(); }
 
 function rPresentEnd() {
 	let winner = serverData.end.winner;

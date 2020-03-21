@@ -1,8 +1,8 @@
 //#region API
-var plidSendStatus=null;
+var plidSentStatus=null;
 function stubSendInitNewGame(isStarter){
 	let unameStarts = S.gameConfig.players[0].username;
-	plidSendStatus = getPlidForUsername(unameStarts);
+	plidSentStatus = getPlidForUsername(unameStarts);
 	let data = serverData;
 	preProcessData(data);
 	if (isStarter && isReallyMultiplayer) socketEmitMessage({ type: 'started', data: USERNAME + ' has started the game!' });
@@ -11,7 +11,7 @@ function stubSendInitNewGame(isStarter){
 }
 function sendAction(boat, callbacks) {
 	//timit.timeStamp('send');
-	plidSendStatus = G.player;
+	plidSentStatus = G.player;
 	let pl = G.playersAugmented[G.player];
 	let route = '/action/' + pl.username + '/' + G.serverData.key + '/' + boat.desc + '/';
 	let t = boat.tuple;
@@ -88,7 +88,7 @@ function sendRestartGame(username, seed, callbacks) {
 }
 function sendRoute(cmd, callback) { _sendRoute(cmd, callback); }
 function sendStatus(username, callbacks) {
-	plidSendStatus = getPlidForUsername(username);
+	plidSentStatus = getPlidForUsername(username);
 	_sendRouteJS('/status/' + username, data => {
 		// console.log('back from _sendStatusJS in sendStatus, data:',data)
 		preProcessData(data);
@@ -101,7 +101,7 @@ function preProcessData(data){
 	//console.log('preprocess:',data.players);
 	for (const plid in data.players) {
 		let pl = data.players[plid];
-		pl.obj_type = plid == plidSendStatus ? 'GamePlayer' : 'opponent';
+		pl.obj_type = plid == plidSentStatus ? 'GamePlayer' : 'opponent';
 		// if (nundef(pl.obj_type)) {
 		// 	//console.log('.......CORRECTING!!!!',plid)
 		// 	pl.obj_type = 'opponent';
@@ -288,9 +288,9 @@ async function route_initGame(game, gc, username, seed = SEED) {
 		}
 		await fetch_wrapper(SERVER + '/add/player/' + plInfo.username + '/' + plInfo.id);
 	}
-	return await route_restart(username, seed);
+	return await route_begin_status(username, seed);
 }
-async function route_restart(username, seed = SEED) {
+async function route_begin_status(username, seed = SEED) {
 	await fetch_wrapper(SERVER + '/begin/' + seed);
 	let data = await route_status(username);
 	//console.log(data)

@@ -24,6 +24,7 @@ function present() {
 	else {
 		let lst = dict2olist(sData);
 		updateSelection(lst);
+		console.log(lst)
 	}
 }
 function initUI() {

@@ -133,7 +133,9 @@ async function sendActionStub(){
 
 	for (let i = 0; i < nChange; i++) {
 		let id = keys[i];
-		//console.log('change rank of id', id)
+		if (isLiteral(serverData[id])) serverData[id]={id:serverData[id]};
+		// console.log('change rank of id', id);
+		// console.log(serverData[id])
 		serverData[id].rank = chooseRandom(ranks);
 		let o = { id: id, rank: serverData[id].rank };
 		listOfUpdatedObjects.push(o);

@@ -2384,7 +2384,7 @@ function isDict(d) {  //TODO MUSS isList ausschliessen!!!! koennte isDictOrList 
 	return res; //typeof (d) == 'object'; // && !isList(d); 
 }
 function isEvent(param) { return getTypeOf(param) == 'event'; }
-function isLiteral(x) { return isString(x) || $.isNumeric(x); }
+function isLiteral(x) { return isString(x) || isNumber(x); }
 function isList(arr) { return Array.isArray(arr); }
 function isListOfLiterals(lst) {
 	if (!isList(lst)) return false;

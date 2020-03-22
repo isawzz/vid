@@ -37,8 +37,8 @@ html,body{
 }
 
 
-/* #region #root #rsg grid */
-#root{
+/* #region grid */
+#ROOT{
 	display: grid;
 	grid-template-rows: min-content auto auto auto auto;
 	grid-template-areas: 'i' 'g' 'o' 's' 'd' ;
@@ -50,7 +50,7 @@ html,body{
 	/* min-width:97vw; */
 
 }
-#rsg{
+#RSG{
 	display: grid;
 	grid-template-columns: min-content min-content 1fr;
 	grid-template-areas: 'ha hb hc' 'a b c';
@@ -66,16 +66,16 @@ html,body{
 	justify-content: stretch;	 */
 	grid-column-gap:var(--gridGap);
 }
-#test{
+#TEST{
 	grid-gap:var(--gridGap);
 	display:grid;
 	grid-template-columns: min-content auto;
 }
-#rsg>div, #pageHeader, #test>div{
+#RSG>div, #PAGEHEADER, #TEST>div{
 	border-radius: 8px;
 	background-color: rgba(0,0,0,0.2);
 }
-#actions{
+#ACTIONS{
 	grid-area: a;
 	/* min-height: 150px; */
 	min-width: 30px;
@@ -87,13 +87,13 @@ html,body{
 	cursor: pointer;
 	white-space: nowrap;
 }
-#areaTable{
+#MAIN{
 	grid-area: b;
 	display: inline-grid;
 	align-self: center;
 	/* align-content: center; */
 }
-#logDiv{
+#LOG{
 	grid-area: c;
 	align-self: stretch;
 	/* min-width:150px; */
@@ -101,39 +101,32 @@ html,body{
 	position:relative;
 	/* overflow-y:auto; */
 }
-#logDiv>div{
+#LOG>div{
 	overflow-y:auto;
 }
-#status{
-	min-height:25px;
-}
-#SPEC,#code,#serverData{
+#SPEC,#CODE,#SERVERDATA{
 	text-align:left;
 }
-/* .headerItem{
-	height:40px;
-} */
 #headerActions{
 	grid-area: ha;
 	padding: 4px;
 }
-#divStatus{
+#STATUS{
 	grid-area: hb;
+	min-height:25px;
 }
 #headerLog{
 	grid-area: hc;
 	padding: 4px;
 }
 
-/* #endregion #rsg grid */
+/* #endregion grid */
 
 /* #region centering */
 .centered {
   position: relative;
   top: 50%;
   left: 50%;
-	/* transform: translate(-50%, -50%);
-	text-align: center; */
 }
 .centerCentered{
 	margin: 0;
@@ -176,9 +169,6 @@ html,body{
 .truncate:hover {
 	overflow: visible;
 }
-/* .truncate:hover+div {
-  margin-top: 50px;
-} */
 /* #endregion centering */
 
 /* #region fieldset */

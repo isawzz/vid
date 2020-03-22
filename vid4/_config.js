@@ -1,5 +1,5 @@
 var USERNAME = 'felix';
-var GAME = 'ttt'; // catan | aristocracy | ttt | game01
+var GAME = 'catan'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
@@ -11,8 +11,8 @@ const USE_LOCAL_STORAGE = true; // true | false //localStorage is cleared when f
 var INCREMENTAL_UPDATE = true; // diff is run after preProcessing serverData!
 
 //*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
-const DSPEC_VERSION = 3;
-const USPEC_VERSION = '2a';
+const DSPEC_VERSION = 4;
+const USPEC_VERSION = '00';
 const CODE_VERSION = 1;
 const SERVERDATA_VERSION = 1;
 const TEST_PATH = '/zdata/';
@@ -32,7 +32,7 @@ var PGAMEPLID = null; //prev game player id
 
 // performance *** TIMER ***
 var timit;
-const TIMIT_SHOW = false; // true | false
+const TIMIT_SHOW = true; // true | false
 var t_total = 0;
 var t_avg = 0;
 
@@ -44,7 +44,7 @@ const SHOW_SERVER_ROUTE = false; // true | false
 const SHOW_SERVER_RETURN = false; // true | false
 const SHOW_CODE = false; // true | false
 const SHOW_SERVERDATA = false; // true | false
-const SHOW_SPEC = false; // true | false
+const SHOW_SPEC = true; // true | false
 const USE_OLD_GRID_FUNCTIONS = false;// true | false
 const STARTING_TAB_OPEN = 'bPlayers'; // bObjects | bPlayers | bSettings
 //var OPEN_TAB = 'Seattle'; //S.settings.openTab = S_openTab; deprecated!

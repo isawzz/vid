@@ -1,6 +1,6 @@
 //using keys, assets, divs for opps,table,players, full serverData in use!, preProcessServerData
 window.onload = () => _start();
-var divRsg, divTable, divPlayer, divOpps, colors, iColor, sData, dPrevServerData, sDataUpdated;
+var divRsg, divTable, divPlayer, divOpps, colors, iColor, presentList, dPrevServerData, sDataUpdated;
 
 async function _start() {
 	await loadAssets();
@@ -20,7 +20,7 @@ function gameStep() {
 	//have: serverData (processed), tupleGroups, SPEC, CODE available!
 
 	//here need to form some kind of list or dict of objects to be presented!!!!!
-	sData = serverData;
+	presentList = serverData;
 
 
 	present(); //just presents now, no serverData modification!!!
@@ -29,12 +29,12 @@ function gameStep() {
 
 }
 function present() {
-	console.log('sData', sData)
-	let lst = dict2olist(sData);
+	console.log('sData', presentList)
+	let lst = dict2olist(presentList);
 	console.log('__________ lst', lst);
 	updateSelection(lst);
 }
-function sendActionStub() {
+function modifyServerDataRandom() {
 	//remember username sending action!
 	//set prevServerData=serverData (preProcessed from last round!)
 
@@ -55,10 +55,10 @@ function sendActionStub() {
 function cardFace(d, i) { return 'para ' + i + ': card ' + d.rank; }
 function gestalte(sel, color) { sel.text(cardFace); sel.style('color', color); }
 function modifyServerData() {
-	dPrevServerData = jsCopy(sData);
-	let sDataList = odict2olist(sData);
+	dPrevServerData = jsCopy(presentList);
+	let sDataList = odict2olist(presentList);
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T'];
-	let keys = Object.keys(sData);
+	let keys = Object.keys(presentList);
 	let nChange = randomNumber(1, keys.length);
 	console.log('>>>change', nChange, 'items!')
 	sDataUpdated = [];
@@ -74,11 +74,11 @@ function modifyServerData() {
 
 }
 function modifyServerDataRandom() {
-	dPrevServerData = jsCopy(sData);
+	dPrevServerData = jsCopy(presentList);
 	//serverData = odict2olist(dServerData); //nicht mehr gebrauch!!!
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
 
-	let keys = Object.keys(sData);
+	let keys = Object.keys(presentList);
 	let nChange = randomNumber(1, keys.length);
 	shuffle(keys);
 	console.log('>>>change', nChange, 'items!')
@@ -93,9 +93,9 @@ function modifyServerDataRandom() {
 		// dServerData[id].rank = ranks[(ranks.indexOf(r) + 1) % ranks.length];
 
 		//just choose random rank:
-		sData[id].rank = chooseRandom(ranks);
+		presentList[id].rank = chooseRandom(ranks);
 
-		let o = { id: id, rank: sData[id].rank };
+		let o = { id: id, rank: presentList[id].rank };
 		sDataUpdated.push(o);
 	}
 	shuffle(sDataUpdated);
@@ -123,11 +123,11 @@ function updateSelection(d) {
 	iColor = (iColor + 1) % colors.length;
 }
 function initialServerData() {
-	sData = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
+	presentList = { '0': { rank: 'K' }, '1': { rank: 'Q' }, '2': { rank: '2' }, '3': { rank: '4' }, '4': { rank: 'A' }, '5': { rank: 'T' } };
 	dPrevServerData = [];
 }
 function initUI() {
-	divRsg = d3.select('#rsg');
+	divRsg = d3.select('#RSG');
 	document.title = 'HA!';
 
 	divTable = divRsg.select('#table');

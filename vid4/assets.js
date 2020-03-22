@@ -1,6 +1,5 @@
 var vidCache, allGames, playerConfig, iconChars, c52, testCards; //session data
-var defaultSpec, userSpec, userCode, serverData, prevServerData, tupleGroups; //new game data
-var listOfUpdatedObjects;
+var defaultSpec, userSpec, userCode, serverData, prevServerData, tupleGroups, boats; //new game data
 
 //#region API: loadAssets, loadSpec (also merges), loadCode (also activates), loadInitialServerData
 async function loadAssets() {
@@ -63,7 +62,7 @@ async function loadSpec() {
 async function loadCode() {
 	// let url = TEST_PATH + GAME + '/code' + CODE_VERSION + '.js';
 	let url = TESTING && !USE_NON_TESTING_DATA ? TEST_PATH + GAME + '/code' + CODE_VERSION + '.js'
-		: url = '/games/' + GAME + '/_rsg/' + GAME + VERSION + '.js';
+		: '/games/' + GAME + '/_rsg/' + GAME + VERSION + '.js';
 
 	let loader = new ScriptLoader();
 	await loader.load(SERVER + url);
@@ -83,9 +82,7 @@ async function loadCode() {
 async function loadInitialServerData(unameStarts) {
 	let initialPath = GAME + (USE_MAX_PLAYER_NUM ? '_max' : '');
 
-	if (nundef(unameStarts)) unameStarts = USERNAME; else USERNAME = unameStarts;
-	////console.log('------------------',unameStarts,USERNAME)
-	plidSentStatus = getPlidForUsername(unameStarts);
+	_syncUsernameOfSender(unameStarts);
 
 	if (TESTING) {
 		url = TEST_PATH + GAME + '/data' + SERVERDATA_VERSION + '_' + initialPath + '.yaml';
@@ -97,103 +94,98 @@ async function loadInitialServerData(unameStarts) {
 	serverData = vidCache.asDict('_initial_' + initialPath);
 	return serverData;
 }
-function preProcessData(data){
+async function sendStatus(username) {
+	_syncUsernameOfSender(username);
+	if (!TESTING) serverData = await route_status(USERNAME);
+}
+async function sendRestart(username) {
+	_syncUsernameOfSender(username);
+	if (TESTING) serverData = await loadInitialServerData(USERNAME);
+	else serverData = await route_begin_status(USERNAME);
+}
+async function sendAction(boat, username) {
+	if (TESTING) {
+		modifyServerDataRandom(username);
+	} else {
+		_syncUsernameOfSender(username);
+		if (nundef(boat)) boat = chooseRandom(boats);
+		let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
+		let t = boat.tuple;
+		//console.log('tuple is:', t);
+		route += t.map(x => _pickStringForAction(x)).join('+');// /action/felix/91b7584a2265b1f5/loc-settlement/96
+		//console.log('sending action...', route);
+		let result = await route_server_js(route);
+		//console.log('server returned', result);
+		prevServerData = serverData;
+		serverData = result;
+	}
+}
+
+// serverData helpers
+function preProcessData(data) {
 	//console.log('preprocess:',data.players, 'plidSentStatus',plidSentStatus);
+	if (nundef(data)) data = serverData;
 	for (const plid in data.players) {
 		let pl = data.players[plid];
 		pl.obj_type = plid == plidSentStatus ? 'GamePlayer' : 'opponent';
 	}
-	if (!data.options) tupleGroups = null; else tupleGroups = getTupleGroups(); 
+	if (data.options) {
+		tupleGroups = getTupleGroups();
+		let iGroup = 0;
+		let iTuple = 0;
+		boats = [];
+		for (const tg of tupleGroups) {
+			for (const t of tg.tuples) {
+				let boatInfo = { obj_type: 'boat', oids: [], desc: tg.desc, tuple: t, iGroup: iGroup, iTuple: iTuple, text: t.map(x => x.val), weg: false };
+				boats[iTuple] = boatInfo;
+				iTuple += 1;
+			}
+			iGroup += 1;
+		}
+	} else {
+		tupleGroups = null;
+		boats = [];
+	}
 }
-function showServerData(){
-	let d = mBy('SERVERDATA');
-	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(serverData.table) + '</pre>'; }
-	//else consoutput('serverData',serverData);
-}
-async function sendAction(boat){
-	let route = '/action/' + USERNAME + '/' + serverData.key + '/' + boat.desc + '/';
-	let t = boat.tuple;
-	//console.log('tuple is:', t);
-	route += t.map(x => _pickStringForAction(x)).join('+');// /action/felix/91b7584a2265b1f5/loc-settlement/96
-	console.log('sending action...', route);
-	let result = await route_server_js(route);
-	console.log('server returned', result);
-	serverData = result;
-}
-async function sendActionStub(){
+function modifyServerDataRandom(username) {
+	//this should ONLY modify serverData
+	_syncUsernameOfSender(username);
 	prevServerData = jsCopy(serverData);
+
 	let ranks = ['2', '3', '4', 'Q', 'J', 'T', 'A', '9'];
 
-	listOfUpdatedObjects = [];
-
-	let keys = Object.keys(serverData);
+	let dModify = serverData.table ? serverData.table : serverData;
+	//console.log('dModify', dModify)
+	let keys = Object.keys(dModify);
+	//console.log('keys', keys);
 	let nChange = randomNumber(1, keys.length);
 	shuffle(keys);
-	//console.log('>>>change', nChange, 'items!')
+	console.log('>>>change', nChange, 'items!')
 
 	for (let i = 0; i < nChange; i++) {
 		let id = keys[i];
-		if (isLiteral(serverData[id])) serverData[id]={id:serverData[id]};
+		let val = dModify[id];
+		if (isLiteral(val)) dModify[id] = { id: id, value: val };
 		// console.log('change rank of id', id);
-		// console.log(serverData[id])
-		serverData[id].rank = chooseRandom(ranks);
-		let o = { id: id, rank: serverData[id].rank };
-		listOfUpdatedObjects.push(o);
+		dModify[id].rank = chooseRandom(ranks);
+		// console.log(dModify[id])
 	}
-	shuffle(listOfUpdatedObjects);
 
 }
-
-//not used yet!!!
-const CHG={none:0,removed:-1,created:1,updated:2};
-function computeDiffServerData(){
-
-	
-	//serverData is preProcessed serverData
-	//only props that will be presented
-
-	//=>take code from vid0!
-	//each table entry is given a special property: '@changes' and '@changeType' mit CHG.removed,created, oder updated
-	//do this for table and players
-	
-
-	// if (!G.table) G.table = {};
-	// G.tableCreated = [];
-	// G.tableRemoved = [];
-	// G.tableUpdated = {}; //updated also has prop change info
-
-	// if (data.table) {
-	// 	let allkeys = union(Object.keys(G.table), Object.keys(data.table));
-	// 	for (id of allkeys) {
-	// 		let o_new = id in data.table ? data.table[id] : null;
-	// 		let o_old = id in G.table ? G.table[id] : null;
-	// 		let changes = propDiffSimple(o_old, o_new); //TODO: could add prop filter here already!!!
-	// 		if (changes.hasChanged) {
-	// 			G.tableUpdated[id] = changes;
-	// 			if (nundef(o_old)) {
-	// 				G.tableCreated.push(id);
-
-	// 			} else if (nundef(o_new)) {
-	// 				G.tableRemoved.push(id);
-	// 				//console.log('removed:',id)
-	// 			}
-	// 		}
-	// 	}
-	// 	G.table = data.table;
-	// }
-
-	// prevServerData = serverData;
+function showServerData(domid = 'SERVERDATA') {
+	let d = mBy(domid);
+	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(serverData.table) + '</pre>'; }
+	//else consoutput('serverData',serverData);
 }
-//sendStatus
-//oder koennte auch in preProcessServerData bereits das weitingFor handeln?!?
-//>>muss ich mir ueberlegen wo das hingehoert?
-
-
-//#region API: serverData+SPEC ==> object tree
-
 
 //#region _internal
-// serverData modification (stub)
+// serverData / server helpers
+function _syncUsernameOfSender(username) {
+	if (nundef(username)) username = USERNAME; else USERNAME = username;
+	plidSentStatus = getPlidForUsername(username);
+	//console.log('------------------', username, USERNAME, plidSentStatus);
+
+}
 
 
 // playerConfig (stub)
@@ -428,7 +420,7 @@ var iTHEME = 0;
 function getTupleGroups() {
 	let act = serverData.options;
 
-	////console.log('options', act)
+	//console.log('options', act)
 	// json_str = JSON.stringify(act);
 	// saveFile("yourfilename.json", "data:application/json", new Blob([json_str], { type: "" }));
 
@@ -517,7 +509,7 @@ function stripSet(x) {
 
 
 // helpers
-function getUsernameForPlid(id) { return playerConfig[GAME].players[id].username;}
+function getUsernameForPlid(id) { return playerConfig[GAME].players[id].username; }
 function getPlidForUsername(username) {
 	let pl = firstCondDict(playerConfig[GAME].players, x => x.username == username);
 	// //console.log(getFunctionCallerName(),pl)

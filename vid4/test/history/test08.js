@@ -97,7 +97,7 @@ function present() {
 	updateSelection(lst); 
 }
 function initUI() {
-	divRsg = d3.select('#rsg');
+	divRsg = d3.select('#RSG');
 	document.title = 'HA!';
 
 	divTable = divRsg.select('#table');

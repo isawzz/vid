@@ -1747,7 +1747,7 @@ function getUID(pref = '') {
 //#endregion
 
 //#region io
-function consoutput() { console.log(...arguments);} 
+function consoutput() { console.log(...arguments); }
 function error(msg) {
 	let fname = getFunctionsNameThatCalledThisFunction();
 	console.log(fname, 'ERROR!!!!! ', msg);
@@ -1893,19 +1893,9 @@ function deepmerge(target, source, optionsArgument) {
 		return mergeObject(target, source, optionsArgument)
 	}
 }
-// function dict2list(d, keyName = 'id') {
-// 	//d assumed to be dictionary with values are objects!!!!
-// 	let res = [];
-// 	for (const key in d) {
-// 		let val = d[key];
-// 		let o;
-// 		if (isDict(val)) { o = jsCopy(o); } else { o = { value: val }; }
-// 		o[keyName] = key;
-// 		res.push(o);
-// 	}
-// 	return res;
-// }
+function dict2list(d, keyName = 'id') { return dict2olist(d, keyName); }
 function dict2olist(d, keyName = 'id') {
+	//renamed from dict2list
 	//d assumed to be dictionary with values are objects!!!!
 	let res = [];
 	for (const key in d) {
@@ -1930,6 +1920,10 @@ function odict2olist(d, keyName = 'id') {
 }
 function dropLast(s) { return s.substring(0, s.length - 1); }
 const fieldSorter = fields => (a, b) =>
+	//usage of field sorter:
+	// const homes = [{"h_id":"3", "city":"Dallas", "state":"TX","zip":"75201","price":162500}, {"h_id":"4","city":"Bevery Hills", "state":"CA", "zip":"90210", "price":319250},{"h_id":"6", "city":"Dallas", "state":"TX", "zip":"75000", "price":556699},{"h_id":"5", "city":"New York", "state":"NY", "zip":"00010", "price":962500}];
+	// const sortedHomes = homes.sort(fieldSorter(['state', '-price']));
+	// document.write('<pre>' + JSON.stringify(sortedHomes, null, '\t') + '</pre>')
 	fields
 		.map(o => {
 			let dir = 1;
@@ -1941,10 +1935,6 @@ const fieldSorter = fields => (a, b) =>
 		})
 		.reduce((p, n) => (p ? p : n), 0);
 
-//usage of field sorter:
-// const homes = [{"h_id":"3", "city":"Dallas", "state":"TX","zip":"75201","price":162500}, {"h_id":"4","city":"Bevery Hills", "state":"CA", "zip":"90210", "price":319250},{"h_id":"6", "city":"Dallas", "state":"TX", "zip":"75000", "price":556699},{"h_id":"5", "city":"New York", "state":"NY", "zip":"00010", "price":962500}];
-// const sortedHomes = homes.sort(fieldSorter(['state', '-price']));
-// document.write('<pre>' + JSON.stringify(sortedHomes, null, '\t') + '</pre>')
 function first(arr) {
 	return arr.length > 0 ? arr[0] : null;
 }

@@ -1,0 +1,24 @@
+# example 1
+placement: 
+  - GamePlayer.items: PLAYER 
+  - Tick: MAIN 
+visualize:
+  Tick:
+    rsgType: dom
+    tag: div
+    optin: [row, col, symbol]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

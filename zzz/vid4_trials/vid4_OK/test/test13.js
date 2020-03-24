@@ -1,5 +1,5 @@
 //using keys, assets, divs for opps,table,players, full serverData in use!, preProcessedData, handle playerChange/restart
-//packaging >package.js
+//packaging,present => package.js
 window.onload = () => _start();
 var divMain, divPlayer, divOpps, colors, iColor, presentList, timit;
 
@@ -50,6 +50,16 @@ function package00(sData, SPEC, CODE) {
 	let res = [{ olist: lst, loc: 'LOG', rsgType: updateSelection }]; //hier wird loc gesetzt!
 	console.log('package returns',res)
 	return res;
+}
+//#region present
+function present(listOfDict) {
+	for (const dic of listOfDict) {
+		area = dic.loc;
+		console.log(area)
+		let datalist = dic.olist;
+
+		updateSelection(datalist, area)
+	}
 }
 
 function updateSelection(data,area) {

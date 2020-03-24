@@ -1,0 +1,49 @@
+placement:
+#example 1:
+  - GamePlayer.items: PLAYER 
+  - Tick: MAIN 
+#example 2:
+  - Board: MAIN
+  - GamePlayer.resources: MAIN
+  - opponent.buildings.farm: OPPS
+  - robber: self.loc
+#example 3:
+  - opponent.buildings: self.name
+visualize:
+#example 1:
+  Tick:
+    rsgType: dom
+    tag: div
+    optin: [row, col, symbol]
+#example 2:
+  Board:
+    rsgType: quadGrid
+  Card:
+    rsgType: c52
+    rank: self.short_name
+  .resources:
+    rsgType: colorLabelRow
+  robber:
+    rsgType: pic
+    symbol: spy
+    color: grey
+#example 3:
+  opponent.buildings: 
+    rsgType: groups
+    itemType: 
+    item:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

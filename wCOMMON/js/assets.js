@@ -26,10 +26,12 @@ async function loadAssets() {
 async function loadSpec() {
 	if (TESTING) {
 
-		let url = TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
+		let url = DSPEC_PATH + DSPEC_VERSION + '.yaml'; //TEST_PATH + 'defaultSpec' + DSPEC_VERSION + '.yaml';
 		defaultSpecC = await vidCache.load('defaultSpec', async () => await route_path_yaml_dict(url), true, false);// last 2 params: reload, useLocal
 
-		url = TEST_PATH + GAME + '/uspec' + USPEC_VERSION + '.yaml';
+		url = TEST_VERSION ? TEST_PATH + 'u' + TEST_VERSION + '.yaml'
+			: TEST_PATH + GAME + '/uspec' + USPEC_VERSION + '.yaml';
+
 		if (USE_NON_TESTING_DATA) url = '/games/' + GAME + '/_rsg/' + GAME + VERSION + '.yaml';
 		userSpecC = await vidCache.load('userSpec', async () => await route_test_userSpec(url), true, false);// last 2 params: reload, useLocal
 
@@ -61,6 +63,8 @@ async function loadSpec() {
 }
 async function loadCode() {
 	// let url = TEST_PATH + GAME + '/code' + CODE_VERSION + '.js';
+	if (TESTING && !CODE_VERSION) return;
+
 	let url = TESTING && !USE_NON_TESTING_DATA ? TEST_PATH + GAME + '/code' + CODE_VERSION + '.js'
 		: '/games/' + GAME + '/_rsg/' + GAME + VERSION + '.js';
 
@@ -85,7 +89,8 @@ async function loadInitialServerData(unameStarts) {
 	_syncUsernameOfSender(unameStarts);
 
 	if (TESTING) {
-		url = TEST_PATH + GAME + '/data' + SERVERDATA_VERSION + '_' + initialPath + '.yaml';
+		let url = TEST_VERSION ? TEST_PATH + 'd' + TEST_VERSION + '.yaml'
+			: TEST_PATH + GAME + '/data' + SERVERDATA_VERSION + '_' + initialPath + '.yaml';
 		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_path_yaml_dict(url), true, false); // last 2 params: reload, useLocal
 	} else {
 		serverDataC = initialDataC[GAME] = await vidCache.load('_initial_' + initialPath, async () => await route_initGame(GAME, playerConfig[GAME], USERNAME), !CACHE_INITDATA, CACHE_INITDATA); // last 2 params: reload, useLocal 
@@ -172,10 +177,15 @@ function modifyServerDataRandom(username) {
 	}
 
 }
-function showServerData(domid = 'SERVERDATA') {
+function showServerData(data, domid = 'SERVERDATA') {
 	let d = mBy(domid);
-	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(serverData.table) + '</pre>'; }
-	//else consoutput('serverData',serverData);
+	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
+	//else consoutput('serverData',data);
+}
+function showPackages(data, domid = 'CODE') {
+	let d = mBy(domid);
+	if (d) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
+	//else consoutput('serverData',data);
 }
 
 //#region _internal

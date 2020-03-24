@@ -1,21 +1,33 @@
 var USERNAME = 'felix';
-var GAME = 'catan'; // catan | aristocracy | ttt | game01
+var GAME = 'ttt'; // catan | aristocracy | ttt | game01
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 
 const TESTING = true; // true | false //uses files from tests, DOES NOT send routes to server, instead: server stub
 const RUNTEST = false; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
-const USE_NON_TESTING_DATA = false; //uses spec,code from /games instead of /zdata
-const USER_SERVERDATA_STUB = false; // if true, need to jsCopy serverData to simulate new batch!
-const USE_LOCAL_STORAGE = true; // true | false //localStorage is cleared when false!!!!!
-var INCREMENTAL_UPDATE = true; // diff is run after preProcessing serverData!
 
 //*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
+const TEST_VERSION = '14'; // | null to use genauere
+const DSPEC_PATH = '/wCOMMON/defaultSpec'
 const DSPEC_VERSION = 4;
+const CODE_VERSION = null;
+
 const USPEC_VERSION = '00';
-const CODE_VERSION = 1;
-const SERVERDATA_VERSION = 1;
-const TEST_PATH = '/zdata/';
+const SERVERDATA_VERSION = 2; ///nur ttt!!!!!!!!!!!
+const TEST_PATH = '/work/';
+const USE_NON_TESTING_DATA = false; //uses spec,code from /games instead of /zdata
+
+const INCREMENTAL_UPDATE = true; // diff is run after preProcessing serverData!
+const USE_LOCAL_STORAGE = true; // true | false //localStorage is cleared when false!!!!!
+const USE_MAX_PLAYER_NUM = false; // true | false
+
+const TIMIT_SHOW = false; // true | false
+const VERBOSE = true; // true | false
+const SHOW_SERVER_ROUTE = false; // true | false
+const SHOW_SERVER_RETURN = false; // true | false
+const SHOW_CODE = false; // true | false
+const SHOW_SERVERDATA = true; // true | false
+const SHOW_SPEC = true; // true | false
 
 //ONLY used when *** NOT testing: ***
 var VERSION = '_02'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
@@ -25,6 +37,7 @@ var CACHE_CODE = false;
 const CACHE_INITDATA = false;
 const USE_ALL_GAMES_ROUTE = false; // true | false //false means directly loading game infos from info.yaml
 
+
 // important vars
 var SPEC = null; //merged userSpec and defaultSpec
 var GAMEPLID = null; //game player id
@@ -32,19 +45,12 @@ var PGAMEPLID = null; //prev game player id
 
 // performance *** TIMER ***
 var timit;
-const TIMIT_SHOW = true; // true | false
 var t_total = 0;
 var t_avg = 0;
 
 //settings that might change but unlikely:
 //const INIT_CLEAR_LOCALSTORAGE = false; // true | false >>see above USE_LOCAL_STORAGE
-const USE_MAX_PLAYER_NUM = false; // true | false
-const VERBOSE = true; // true | false
-const SHOW_SERVER_ROUTE = false; // true | false
-const SHOW_SERVER_RETURN = false; // true | false
-const SHOW_CODE = false; // true | false
-const SHOW_SERVERDATA = false; // true | false
-const SHOW_SPEC = true; // true | false
+const USER_SERVERDATA_STUB = false; // if true, need to jsCopy serverData to simulate new batch!
 const USE_OLD_GRID_FUNCTIONS = false;// true | false
 const STARTING_TAB_OPEN = 'bPlayers'; // bObjects | bPlayers | bSettings
 //var OPEN_TAB = 'Seattle'; //S.settings.openTab = S_openTab; deprecated!

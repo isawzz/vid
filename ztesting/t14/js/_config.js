@@ -7,12 +7,11 @@ const TESTING = true; // true | false //uses files from tests, DOES NOT send rou
 const RUNTEST = false; // true | false //just runTest preprocess serverData, pageHeaderInit, and clear
 
 //*** TESTING *** uses files in /tests/GAME/uspecN and codeN, NO caching of uspec, code, and data!
-const TEST_VERSION = '15'; // | null to use genauere
+const TEST_VERSION = '14'; // | null to use genauere
 const DSPEC_PATH = '/wCOMMON/defaultSpec'
 const DSPEC_VERSION = 4;
 const CODE_VERSION = null;
 
-//*** additional *** TESTING *** settings */
 const USPEC_VERSION = '00';
 const SERVERDATA_VERSION = 2; ///nur ttt!!!!!!!!!!!
 const TEST_PATH = '/work/';

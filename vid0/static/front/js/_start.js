@@ -33,6 +33,7 @@ async function _startSession() {
 	//await loadAllGames_dep();
 	_initServer([ensureAllGames, () => {
 
+		console.log('allGames',allGames)
 		//START HERE!!!! have iconChars,allGames,gcs
 		timit.showTime('nach loadAllGames_dep+loadIcons')
 		gcsAuto();

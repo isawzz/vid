@@ -211,6 +211,7 @@ function _sendRouteBase(returnJS, route, callback) {
 //#region route_ API new!
 //#region routes
 async function route_allGames() {
+	console.log('hallooooooooooooooo')
 	let gameNames = await route_server_js('/game/available');
 	console.log('gamenames returned:', gameNames)
 	let res = {};

@@ -55,12 +55,12 @@ function findPlacements(dPlacements, data) {
 	return placements;
 }
 
-function detectLists(placements) {
+function flattenMappings(placements) {
 	let flattened = [];
 	for (const plc of placements) {
 		for (const match of plc) {
 			let result = [];
-			recDetectLists(match, result);
+			flattenMatch(match, result);
 			flattened = flattened.concat(result);
 		}
 	}
@@ -69,15 +69,11 @@ function detectLists(placements) {
 	return flattened;
 
 }
-function recDetectLists(m, matches) {
+function flattenMatch(m, matches) {
 	// returns list of matches made of this single match 
 	//console.log(m);
 	//example: Board 
-	if (SPEC.visualize && SPEC.visualize[m.path]) { 
-		//whatever the rsgType, if it is specified, defer olist spawning to later
-		matches.push(m); 
-		return; 
-	}
+	if (SPEC.visualize && SPEC.visualize[m.path]) { matches.push(m); return; }
 	//example: GamePlayer.items
 	//if it is a set of objects, look what type objects are
 	//if objects are sets also, need to go deeper! otherwise just return item list
@@ -95,7 +91,7 @@ function recDetectLists(m, matches) {
 				//TODO: soll ich da einen index dazugeben??? glaub schon!!!
 
 				let mNew = { omap: el, loc: m.loc, myLoc: m.myLoc, path: m.path + '.' + i, oid: m.oid, props: m.props };
-				recDetectLists(mNew, matches);
+				flattenMatch(mNew, matches);
 				i += 1;
 				// //els[0] is dict or array
 				// //only support sets of similar element types!!!
@@ -151,7 +147,7 @@ function recDetectLists(m, matches) {
 			for (const key in m.omap) {
 				m.props.push(key);
 				let mNew = { omap: m.omap[key], loc: m.loc, myLoc: m.myLoc, path: m.path + '.' + key, oid: m.oid, props: m.props };
-				recDetectLists(mNew, matches);
+				flattenMatch(mNew, matches);
 				// //els[0] is dict or array
 				// //only support sets of similar element types!!!
 				// let els1 = getElements(els[0]);

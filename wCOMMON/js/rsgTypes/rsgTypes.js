@@ -1,8 +1,13 @@
-// const RSGTYPES = { board: 1, hand: 2, field: 101, edge: 102, corner: 103 };//unter 100:container types
+//default rsg types:
+var DEF_LIST_TYPE = 'dom';
+var DEF_ITEM_TYPE = 'dom';
 
-//rsgTypes are functions
-//layout types: hexGrid, quadGrid
-//leaf types: dom, 
+//default req params for types:
+var DEF_DOM_TAG = 'div';
+
+
+
+
 
 
 

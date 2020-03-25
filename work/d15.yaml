@@ -96,3 +96,9 @@ table:
   "30":
     loc: {_obj: "3"}
     obj_type: robber
+  "31":
+    row: 1
+    col: 1
+    color: green
+    name: max
+    obj_type: piece

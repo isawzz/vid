@@ -30,28 +30,63 @@ async function gameStep() {
 
 	sData = serverData; //these are the data that I actually want to present!
 
+	//test ob Board object auf getELements anspricht
+	// let boardEls = getElements(serverData.table['9'], elKey = '_obj', arrKey = 'fields'); 
+	// console.log('boardEls',boardEls,serverData.table['9']);
+	// return;
+
+	//************ createMappings ************* */
 	//step1: find placements
 	let placements = findPlacements(SPEC.placement, sData);
 	console.log('placements', placements);
 
 	//step2: flatten lists
-	let flattened = flattenMappings(placements);
-	console.log('flattened',flattened);
+	let flattened = detectLists(placements);
+	console.log('flattened', flattened);
+
+	//need to think about rsgTypes!
+	//how about this:
+	//each layoutType (or listType) must have its own way to generate its members
+	//a listType does not create any object,it only creates mapping objects just like the ones created in createMappings
+	
 
 	//jedes object hat jetzt eine olist wenn es ein compound ist und nur omap wenn es simple object ist
 
-	//step 3: give each mapping a listType (if compound) and an itemType
-	//default list and itemTypes are div,div
+	//step 4: give each mapping a listType (if compound) and an itemType
+	for (const m of flattened) {
+		let vis = SPEC.visualize;
+		if (vis && vis[m.path]) {
+			//for now only consider exact path!
+			let visPath = vis[m.path];
+			m.listType = visPath.listType;
+			m.itemType = visPath.itemType;
+			m.params = visPath;
+		} else {
+			m.listType = DEF_LIST_TYPE;
+			m.itemType = DEF_ITEM_TYPE;
+		}
+	}
 
-	//bisher wurden noch ueberhauptkeine uis created!!!
-	//for ui:
-	//1. need player and opp areas named w/ pl.name.toUpperCase()
+	//************ create Objects ************* */
+	//step 4: create all objects
+	//for each item mapping: create 1 object
+	//for each list mapping create 1 object + 1 for each item in olist
+	for (const m of flattened) {
+		if (m.olist) {
+			//this is a container mapping
+			let oContainer = registerObject(m.oid, m.props, m);
+			let oItems = m.olist.map(x => registerObject(x, [], m));
+		} else {
+			let oItem = registerObject(m.oid, m.props, m); //can props ever be != [] with item objects???
+		}
+	}
+
+	//step 5: create ui
+
+
+	//1. need player and opp areas named w/ pl.name.toUpperCase(): hardcoded for now!!!
 
 	//2. need to create other areas as per layout if any! ==>spare that for now!
-
-	//3. geh wieder mit beispielen vor!
-
-	//wie 
 
 
 

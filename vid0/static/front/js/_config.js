@@ -1,11 +1,11 @@
 var USERNAME = 'felix';
-var GAME = 'catan'; // s1 | catan | ttt | empty | game01 | aristocracy
+var GAME = 'aristocracy'; // s1 | catan | ttt | empty | game01 | aristocracy
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 //var AI_TYPE = 'random';
 const PLAYER_CONFIG_FOR_MULTIPLAYER = ['me', 'human', 'human'];
 
-const USE_LOCAL_STORAGE = true; // true | false
+const USE_LOCAL_STORAGE = false; // true | false
 
 //ONLY used when *** NOT testing: ***
 const VERSION = '_ui'; //files sollen heissen [GAME]_01.yaml and [GAME]_01.js, und im richtigen dir sein!!
@@ -26,7 +26,7 @@ const SERVERDATA_VERSION = 1;
 const TEST_PATH = '/zdata/';
 
 //might change but unlikely:
-const INIT_CLEAR_LOCALSTORAGE = false; // true | false //tru will delete complete localStorage at _startSession
+const INIT_CLEAR_LOCALSTORAGE = true; // true | false //tru will delete complete localStorage at _startSession
 const USE_MAX_PLAYER_NUM = false; // true | false
 const STARTING_TAB_OPEN = 'bPlayers'; // bObjects | bPlayers | bSettings
 const TIMIT_SHOW = false; // true | false

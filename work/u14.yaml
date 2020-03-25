@@ -1,8 +1,19 @@
-# example 1
 placement: 
-  - GamePlayer.items: PLAYER 
+  # case 0: there is visualize directive for this path:
+  - Board: MAIN
   - Tick: MAIN 
+  # case 1: sets are unpacked
+  - GamePlayer.items: PLAYER 
+  - GamePlayer.sets: PLAYER 
+  - hand: MAIN
+  #case 2: makes key-value list w/ simple values only!
+  - GamePlayer.resources: MAIN
+  # - GamePlayer.weired_resources: MAIN
+  - robber: self.loc
+  - opponent.buildings: self.name
 visualize:
+  # Board:
+  #   rsgType: quadGrid
   Tick:
     rsgType: dom
     tag: div

@@ -94,7 +94,7 @@ table:
     short_name: "7"
     obj_type: Card
   "30":
-    loc: {_obj: "3"}
+    loc: {_obj: "1"}
     obj_type: robber
   "31":
     row: 1

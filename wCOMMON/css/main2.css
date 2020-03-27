@@ -109,15 +109,16 @@ html,body{
 }
 #headerActions{
 	grid-area: ha;
-	padding: 4px;
+	/* padding: 4px; */
 }
 #STATUS{
 	grid-area: hb;
-	min-height:25px;
+	/* padding: 4px; */
+	/* min-height:25px; */
 }
 #headerLog{
 	grid-area: hc;
-	padding: 4px;
+	/* padding: 4px; */
 }
 
 /* #endregion grid */

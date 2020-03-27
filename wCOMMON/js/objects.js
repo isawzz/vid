@@ -1,18 +1,37 @@
-var UIS, IdOwner, id2oids, oid2ids, id2uids;
+var UIS, IdOwner, id2oids, oid2ids, id2uids, path2mainIds;
 
 class MK { }
-function registerObject(what, props, mapping) {
+function registerObject(what, props, mapping, mParentId) {
 	//what can be oid | {key: "wood", value: 3} (for literal objects)
 	//props [] means toplevel object
 	//mapping is either own or parent mapping (for container child)
-	ensureUIS();
-	console.log('registering', ...arguments);
 
-	//if what is an object, it is a literal
+	//for a child that is proper object, mk.oid has to be its own oid!
+	//mapping can still be parent mapping 
+	//or
+	//can transform into child mapping: schau ma mal!
+
+	ensureUIS();
+	//console.log('registering', ...arguments);
+
+	//if what is an object (isDict), it is a literal and this is a leaf object
 	let mk = new MK();
 	let id = mk.id = getUID();
+	if (mParentId) mk.mParentId=mParentId;
+
 	let oid = mk.oid = isDict(what) ? mapping.oid : what;
+
+	//TODO da muss ich noch den index reinbringen: zB fuer farms beispiel!!!
+	let o = mk.o =  isDict(what) ? what : isEmpty(props)? getServerObject(oid): mapping.omap;
+	let myPath = mk.myPath = isDict(what)?mapping.path + o.key:oid==mapping.oid?oid+mapping.props.join('.'):what;
+
+	mk.isLeaf = isDict(what) || oid != mapping.oid;
+
+	//if this thing has an oid and no props: its object is serverData.table[oid]
+	//console.log(isDict(what),isEmpty(props),oid,mapping.omap)
+
 	let idType = mk.idType = 'm'; // mapped object
+	listKey(path2mainIds,myPath,id);
 	mk.mapping = mapping;
 
 	linkObjects(id, oid);
@@ -25,7 +44,12 @@ function registerObject(what, props, mapping) {
 
 function getServerObject(oid) { return serverData.table[oid] ? serverData.table[oid] : serverData.players[oid]; }
 function getUIObject(id) { return UIS[id]; }
-function ensureUIS() { if (nundef(UIS)) { UIS = {}; IdOwner = {}; id2oids = {}; oid2ids = {}; id2uids = {}; } }
+function getFirstId(path){let ids=path2mainIds[path];return ids && ids.length>0?ids[0]:null;}
+function getFirstVisual(path){
+	let ids = path2mainIds[path];
+	for(const id of ids) if (UIS[id]) return UIS[id];
+}
+function ensureUIS() { if (nundef(UIS)) { UIS = {}; IdOwner = {}; id2oids = {}; oid2ids = {}; id2uids = {}; path2mainIds = {}; } }
 function resetUIS() {
 	UIS = {};
 	IdOwner = {}; //lists of ids by owner
@@ -40,7 +64,7 @@ function _addRelatives(id, oid) {
 	if (isdef(oid2ids[oid])) {
 		for (const idOther of oid2ids[oid]) {
 			if (idOther == id) {
-				console.log('object', id, 'already exists in oid2ids[', oid, ']');
+				//console.log('object', id, 'already exists in oid2ids[', oid, ']');
 				continue;
 			}
 			listKey(id2uids, id, idOther);
@@ -49,7 +73,7 @@ function _addRelatives(id, oid) {
 	}
 }
 function linkObjects(id, oid) {
-	// if (HALLO) console.log('linkObjects',id,oid)
+	// if (HALLO) //console.log('linkObjects',id,oid)
 	_addRelatives(id, oid);
 	listKey(id2oids, id, oid);
 	listKey(oid2ids, oid, id);
@@ -101,7 +125,7 @@ function registerObject_dep(o, idType, loc, rsgType) {
 	mk.oid = oid;
 	mk.path = o.oid;
 
-	//if (idType=='i') console.log('dadada')///////////////////////////
+	//if (idType=='i') //console.log('dadada')///////////////////////////
 
 	//	mk.cat = cat;
 	mk.rsg = rsgType;
@@ -110,7 +134,7 @@ function registerObject_dep(o, idType, loc, rsgType) {
 	mk.loc = loc; //id of containing ui (can be in UIS or just a div)
 	if (o.ui) registerUiFor(mk, o.ui); // { mk.elem = mk.parts.elem = o.ui; mk.elem.id = id; }
 
-	//if (idType=='i') console.log('mk.elem',mk.elem);///////////////////////////
+	//if (idType=='i') //console.log('mk.elem',mk.elem);///////////////////////////
 
 	linkObjects(id, oid);
 	listKey(IdOwner, idType, id);
@@ -124,7 +148,7 @@ function registerUiFor(mk, ui) { mk.elem = ui; mk.elem.id = mk.id; mk.parts.elem
 //#region delete MSOB 
 function _deleteFromOwnerList(id) { let owner = IdOwner[id[2]]; if (isdef(owner)) removeInPlace(owner, id); }
 function deleteRSG(id) {
-	console.log('deleting', id)
+	//console.log('deleting', id)
 	let mk = UIS[id];
 	if (nundef(mk)) {
 		error('object that should be deleted does NOT exist!!!! ' + id);

@@ -73,10 +73,26 @@ function recDetectLists(m, matches) {
 	// returns list of matches made of this single match 
 	//console.log(m);
 	//example: Board 
-	if (SPEC.visualize && SPEC.visualize[m.path]) { 
+	if (SPEC.visualize && SPEC.visualize[m.path]) {
 		//whatever the rsgType, if it is specified, defer olist spawning to later
-		matches.push(m); 
-		return; 
+		let vis = SPEC.visualize[m.path];
+		if (!vis.listType) { //this is a leaf object!!!
+			matches.push(m);
+			return;
+		}else{
+			//this matching has a listType, meaning: it is a container of other objects 
+			//what if this listType is recursive? muss sowieso fuer alle spawns recDetectLists aufrufen!
+			// let mNew = { omap: el, loc: m.loc, path: m.path + '.' + i, oid: m.oid, props: m.props };
+			// recDetectLists(mNew, matches);
+			let func = vis.listType;
+			let {olist,layoutInfo} = window[func](m.omap ,serverData.table);
+			m.olist=olist;
+			m.layoutInfo=layoutInfo;
+			//console.log('structure',olist,layoutInfo);
+			matches.push(m);
+			return;
+		}
+
 	}
 	//example: GamePlayer.items
 	//if it is a set of objects, look what type objects are
@@ -94,7 +110,7 @@ function recDetectLists(m, matches) {
 			for (const el of els) {
 				//TODO: soll ich da einen index dazugeben??? glaub schon!!!
 
-				let mNew = { omap: el, loc: m.loc, myLoc: m.myLoc, path: m.path + '.' + i, oid: m.oid, props: m.props };
+				let mNew = { omap: el, loc: m.loc, path: m.path + '.' + i, oid: m.oid, props: m.props };
 				recDetectLists(mNew, matches);
 				i += 1;
 				// //els[0] is dict or array

@@ -58,7 +58,7 @@ async function loadSpec() {
 
 	let d = mBy('SPEC');
 	if (d && SHOW_SPEC) { d.innerHTML = '<pre>' + jsonToYaml(SPEC) + '</pre>'; }
-	//else consoutput('SPEC',SPEC);
+	//else consOutput('SPEC',SPEC);
 
 }
 async function loadCode() {
@@ -180,12 +180,12 @@ function modifyServerDataRandom(username) {
 function showServerData(data, domid = 'SERVERDATA') {
 	let d = mBy(domid);
 	if (d && SHOW_SERVERDATA) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
-	//else consoutput('serverData',data);
+	//else consOutput('serverData',data);
 }
 function showPackages(data, domid = 'CODE') {
 	let d = mBy(domid);
 	if (d) { d.innerHTML = '<pre>' + jsonToYaml(data) + '</pre>'; }
-	//else consoutput('serverData',data);
+	//else consOutput('serverData',data);
 }
 
 //#region _internal
@@ -392,9 +392,9 @@ async function route_server(url) { await fetch_wrapper(SERVER + url); }
 var route_counter = 0;
 async function fetch_wrapper(url) {
 	route_counter += 1;
-	if (SHOW_SERVER_ROUTE) consoutput(route_counter + ': route:' + url);
+	if (SHOW_SERVER_ROUTE) consOutput(route_counter + ': route:' + url);
 	let res = await fetch(url);
-	if (SHOW_SERVER_RETURN) consoutput(route_counter + ': return:', res);
+	if (SHOW_SERVER_RETURN) consOutput(route_counter + ': return:', res);
 	return res;
 }
 

@@ -1747,7 +1747,7 @@ function getUID(pref = '') {
 //#endregion
 
 //#region io
-function consoutput() { console.log(...arguments); }
+function consOutput() { console.log(...arguments); }
 function error(msg) {
 	let fname = getFunctionsNameThatCalledThisFunction();
 	console.log(fname, 'ERROR!!!!! ', msg);

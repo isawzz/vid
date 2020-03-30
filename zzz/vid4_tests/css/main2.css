@@ -38,7 +38,7 @@ html,body{
 
 
 /* #region grid */
-#ROOT{
+#PAGEROOT{
 	display: grid;
 	grid-template-rows: min-content auto auto auto auto;
 	grid-template-areas: 'i' 'g' 'o' 's' 'd' ;

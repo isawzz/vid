@@ -1,7 +1,7 @@
 window.onload = () => _start();
 var divMain, divPlayer, divOpps, colors, iColor, timit;
 const SPEC_PATH = '/work2/static2.yaml';
-const SERVERDATA_PATH = '/work2/serverData.yaml';
+const SERVERDATA_PATH = '/work2/sDataFull.yaml';
 //#region control flow
 async function _start() {
 	timit = new TimeIt('*timer', TIMIT_SHOW);
@@ -36,7 +36,12 @@ async function gameStep() {
 	//console.log(sData);
 	root('ROOT');
 	parseStaticSpec();
+	showTree(UIROOT);
+	console.log('__________________')
 	parseDynamicSpec();
+	console.log('__________________')
+	showTree(UIROOT,['panels', 'elm'], ['params']);
+	console.log('__________________')
 }
 
 
@@ -103,32 +108,6 @@ async function loadInitialServerDatafe(unameStarts) {
 	return serverData;
 }
 
-//#region FUNCTIONS
-var FUNCTIONS={
-	instanceof: 'instanceOf',
-
-}
-function evalCond(o,node){
-	let qualifies=true;
-	for(const fCond in node.cond){
-		console.log(fCond)
-		let func=FUNCTIONS[fCond];
-		func=window[func];
-		if (!func) {qualifies=false;break;}
-		let val = func(o,node.cond[fCond]);
-		if (!val) {qualifies=false;break;}
-	}
-	return qualifies;
-
-}
-
-function instanceOf(o,className){
-	let otype = o.obj_type;
-	switch(className){
-		case '_player': return otype=='GamePlayer'||otype =='opponent';break;
-		case 'building': return otype == 'farm'||otype=='estate'||otype=='chateau'||otype=='settlement'||otype=='city'||otype =='road';break;
-	}
-}
 
 
 

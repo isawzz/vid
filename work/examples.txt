@@ -30,7 +30,7 @@ PLAYER1:
  
 Board: MAIN
 MAIN:
-  container: ...alle board items
+ container: ...alle board items
 
 
  

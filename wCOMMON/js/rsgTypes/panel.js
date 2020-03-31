@@ -6,45 +6,96 @@ function staticArea(areaName, o) {
 	let func = o.type;
 	switch (func) {
 		case 'list': func = 'liste'; break;
+		case 'dict': func = 'dicti'; break;
 		case undefined: func = 'panel'; break;
 	}
 	//console.log(func,areaName);
 	o.ui = window[func](areaName, o);
-	//console.log(func, areaName, 'returns', o.ui.id);
-
-	// if (nundef(func)){
-	// 	//console.log('type undefined');
-	// 	if (o.id) {
-	// 		let d=mBy(areaName);
-	// 		d.id=o.id;
-	// 		mColor(d,randomColor(),'black')
-	// 		d.innerHTML = o.id;
-	// 	}
-	// }else{
-	// }
 }
-function panel(areaName, o) {
+
+//#region dynamic spec helpers
+function mergeSpecNodes(o){
+	let merged = {};
+	//console.log('------------',o.RSG);
+	let interpool=null;
+	for (const nodeId in o.RSG) {
+		let node = jsCopy(dynSpec[nodeId]);
+		let pool = node.pool;
+		if (pool) {
+			if (!interpool) interpool=pool;
+			else interpool = intersection(interpool,pool);
+		}
+		//console.log('node',node)
+		merged = deepmerge(merged, node);
+	}
+	merged.pool = interpool;
+	//console.log('pool:',interpool)
+	return merged;
+}
+function getDynId(loc,oid){return loc+'@'+oid;}
+function prepParentForChildren(loc,numChildren){
+	let parent=mBy(loc);
+	clearElement(loc);
+	parent.style.display='inline-grid';
+	let uiNode = AREAS[loc];
+	if (!uiNode.type) uiNode.type='panel';
+	if (!uiNode.params) uiNode.params ={split:'equal'};
+	uiNode.params.num=numChildren;
+
+	if (!uiNode.panels) uiNode.panels=[];
+}
+function addPanel(areaName,oid){
+	//mach so einen spec node
+	let id=getDynId(areaName,oid);
+
+	let color=randomColor();
+	let parent = mBy(areaName);
+	let ui=mDiv100(parent);ui.id=id;mColor(ui,color);
+	let n={type:'panel',id:id,color:color,ui:ui};
+	AREAS[areaName].panels.push(n);
+	addAREA(id,n);
+}
+function dynamicArea(areaName,oSpec,oid,o){
+	//console.log('_______ staticArea', areaName,o)
+	let func = oSpec.type;
+	switch (func) {
+		case 'list': func = 'liste'; break;
+		case 'dict': func = 'dicti'; break;
+		case undefined: func = 'panel'; break;
+	}
+	//console.log(func,areaName);
+	oSpec.ui = window[func](areaName, oSpec, oid, o);
+}
+
+
+//#region layout functions TODO: code cleanup!
+function panel(areaName, oSpec, oid, o) {
 
 	//console.log('________ panel', areaName, o)
 
-	let params = o.params ? o.params : {}; //all defaults here!!!!!
-	let panels = o.panels ? o.panels : [];
+	let params = oSpec.params ? oSpec.params : {}; //all defaults here!!!!!
+	let panels = oSpec.panels ? oSpec.panels : [];
 
 	let num = panels.length;
 	let or = params.orientation ? params.orientation == 'h' ? 'rows'
 		: 'columns' : DEF_ORIENTATION;
 	let split = params.split ? params.split : DEF_SPLIT;
-	let bg = o.color ? o.color : null;
+	let bg = oSpec.color ? oSpec.color : randomColor();
 	let fg = bg ? colorIdealText(bg) : null;
-	let id = o.id ? o.id : areaName;
+	let id = oSpec.id ? oSpec.id : areaName;
+	if (oid) {
+		id+='@'+oid;
+		//console.log('dynamic!',id);
+	}
 	//console.log(num, or, split, bg, fg, id);
 
 	let parent = mBy(areaName);
+	//console.log(areaName,parent)
 
 	if (num == 0) {
 		if (id) { 
 			parent.id = id; 
-			AREAS[id]=o;
+			addAREA(id,oSpec); //AREAS[id]=o;
 			// //console.log('area',id,o)
 			parent.innerHTML = id;  
 		}
@@ -62,7 +113,7 @@ function panel(areaName, o) {
 			let d = mDiv100(parent);
 			d.id = getUID();
 			if (panels.length > i) {
-				staticArea(d.id, panels[i]);
+				if (oid) dynamicArea(d.id,panels[i],oid,o); else staticArea(d.id, panels[i]);
 				// tree.children.push(a);
 			}
 			//d.innerHTML='wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww';
@@ -71,19 +122,23 @@ function panel(areaName, o) {
 	}
 
 	return parent;
-	o.ui=parent;
+	//oSpec.ui=parent;
 	//console.log(areaName,o.ui.id)
 }
-function liste(areaName, o) {
+function liste(areaName, oSpec, oid, o) {
 
 	//console.log('________ liste', areaName, o);
 
-	let params = o.params ? o.params : {}; //all defaults here!!!!!
+	let params = oSpec.params ? oSpec.params : {}; //all defaults here!!!!!
 	let or = params.orientation ? params.orientation == 'h' ? 'rows'
 		: 'columns' : DEF_ORIENTATION;
-	let bg = o.color ? o.color : null;
+	let bg = oSpec.color ? oSpec.color : randomColor();
 	let fg = bg ? colorIdealText(bg) : null;
-	let id = o.id ? o.id : areaName;
+	let id = oSpec.id ? oSpec.id : areaName;
+	if (oid) {
+		id+='@'+oid;
+		//console.log('dynamic!',id);
+	}
 	//console.log(or, bg, fg, id);
 
 	let parent = mBy(areaName);
@@ -92,16 +147,46 @@ function liste(areaName, o) {
 
 	if (id) { 
 		parent.id = id; 
-		AREAS[id]=o;
+		addAREA(id,oSpec); //AREAS[id]=o;
 		parent.innerHTML = id; 
 	}
 	if (bg) { mColor(parent, bg, fg); }
 
 	return parent;
-	o.ui=parent;
+	//oSpec.ui=parent;
 	//console.log(areaName,o.ui.id)
 }
+function dicti(areaName, oSpec, oid, o) {
 
+	//console.log('________ liste', areaName, o);
+
+	let params = oSpec.params ? oSpec.params : {}; //all defaults here!!!!!
+	let or = params.orientation ? params.orientation == 'h' ? 'rows'
+		: 'columns' : DEF_ORIENTATION;
+	let bg = oSpec.color ? oSpec.color : null;
+	let fg = bg ? colorIdealText(bg) : null;
+	let id = oSpec.id ? oSpec.id : areaName;
+	if (oid) {
+		id+='@'+oid;
+		//console.log('dynamic!',id);
+	}
+	//console.log(or, bg, fg, id);
+
+	let parent = mBy(areaName);
+
+	parent.style.display = 'inline-grid';
+
+	if (id) { 
+		parent.id = id; 
+		addAREA(id,oSpec); //AREAS[id]=o;
+		parent.innerHTML = id; 
+	}
+	if (bg) { mColor(parent, bg, fg); }
+
+	return parent;
+	//oSpec.ui=parent;
+	//console.log(areaName,o.ui.id)
+}
 
 
 

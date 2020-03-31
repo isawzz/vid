@@ -105,7 +105,7 @@ function onClickFilterTuples(ev, mobj, part) {
 		} else {
 			boatFilters.push(id);
 			_addFilterHighlight(mobj);
-			for (const bid of IdOwner.a) { if (!boats.includes(bid)) { _hideBoat(bid) } } //soll von tuple liste nur die tuples anzeigen, wo diese id vorkommt
+			for (const bid of IdOwner.a) { if (!boats.includes(bid)) { _hideBoat(bid) } } //soll von tuple list nur die tuples anzeigen, wo diese id vorkommt
 			//TODO!!! soll von objects nur die anzeigen, die in einem der visible tuples vorkommen
 		}
 	}

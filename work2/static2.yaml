@@ -15,7 +15,7 @@ staticSpec:
           - type: list
             params:
               orientation: h
-            id: stand_loc
+            id: stand_loc #muss dict sein by oid
           - type: list
             params:
               orientation: h
@@ -30,6 +30,7 @@ staticSpec:
             params:
               orientation: h
           - type: dict # player info
+            id: info_loc
 
   root:
     type: panel
@@ -43,15 +44,12 @@ staticSpec:
           split: 0.5
         panels:
           - id: market_loc
-            color: red
             type: list # any data here is merged with any object that has "loc: market_loc"
             params:
               orientation: h
           - id: me_loc
-            color: blue
       - type: panel
         id: all_opps
-        color: yellow
         params:
           split: equal
           panel_type: p_elm
@@ -65,12 +63,10 @@ staticSpec:
     panels:
       - type: list
         id: neutral_loc
-        color: green
       - type: list
         params:
           orientation: v
         id: discard_loc
-        color: orange
 
 # in dynamic.yaml
 # dynamic - subsets of the full gameobject/player set in status
@@ -81,10 +77,11 @@ dynamicSpec:
       instanceof: _player # auto-parent of me and opponents
     type: p_elm
 
+    
     panels.0.panels.0.elm: .market # "composite" keys
     panels.0.panels.1.elm: .buildings
-
     panels.1.panels.0.elm: .hand
+    .hand_loc: .hand
     panels.1.panels.1.data:
       vps: .vps
       money: .money
@@ -92,12 +89,12 @@ dynamicSpec:
 
   self_info: # in general sets containing one element behave like the element on its own
     cond:
-      obj_type: _me
+      obj_type: GamePlayer
     loc: me_loc
 
   opp_info: # defines a type
     cond:
-      obj_type: _opponent
+      obj_type: opponent
     loc: all_opps
     panels: . # number of panels infered by number specified
   #  params.num: this._size # all sets have some default properties, eg. size accessed through "this"

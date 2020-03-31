@@ -1764,12 +1764,67 @@ function consExpand(o,keys,indent=0){
 	}
 
 }
-
 function consOutput() { console.log(...arguments); }
 function error(msg) {
 	let fname = getFunctionsNameThatCalledThisFunction();
 	console.log(fname, 'ERROR!!!!! ', msg);
 }
+function compactObjectString(o){
+	let s='';
+	for (const k in o) {
+		if (isSimple(o[k]) && !isComplexColor(o[k])) {
+			
+			s += k + ':' + o[k] + ' ';
+		}
+	}
+	return s;
+}
+function extendedObjectString(o,indent,simple,plus,minus){
+	//console.log('indent',indent)
+	let s = ' '.repeat(indent) + (o.id ? o.id + ': ' : ' _ : ');
+
+	for (const k in o) {
+		if (k == 'id') continue;
+		if (plus && plus.includes(k) 
+		|| minus && !minus.includes(k) 
+		|| simple && isSimple(o[k]) && !isComplexColor(o[k])) {
+			if (isDict(o[k])) s+=compactObjectString(o[k]);
+			else s += k + ':' + o[k] + ' ';
+		}
+	}
+	return s;
+}
+function showObject(o, indent = 0, simple = true, plus = null, minus = null) {
+	let s=extendedObjectString(o,indent,simple,plus,minus);
+	console.log(s);
+}
+function showTree(o, childrenKeys = ['panels', 'elm'], plus, minus) {
+	recShowTree(o, 0, childrenKeys, plus, minus);
+
+}
+function findFirstListKey(o, childrenKeys) {
+	for (const k in o) {
+		let val = o[k];
+		if (childrenKeys && childrenKeys.includes(k) || isList(val)) {
+			return k;
+		}
+	}
+	return null;
+}
+function recShowTree(o, indent, childrenKeys, plus, minus) {
+	showObject(o, indent, true, plus, minus);
+	let chkey = findFirstListKey(o, childrenKeys);
+	//console.log(chkey,o[chkey])
+	if (chkey) {
+		console.log(' '.repeat(indent+2) + chkey + ':');
+		for (const ch of o[chkey]) {
+			recShowTree(ch, indent + 4, childrenKeys, plus, minus);
+		}
+	}
+
+}
+
+
 //#endregion
 
 //#region objects, dictionaries, lists, arrays
@@ -2418,6 +2473,7 @@ function isListOfLiterals(lst) {
 function isNumber(param) { return !isNaN(Number(param)); }
 function isNumeric(x) { return !isNaN(+x); }
 function isSet(x) { return (isDict(x) && (x.set || x._set)); }
+function isComplexColor(x){return isString(x) && x.includes('('); }
 function isSimple(x) { return isString(x) || isNumeric(x); }
 function isString(param) { return typeof param == 'string'; }
 function isSvg(elem) { return startsWith(elem.constructor.name, 'SVG'); }

@@ -105,56 +105,82 @@ table:
     name: Jack
     generic_type: card
   1-c7159b04:
+    obj_type: card
     generic_type: card
   1-3fbdd39e:
+    obj_type: card
     generic_type: card
   1-131f12e7:
+    obj_type: card
     generic_type: card
   1-3459c5de:
+    obj_type: card
     generic_type: card
   1-758b60b:
+    obj_type: card
     generic_type: card
   1-9bcda723:
+    obj_type: card
     generic_type: card
   1-fe0c8d2d:
+    obj_type: card
     generic_type: card
   1-98382471:
+    obj_type: card
     generic_type: card
   1-a222ce72:
+    obj_type: card
     generic_type: card
   1-33bf5bf0:
+    obj_type: card
     generic_type: card
   1-306df326:
+    obj_type: card
     generic_type: card
   1-c1b4700:
+    obj_type: card
     generic_type: card
   1-bc63de51:
+    obj_type: card
     generic_type: card
   1-1391cf74:
+    obj_type: card
     generic_type: card
   1-adf52e1:
+    obj_type: card
     generic_type: card
   1-ef780614:
+    obj_type: card
     generic_type: card
   1-1f960559:
+    obj_type: card
     generic_type: card
   1-fe70334b:
+    obj_type: card
     generic_type: card
   1-58383e7d:
+    obj_type: card
     generic_type: card
   1-dfea41e6:
+    obj_type: card
     generic_type: card
   1-f678770:
+    obj_type: card
     generic_type: card
   1-e1b51efb:
+    obj_type: card
     generic_type: card
   1-46478b1e:
+    obj_type: card
     generic_type: card
   1-61c84bce:
+    obj_type: card
     generic_type: card
   1-db0b05be:
+    obj_type: card
     generic_type: card
   1-8fc960aa:
+    obj_type: card
     generic_type: card
   1-731f9025:
     short_name: '1'
@@ -166,10 +192,14 @@ table:
     name: '1'
     generic_type: card
   1-d5753cc8:
+    obj_type: card
     generic_type: card
   1-402528cf:
+    obj_type: card
     generic_type: card
   1-1db627cb:
+    obj_type: card
     generic_type: card
   1-df3198d3:
+    obj_type: card
     generic_type: card

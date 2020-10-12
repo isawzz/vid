@@ -33,28 +33,28 @@ players:
       - _obj: 1-9bcda723
       - _obj: 1-d5753cc8
     obj_type: opponent
-  Player3:
-    name: Player3
-    hand:
-      _set:
-      - _obj: 1-fe0c8d2d
-      - _obj: 1-98382471
-      - _obj: 1-a222ce72
-      - _obj: 1-33bf5bf0
-      - _obj: 1-306df326
-      - _obj: 1-c1b4700
-      - _obj: 1-402528cf
-    buildings:
-      palace: []
-      estate: []
-      farm: []
-    obj_type: opponent
-  Player4:
-    name: Player4
-    obj_type: opponent
-  Player5:
-    name: Player5
-    obj_type: opponent
+  # Player3:
+  #   name: Player3
+  #   hand:
+  #     _set:
+  #     - _obj: 1-fe0c8d2d
+  #     - _obj: 1-98382471
+  #     - _obj: 1-a222ce72
+  #     - _obj: 1-33bf5bf0
+  #     - _obj: 1-306df326
+  #     - _obj: 1-c1b4700
+  #     - _obj: 1-402528cf
+  #   buildings:
+  #     palace: []
+  #     estate: []
+  #     farm: []
+  #   obj_type: opponent
+  # Player4:
+  #   name: Player4
+  #   obj_type: opponent
+  # Player5:
+  #   name: Player5
+  #   obj_type: opponent
 table:
   1-398593ec:
     short_name: K

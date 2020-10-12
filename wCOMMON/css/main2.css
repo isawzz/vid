@@ -52,7 +52,7 @@ html,body{
 }
 #RSG{
 	display: grid;
-	grid-template-columns: min-content min-content 1fr;
+	grid-template-columns: min-content min-content auto;
 	grid-template-areas: 'ha hb hc' 'a b c';
 	align-content: stretch;
 	align-items: stretch;
@@ -64,7 +64,9 @@ html,body{
 	grid-template-areas: 'ha hb hc' 'a b c'; */
 	/* justify-items: stretch;
 	justify-content: stretch;	 */
+	/* grid-column-gap:0px; */
 	grid-column-gap:var(--gridGap);
+	
 }
 #TEST{
 	grid-gap:var(--gridGap);
@@ -74,6 +76,9 @@ html,body{
 #RSG>div, #PAGEHEADER, #TEST>div{
 	border-radius: 8px;
 	background-color: rgba(0,0,0,0.2);
+}
+#MIDDLE{
+	width: min-content;
 }
 #ACTIONS{
 	grid-area: a;
@@ -90,8 +95,11 @@ html,body{
 #ROOT{
 	grid-area: b;
 	display: inline-grid;
-	align-self: center;
-	/* align-content: center; */
+	/* align-self: center;
+	align-content: center; */
+	/* width: auto; */
+	/* justify-self: stretch;
+	justify-content: center; */
 }
 #LOG{
 	grid-area: c;

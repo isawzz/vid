@@ -3,6 +3,7 @@ staticSpec:
   p_elm:
     type: panel
     params:
+      num: 2 # usually optional (inferred by provided "panels")
       orientation: h
       split: 0.6
     panels:
@@ -11,11 +12,11 @@ staticSpec:
           orientation: v
           split: 0.5
         panels:
-          - type: list
+          - type: panel
             params:
               orientation: h
             id: stand_loc #muss dict sein by oid
-          - type: list
+          - type: panel
             params:
               orientation: h
             id: bld_loc
@@ -24,11 +25,11 @@ staticSpec:
           orientation: v
           split: 0.5
         panels:
-          - type: list # player hand/stand
+          - type: panel # player hand/stand
             id: hand_loc
             params:
               orientation: h
-          - type: dict # player info
+          - type: panel # player info
             id: info_loc
 
   root:
@@ -54,9 +55,9 @@ staticSpec:
       orientation: h
       split: 0.5
     panels:
-      - type: list
+      - type: panel
         id: neutral_loc
-      - type: list
+      - type: panel
         params:
           orientation: v
         id: discard_loc
@@ -69,7 +70,7 @@ dynamicSpec:
     cond:
       instanceof: _player # auto-parent of me and opponents
     type: p_elm
-    #id: .name
+    
     panels.0.panels.0.elm: .market # "composite" keys
     panels.0.panels.1.elm: .buildings
     panels.1.panels.0.elm: .hand
@@ -145,5 +146,5 @@ dynamicSpec:
         data: # info data can also be specified as a list of "key,value" pairs if the keys also have to be computed/dynamic
           - key: .obj_type
             value: .address
-      - type: list
+      - type: panel
         elm: .storage

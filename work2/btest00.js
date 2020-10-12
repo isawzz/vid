@@ -36,12 +36,90 @@ async function gameStep() {
 	//console.log(sData);
 	root('ROOT');
 	parseStaticSpec();
-	showTree(UIROOT);
-	console.log('__________________')
-	parseDynamicSpec();
-	console.log('__________________')
-	showTree(UIROOT,['panels', 'elm'], ['params']);
-	console.log('__________________')
+
+
+	mBy('all_opps').innerHTML='wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww'
+
+	//showTree(UIROOT);
+	//console.log('__________________')
+	
+	
+	//parseDynamicSpec();
+	
+	//console.log('__________________')
+	//showTree(UIROOT,['panels', 'elm'], ['params']);
+	//console.log('__________________')
+}
+
+function parseDynamicSpec1() {
+	let sp = jsCopy(SPEC.dynamicSpec);
+
+	POOLS.augData = makeDefaultPool(sData);// jsCopy(serverData);
+
+	//annotate does NOT create anything!
+	annotate(sp); //connects nodes to spec and dyn spec nodes to each object
+
+	//instantiate sp nodes
+	dynSpec = sp;
+	let pool = POOLS.augData;
+
+	//erst brauch ich einen pass der ueberall die number info setzt
+	//und fuer jedes object das in node.pool ist ein eigenes base panel macht
+	//fuer diese loc!
+	for (const k in sp) {
+		let node = sp[k];
+		if (node.loc) {
+			let group = node.pool;
+			if (isEmpty(group)) continue;
+			//console.log('group', group);
+			let loc = node.loc;
+			let uiNode = AREAS[loc];
+			//console.log('loc', loc, 'uiNode', uiNode);
+			prepParentForChildren(loc, group.length);
+			for (const oid of group) {
+				//TODO!!! simplification: mach einfach panels!
+				//TODO!!! simpl: keine params... werden verwendet!
+				addPanel(loc, oid);
+
+			}
+		}
+	}
+
+	//return;
+	// 2. pass: add dynamic areas
+	for (const oid in pool) {
+
+		let o = pool[oid];
+
+		if (nundef(o.RSG)) continue;
+
+		let merged = mergeDynSetNodes(o);
+
+		if (oid == 'Player2') {
+			//console.log('merged', merged);
+		}
+		// according to merge muss ich in parent loc ein p_elm
+		//machen und mit info von o fuellen! das wird 1 panel von parent AREA
+
+		//wie macht man ein panel in einer loc?
+		if (!merged.type || !PROTO[merged.type]) continue;
+		let info = jsCopy(PROTO[merged.type]);
+		if (oid == 'Player2') {
+			//console.log('info',merged.type,info);
+		}
+
+		let areaName = getDynId(merged.loc, oid);
+
+		dynamicArea(areaName, info, oid, o);
+
+		//console.log('>>>>>>>',info.type);
+		let propName = info.type == 'panel' ? 'panels'
+			: info.type == 'list' ? 'elm' : 'data';
+		let oEinhaengen = AREAS[areaName];
+		if (nundef(oEinhaengen[propName])) oEinhaengen[propName] = [];
+		oEinhaengen[propName].push(info);
+
+	}
 }
 
 

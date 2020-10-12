@@ -1773,8 +1773,12 @@ function compactObjectString(o){
 	let s='';
 	for (const k in o) {
 		if (isSimple(o[k]) && !isComplexColor(o[k])) {
-			
+			if (isDict(o[k])) {
+				console.log('!!!!!!!!!!!!!!!!isDict',o[k]);
+			}
 			s += k + ':' + o[k] + ' ';
+			
+			// s += k + ':' + (isDict(o[k])?compactObjectString(o[k]):o[k]) + ' ';
 		}
 	}
 	return s;
@@ -1783,17 +1787,34 @@ function extendedObjectString(o,indent,simple,plus,minus){
 	//console.log('indent',indent)
 	let s = ' '.repeat(indent) + (o.id ? o.id + ': ' : ' _ : ');
 
+	//console.log('plus',plus)
 	for (const k in o) {
+		//console.log(k,plus && plus.includes(k))
+
 		if (k == 'id') continue;
 		if (plus && plus.includes(k) 
 		|| minus && !minus.includes(k) 
 		|| simple && isSimple(o[k]) && !isComplexColor(o[k])) {
-			if (isDict(o[k])) s+=compactObjectString(o[k]);
-			else s += k + ':' + o[k] + ' ';
+			if (isDict(o[k])) {
+				//console.log('???????!!!!!!!!!!!!!!!!isDict',o[k]);
+				// s+=compactObjectString(o[k]);
+				s+= '('+extendedObjectString(o[k],indent,simple,plus,minus)+') ';
+			}	else s += k + ':' + o[k] + ' ';
 		}
 	}
 	return s;
 }
+function showFullObject(o,indent=0){
+	for(const k in o){
+		if (isSimple(o[k])) console.log(' '.repeat(indent),k,o[k]);
+		else {
+			console.log(' '.repeat(indent),k);
+			showFullObject(o[k],indent+2);
+		}
+	}
+}
+
+
 function showObject(o, indent = 0, simple = true, plus = null, minus = null) {
 	let s=extendedObjectString(o,indent,simple,plus,minus);
 	console.log(s);

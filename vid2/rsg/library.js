@@ -112,10 +112,12 @@ function card123(oCard,w,h) {
 	//look at card typeMappings
 	if (lookup(SPEC, ['typeMappings', 'card'])) {
 		for (const k in SPEC.typeMappings.card) {
+			//eg, SPEC.typeMappings.card:{rank:'short_name'}
+			//=>from property short_name will extract property val for rank
 			oCard[k] = oCard[SPEC.typeMappings.card[k]];
 		}
 	}
-	let el = cardFace(oCard,w,h);
+	let el = cardFace(oCard,w,h); // need rank,suit,key properties
 	return el;
 }
 

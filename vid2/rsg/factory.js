@@ -6,7 +6,7 @@ function cardFace({ rank, suit, key } = {},w,h) {
 		svgCode = testCards[cardKey];
 		if (!svgCode) svgCode = vidCache.getRandom('c52');
 	} else {
-		if (nundef(rank)) { rank = '2'; suit = 'B'; }
+		if (nundef(rank)) { rank = '2'; suit = 'B'; } //face down card!
 		if (rank == '10') rank = 'T';
 		if (rank == '1') rank = 'A';
 		if (nundef(suit)) suit = 'H';//joker:J1,J2, back:1B,2B

@@ -3,7 +3,7 @@
 var allGamesC = null;
 var playerConfigC = null;
 var iconCharsC = null;
-var c52C = null;
+//var c52C = null;
 var testCardsC = null
 
 //#endregion
@@ -11,7 +11,7 @@ var testCardsC = null
 var allGames = null;
 var playerConfig = null;
 var iconChars = null;
-var c52 = null;
+//var c52 = null;
 var testCards = null
 
 
@@ -52,8 +52,8 @@ async function loadAssets() {
 	testCards = vidCache.asDict('testCards');
 	iconCharsC = await vidCache.load('iconChars', route_iconChars);
 	iconChars = vidCache.asDict('iconChars');
-	c52C = await vidCache.load('c52', route_c52);
-	c52 = vidCache.asDict('c52');
+	// c52C = await vidCache.load('c52', route_c52);
+	// c52 = vidCache.asDict('c52');
 
 	allGamesC = await vidCache.load('allGames', route_allGames);
 	allGames = vidCache.asDict('allGames');

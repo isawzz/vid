@@ -1,5 +1,5 @@
 var USERNAME = 'felix';
-var GAME = 'ttt'; // s1 | catan | ttt | empty | game01 | aristocracy
+var GAME = 'catan'; // s1 | catan | ttt | empty | game01 | aristocracy
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 //var AI_TYPE = 'random';

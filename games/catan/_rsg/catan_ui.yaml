@@ -1,5 +1,5 @@
 SETTINGS:
-  gameAreaSize: [600, 500]
+  gameAreaSize: [600, 600]
   table:
     optin: [res, num, building, port]
   pieceSizeRelativeToLoc:
@@ -11,14 +11,6 @@ SETTINGS:
 STRUCTURES:
   M:
     location: a_d_game
-    bounds: [0, 0, 500, 400, px]
+    bounds: [0, 0, 600, 600, px]
     structure:
       type: detectBoard
-  DevCards:
-    location: a_d_game
-    bounds: [0, 400, 500, 100, px]
-    color: '#00FFFF0D'
-  Stats:
-    location: a_d_game
-    bounds: [500, 0, 100, 500, px]
-    color: '#00FF000D'

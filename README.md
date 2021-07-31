@@ -20,8 +20,8 @@ two examples have been implemented:
 
 Note: HAS ONLY BEEN TESTED ON **_ GOOGLE CHROME _**
 
-trouble-shooting:
+Troubleshooting: use F12 in Chrome to see error messages
 
-- use F12 in Chrome to see error messages
+\*1: using an older GSM / Ludos version!
 
-*1: using an older GSM / Ludos version! *2: only the setup phase really works
+\*2: only the setup phase really works

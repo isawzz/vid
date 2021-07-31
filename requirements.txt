@@ -63,7 +63,7 @@ dnspython==1.16.0
 docutils @ file:///C:/ci/docutils_1620828260973/work
 entrypoints==0.3
 et-xmlfile==1.1.0
-eventlet==0.25.1
+eventlet==0.31.0
 fastcache==1.1.0
 filelock @ file:///home/linux1/recipes/ci/filelock_1610993975404/work
 flake8==3.8.3

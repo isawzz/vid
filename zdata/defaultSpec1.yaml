@@ -1,25 +1,20 @@
-tableSize: [200,200]
+tableSize: [200, 200]
 
-layout: [
-  'z z z o',
-  'z z z o',
-  'z z z o',
-  'p p p a',
-  ]
+layout: ['z z z o', 'z z z o', 'z z z o', 'p p p a']
 
-layout_alias: 
+layout_alias:
   z: zone
   a: extra
   p: player
   o: others
 
-#legacy settings von vid0
+#legacy settings von frontend
 boardDetection: true
 deckDetection: true
 useColorHintForProperties: true
 useColorHintForObjects: true
 onlySimpleValues: true
-ignoreStructureTypesInPresentation : true
+ignoreStructureTypesInPresentation: true
 collapseEmptySmallLetterAreas: false
 shadeAreaBackgrounds: true
 showAreaNames: false
@@ -47,12 +42,12 @@ extendedOptout:
 
 useExtendedOptout: true
 addSymbolToEdges: false
-color: 
+color:
   theme: '#6B7A8F'
 gap: 4
 outerGap: false
 
-table: 
+table:
   createDefault: true #miss | true | false
   optin: null
   optout: [obj_type, id]
@@ -66,13 +61,6 @@ players:
   defaultArea: a_d_players
 
 pieceSizeRelativeToLoc:
-  corner: ['w',100]
+  corner: ['w', 100]
   field: ['w', 30]
-  edge: ['length',100]
-
-
-
-
-
-
-
+  edge: ['length', 100]

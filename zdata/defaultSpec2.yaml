@@ -1,13 +1,8 @@
-tableSize: [200,200]
+tableSize: [200, 200]
 
-layout: [
-  'z z z o',
-  'z z z o',
-  'z z z o',
-  'p p p a',
-  ]
+layout: ['z z z o', 'z z z o', 'z z z o', 'p p p a']
 
-layout_alias: 
+layout_alias:
   z: zone
   a: extra
   p: player
@@ -16,15 +11,15 @@ layout_alias:
 #global: # global settings for UI
 #default_loc: "none" # hide any game objects not explicitly placed => same as table.createDefault and player.createDefault
 #visualize: "default" #dont know exactly what that means
-useLocPropertyForPlacement: true # if a game object has a "loc" property, and if that loc is an element of a grid, then autmatically place the object 
+useLocPropertyForPlacement: true # if a game object has a "loc" property, and if that loc is an element of a grid, then autmatically place the object
 
-#legacy settings von vid0
+#legacy settings von frontend
 boardDetection: true
 deckDetection: true
 useColorHintForProperties: true
 useColorHintForObjects: true
 onlySimpleValues: true #false is NOT IMPLEMENTED!!!
-ignoreStructureTypesInPresentation : true
+ignoreStructureTypesInPresentation: true
 collapseEmptySmallLetterAreas: true
 shadeAreaBackgrounds: true
 showAreaNames: false
@@ -52,12 +47,12 @@ extendedOptout:
 
 useExtendedOptout: true
 addSymbolToEdges: false
-color: 
+color:
   theme: '#6B7A8F'
 gap: 4
 outerGap: false
 
-table: 
+table:
   createDefault: true #miss | true | false #NOT IMPLEMENTED!!!
   optin: null
   optout: [obj_type, id]
@@ -71,14 +66,7 @@ players:
   defaultArea: a_d_players
 
 pieceSizeRelativeToLoc:
-  default: 
-  corner: ['w',100]
+  default:
+  corner: ['w', 100]
   field: ['w', 30]
-  edge: ['length',100]
-
-
-
-
-
-
-
+  edge: ['length', 100]

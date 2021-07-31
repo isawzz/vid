@@ -69,7 +69,7 @@ filelock @ file:///home/linux1/recipes/ci/filelock_1610993975404/work
 flake8==3.8.3
 Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
 Flask-Bcrypt==0.7.1
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-Login==0.4.1
 Flask-Migrate==2.5.3
 Flask-RESTful==0.3.8

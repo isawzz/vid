@@ -1,4 +1,5 @@
 SETTINGS:
+  #deckDetection: false
   gameAreaSize: [600, 500]
   table:
     optin: [res, num, building, port]
@@ -7,6 +8,21 @@ SETTINGS:
   symbol:
     city: 'castle'
     settlement: 'house'
+  # dev:
+  #   run_to_buttons:
+  #     devdeck: "buy devcard"
+  #     hex: "place robber"
+  #     Corner: "settlement"
+  #     settlement: 'city upgrade'
+  #     Edge: "road"
+  #   cheat_buttons:
+  #     robber: "cheat robber"
+  #     devcard: "cheat devcard"
+  #     road: 'cheat road'
+  #     settlement: 'cheat settlement'
+  #     city: 'cheat city'
+  #   scenario_buttons:
+  #     devdeck: 'devcard devdeck'
 
 STRUCTURES:
   M:
@@ -22,3 +38,5 @@ STRUCTURES:
     location: a_d_game
     bounds: [500, 0, 100, 500, px]
     color: '#00FF000D'
+#CODE: catan_ui_orig
+

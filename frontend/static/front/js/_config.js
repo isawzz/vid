@@ -55,7 +55,7 @@ const SERVER = 'http://localhost:5000'
 
 //general settings: 
 var S_tooltips = 'OFF';
-var S_openTab = 'Seattle';
+var S_openTab = 'CodeTab'; // SpecTab | CodeTab | ObjectsTab | SettingsTab
 
 var S_useSimpleCode = false; // true | false
 var S_userSettings = true; // true | false

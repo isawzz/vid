@@ -102,7 +102,7 @@ function redrawScreen() {
 		});
 		console.log('userCode', userCode);
 	}
-	else	proceedRedraw();
+	else proceedRedraw();
 	// 	//console.log('geht in user behaviors in redrawScreen')
 	// 	restoreBehaviors
 	// 	loadScript(S.path.script, proceedRedraw);
@@ -136,7 +136,7 @@ function onClickPlain() {
 	S.settings.userSettings = false;
 	S.settings.boardDetection = S_boardDetection = false;
 	S.settings.deckDetection = S_deckDetection = false;
-	S.settings.openTab = 'London';
+	S.settings.openTab = 'ObjectsTab';
 	redrawScreen();
 }
 function onClickDetection() {
@@ -145,7 +145,7 @@ function onClickDetection() {
 	S.settings.userSettings = false;
 	S.settings.boardDetection = S_boardDetection = true;
 	S.settings.deckDetection = S_deckDetection = true;
-	S.settings.openTab = 'London';
+	S.settings.openTab = 'ObjectsTab';
 	redrawScreen();
 }
 function onClickUseSettings() {
@@ -154,7 +154,7 @@ function onClickUseSettings() {
 	S.settings.userSettings = true;
 	S.settings.boardDetection = S_boardDetection = true;
 	S.settings.deckDetection = S_deckDetection = true;
-	S.settings.openTab = 'Seattle';
+	S.settings.openTab = 'SettingsTab';
 	redrawScreen();
 }
 function onClickSpec() {
@@ -164,7 +164,7 @@ function onClickSpec() {
 	S.settings.userSettings = true;
 	S.settings.boardDetection = S_boardDetection = true;
 	S.settings.deckDetection = S_deckDetection = true;
-	S.settings.openTab = 'Paris';
+	S.settings.openTab = 'SpecTab';
 	redrawScreen();
 }
 function onClickSpecAndCode() {
@@ -173,7 +173,7 @@ function onClickSpecAndCode() {
 	S.settings.userSettings = true;
 	S.settings.boardDetection = S_boardDetection = true;
 	S.settings.deckDetection = S_deckDetection = true;
-	S.settings.openTab = 'Oslo';
+	S.settings.openTab = 'CodeTab';
 	redrawScreen();
 }
 async function onClickReloadSpec() {
@@ -192,7 +192,7 @@ function loadUserSpec(callbacks = []) {
 				S.user.specText = d2;
 				if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));
 			});
-		} catch{
+		} catch {
 			S.user.spec = null;
 			S.user.specText = 'null';
 			if (!isEmpty(callbacks)) callbacks[0](arrFromIndex(callbacks, 1));

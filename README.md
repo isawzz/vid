@@ -13,8 +13,6 @@ This project provides a simple javascript frontend for GSM\*/Ludos games:
 - in principle the UI can be generated completely automatically without spec or code (see 'plain' display mode)
 - however, incrementally, the UI can be refined by the user (=developer of the game) adding static spec or dynamic behaviors which refer to the spec.
 
-# example games:
-
 two examples have been implemented:
 
 - Tic Tac Toe: simple toy game in order to connect the different pieces

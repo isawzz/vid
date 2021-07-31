@@ -61,7 +61,7 @@ async function loadAssets() {
 	playerConfig = stubPlayerConfig(allGames); //stub to get player info
 }
 function setUserSpecAndCode() {
-	console.log('SETTING USER SPEC AND CODE!!!!!!!!!!!!!!!!!!!!!')
+	//console.log('SETTING USER SPEC AND CODE!!!!!!!!!!!!!!!!!!!!!')
 	S.user.spec = userSpec;
 	S.user.specText = userSpec.asText;
 	S.user.script = userCode.asText;

@@ -1,6 +1,6 @@
 //#region API
-var plidSentStatus=null;
-function stubSendInitNewGame(isStarter){
+var plidSentStatus = null;
+function stubSendInitNewGame(isStarter) {
 	let unameStarts = S.gameConfig.players[0].username;
 	plidSentStatus = getPlidForUsername(unameStarts);
 	let data = serverData;
@@ -41,7 +41,6 @@ function sendGetAllGamesFromYaml(callback) {
 	});
 }
 function sendGetAllGamesFromServer(callback) {
-	console.log('halloooooooo')
 	_sendRouteJS('/game/available', glist => {
 		let chain = [];
 		//console.log(glist);//glist is a list!!!
@@ -97,7 +96,7 @@ function sendStatus(username, callbacks) {
 }
 function sendStatusNewGame() { sendStatus(USERNAME, [gameStep]); }
 
-function preProcessData(data){
+function preProcessData(data) {
 	//console.log('preprocess:',data.players);
 	for (const plid in data.players) {
 		let pl = data.players[plid];
@@ -195,7 +194,7 @@ function _sendRouteBase(returnJS, route, callback) {
 				//console.log('json',js)
 				if (js.error) { console.log(js.error.msg); }
 				//if (callback) callback(returnJS ? js : response);
-			} catch{
+			} catch {
 				//alert('NOT JSON: '+response);
 				js = { response: response };
 				//if (callback) callback(returnJS ? { response: response } : response);
@@ -211,7 +210,6 @@ function _sendRouteBase(returnJS, route, callback) {
 //#region route_ API new!
 //#region routes
 async function route_allGames() {
-	console.log('hallooooooooooooooo')
 	let gameNames = await route_server_js('/game/available');
 	console.log('gamenames returned:', gameNames)
 	let res = {};
@@ -222,7 +220,7 @@ async function route_allGames() {
 		} else {
 			let url = '/games/' + name + '/info.yaml';
 			res[name] = await route_path_yaml_dict(url);// last 2 params: reload, useLocal
-			console.log('game info',name,res[name]);
+			console.log('game info', name, res[name]);
 		}
 	}
 	return res;
@@ -251,7 +249,7 @@ async function route_userSpec(game, fname) {
 		let spec = jsyaml.load(text);
 		spec.asText = text;
 		return spec;
-	} catch{
+	} catch {
 		return { asText: '' }; //empty spec!
 	}
 }
@@ -261,7 +259,7 @@ async function route_test_userSpec(url) {
 		let spec = jsyaml.load(text);
 		spec.asText = text;
 		return spec;
-	} catch{
+	} catch {
 		return { asText: '' }; //empty spec!
 	}
 }
@@ -272,7 +270,7 @@ async function route_userCode(game, fname) {
 		let text = await route_server_text(url);
 
 		return { asText: text };
-	} catch{ return {}; }
+	} catch { return {}; }
 
 }
 async function route_initGame(game, gc, username, seed = SEED) {
@@ -352,12 +350,12 @@ async function postData(url = '', data = {}) {
 }
 async function route_server(url) { await fetch_wrapper(SERVER + url); }
 
-var route_counter=0;
-async function fetch_wrapper(url){
-	route_counter+=1;
-	if (SHOW_SERVER_ROUTE) console.log(route_counter+': route:'+url);
+var route_counter = 0;
+async function fetch_wrapper(url) {
+	route_counter += 1;
+	if (SHOW_SERVER_ROUTE) console.log(route_counter + ': route:' + url);
 	let res = await fetch(url);
-	if (SHOW_SERVER_RETURN) console.log(route_counter+': return:',res);
+	if (SHOW_SERVER_RETURN) console.log(route_counter + ': return:', res);
 	return res;
 }
 

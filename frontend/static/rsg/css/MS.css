@@ -1,37 +1,41 @@
-.high{
+.high {
 	fill: #ccff00;
 	stroke: #ccff00;
 	background-color: #ccff00;
 	color: black;
 }
-.highFrame{
+.highFrame {
 	/* fill: #ccff0080; */
+	cursor: pointer;
 	stroke: #ccff00;
 	stroke-width: 2px;
 	border: 2px solid #ccff00;
-	color:  #ccff00;
+	color: #ccff00;
 	color: black;
 }
-.fieldHighFrame{
-	fill: #ffffff4d;
+.fieldHighFrame {
+	cursor: pointer;
+	/* fill: red; */
+	/* fill: #ffffff4d; */
 	stroke: #ffffff4d;
 	color: black;
 }
-.lineHighFrame{
+.lineHighFrame {
+	cursor: pointer;
 	fill: #ccff0099;
 	stroke: #ccff0099;
 	color: black;
 }
 
 /* #region table */
-.tttable{
-	padding:2px;
-	border-radius:4px;
+.tttable {
+	padding: 2px;
+	border-radius: 4px;
 	text-align: left;
 	border-collapse: separate;
 	border-spacing: 4px 2px;
 }
-.hallo{
+.hallo {
 	display: inline-block;
 	color: var(--fgButton);
 	margin: 2px;
@@ -46,32 +50,31 @@
 	margin-top: 6px;
 	background-color: var(--bgButton);
 }
-.tttitle{
-	color:silver;
+.tttitle {
+	color: silver;
 }
-.tttable th{
+.tttable th {
 	padding-top: var(--tableRowPadding);
-	vertical-align:top;
-	color:silver;
+	vertical-align: top;
+	color: silver;
 }
 .tttable td {
 	padding-top: var(--tableRowPadding);
-	vertical-align:top;
-	color:gold;
+	vertical-align: top;
+	color: gold;
 }
-.tttable td .obj{
-	padding:4px 12px; 
-	margin-top:var(--upRowPadding);
+.tttable td .obj {
+	padding: 4px 12px;
+	margin-top: var(--upRowPadding);
 }
-.up10{
-	margin-top:var(--upRowPadding);
+.up10 {
+	margin-top: var(--upRowPadding);
 }
-.up5{
-	margin-top:calc(var(--upRowPadding)/2);
-
+.up5 {
+	margin-top: calc(var(--upRowPadding) / 2);
 }
-.up2{
-	margin-top:calc(var(--upRowPadding)/4);
+.up2 {
+	margin-top: calc(var(--upRowPadding) / 4);
 }
 
 /* #endregion */

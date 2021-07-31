@@ -1,5 +1,5 @@
 var USERNAME = 'felix';
-var GAME = 'catan'; // s1 | catan | ttt | empty | game01 | aristocracy
+var GAME = 'ttt'; // s1 | catan | ttt | empty | game01 | aristocracy
 var PLAYMODE = 'hotseat'; // multiplayer | hotseat | solo | passplay
 var SEED = 1;
 //var AI_TYPE = 'random';
@@ -81,20 +81,20 @@ var view = null;
 var isPlaying = false; //initially
 var isReallyMultiplayer = false;
 
-function gcsAuto(){
+function gcsAuto() {
 	//automatically set a player configuration when starting in game view
 	gcs = {};
-	for (const gName in allGames){
+	for (const gName in allGames) {
 		let info = allGames[gName]
 		//console.log(gName, info);
 		let nPlayers = info.num_players[0]; // min player number, info.num_players.length - 1]; // max player number
 		let pls = [];
-		for(let i=0;i<nPlayers;i++){
-			let pl = {id:info.player_names[i],playerType:'me',agentType:null,username:USERNAME+(i>0?i:'')};
+		for (let i = 0; i < nPlayers; i++) {
+			let pl = { id: info.player_names[i], playerType: 'me', agentType: null, username: USERNAME + (i > 0 ? i : '') };
 			//console.log('player:', pl)
 			pls.push(pl);
 		}
-		gcs[gName]={numPlayers:nPlayers,players:pls};
+		gcs[gName] = { numPlayers: nPlayers, players: pls };
 
 	}
 	//console.log('-------------------',gcs);

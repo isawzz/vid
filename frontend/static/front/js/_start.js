@@ -3,37 +3,15 @@ var maxZIndex = 110;
 var iconChars = null;
 var firstDomLoad = null;
 
-//#region testing
-//#endregion
-
 async function _startSession() {
 
-	timit = new TimeIt(getFunctionCallerName(),TIMIT_SHOW);
+	timit = new TimeIt(getFunctionCallerName(), TIMIT_SHOW);
 
 	await loadAssets();
 
-	//#region testing
-	// timit.showTime('vor');
-	// _initServer();
-	// testPicto(10);
-	// //testPicto_dep(10);
-	// timit.showTime('testPicto');
-	// return;
-	// //_test01_load_game_info();
-	// // _initServer([loadIconChars,()=>{
-	// // 	//testPicto();
-	// // 	//testCommonKeys();
-	// // 	//testFaKeysNotInGa();
-
-	// // }]);
-	// //atestLoadIcons();
-	//#endregion
-
-	//timit.showTime('vor loadAllGames_dep+loadIcons')
-	//await loadAllGames_dep();
 	_initServer([ensureAllGames, () => {
 
-		console.log('allGames',allGames)
+		console.log('allGames', allGames)
 		//START HERE!!!! have iconChars,allGames,gcs
 		timit.showTime('nach loadAllGames_dep+loadIcons')
 		gcsAuto();

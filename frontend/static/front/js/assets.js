@@ -59,12 +59,6 @@ async function loadAssets() {
 	allGames = vidCache.asDict('allGames');
 	//console.log('allGames', GAME, allGames[GAME]);
 	playerConfig = stubPlayerConfig(allGames); //stub to get player info
-	//console.log('playerConfig', playerConfig[GAME]);
-	// console.log('testCards', testCards['green2']);
-	// console.log('c52', c52['card_2C']);
-	// console.log('icons', iconChars.crow);
-	// console.log('allGames', allGames.catan);
-	// console.log(vidCache);
 }
 function setUserSpecAndCode() {
 	console.log('SETTING USER SPEC AND CODE!!!!!!!!!!!!!!!!!!!!!')
@@ -72,10 +66,6 @@ function setUserSpecAndCode() {
 	S.user.specText = userSpec.asText;
 	S.user.script = userCode.asText;
 }
-// async function loadUserSpecAndCode() {
-// 	await loadSpecAndCode();
-// 	await setUserSpecAndCode();
-// }
 
 async function loadSpecAndCode() {
 	let initialPath = GAME + (USE_MAX_PLAYER_NUM ? '_max' : '');
@@ -112,7 +102,7 @@ async function loadSpecAndCode() {
 	userSpec = vidCache.asDict('userSpec');
 	userCode = vidCache.asDict('userCode');
 	// console.log('onCodeLoaded',onCodeLoaded)
-	loadCode0(userCode.asText,'setUserSpecAndCode();',()=>{
+	loadCode0(userCode.asText, 'setUserSpecAndCode();', () => {
 		//console.log('setting code now!')
 		setUserSpecAndCode();
 		// console.log(onCodeLoaded)

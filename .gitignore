@@ -6,4 +6,7 @@ venvHALLO/
 pylibs/
 zdata/
 _codeRemoved
+*__pycache__*
 __pycache__/
+saves/
+*.pyc

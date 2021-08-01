@@ -4,14 +4,14 @@ installation:
 
 - > git clone https://github.com/isawzz/vid
 
-- install gsm and humpack from code directories > pip install -e . 
+- install first humpack then gsm from code directories > pip install -e . 
 
 - install other required packages (eg., pip install -r requirements.txt)
 - > pip install -r requirements.txt --user
 
-- > py runhost.py
+- > python runhost.py
 
-(hab etwas aufgegeben weil ich mich nicht mit den venv auskenne, konnte nicht rausfinden wie ich das gsm/humpack in einem venv installieren kann, aber im pylibs sind die alten gsm/humpack sodass wenn du es installieren kannst es laufen muesste)
+(hab etwas aufgegeben weil ich mich nicht mit den venv auskenne, konnte nicht rausfinden wie ich das gsm/humpack in einem venv installieren kann, aber im pylibs sind die alten gsm/humpack sodass wenn du es installieren kannst es laufen muesste. paar packages complaint er vielleicht und man muss sie haendisch installen)
 
 This project provides a simple javascript frontend for GSM\*/Ludos games:
 

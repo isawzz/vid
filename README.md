@@ -1,5 +1,11 @@
 # RSG: frontend implementation for GSM / Ludos
 
+installation:
+
+- git clone https://github.com/isawzz/vid
+- install gsm and humpack from directories
+- install other required packages (eg., as in )
+
 This project provides a simple javascript frontend for GSM\*/Ludos games:
 
 1. the game backend is implemented in python.

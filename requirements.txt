@@ -9,11 +9,7 @@ Flask-SocketIO==5.1.0
 Flask-SQLAlchemy==2.5.1
 greenlet==1.1.0
 itsdangerous==2.0.1
-jedi==0.18.0
-Jinja2==3.0.1
 MarkupSafe==2.0.1
-matplotlib-inline==0.1.2
-numpy==1.21.1
 parso==0.8.2
 pickleshare==0.7.5
 prompt-toolkit==3.0.19
@@ -25,5 +21,5 @@ SQLAlchemy==1.4.22
 traitlets==5.0.5
 wcwidth==0.2.5
 Werkzeug==2.0.1
-numpy==1.21.1
-scipy==1.6.2
+numpy
+scipy

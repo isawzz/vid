@@ -1,0 +1,6 @@
+venv/
+.git
+.vscode
+pylibs/
+zdata/
+_codeRemoved

@@ -8,6 +8,9 @@ Flask-Cors==3.0.10
 Flask-SocketIO==5.1.0
 Flask-SQLAlchemy==2.5.1
 greenlet==1.1.0
+gunicorn==20.1.0
+ipython==7.25.0
+ipython-genutils==0.2.0
 itsdangerous==2.0.1
 jedi==0.18.0
 Jinja2==3.0.1
@@ -25,5 +28,3 @@ SQLAlchemy==1.4.22
 traitlets==5.0.5
 wcwidth==0.2.5
 Werkzeug==2.0.1
-numpy==1.21.1
-scipy==1.6.2

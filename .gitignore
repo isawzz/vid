@@ -1,6 +1,8 @@
 venv/
+venvHALLO/
 .git
 .vscode
 pylibs/
 zdata/
 _codeRemoved
+__pycache__/

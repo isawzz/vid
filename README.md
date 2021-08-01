@@ -4,9 +4,10 @@ installation:
 
 - > git clone https://github.com/isawzz/vid
 
-- install gsm and humpack from directories
+- install gsm and humpack from code directories > pip install -e . 
 
 - install other required packages (eg., pip install -r requirements.txt)
+- > pip install -r requirements.txt --user
 
 - > py runhost.py
 

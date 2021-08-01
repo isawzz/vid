@@ -11,7 +11,7 @@ installation:
 
 - > python runhost.py
 
-(hab etwas aufgegeben weil ich mich nicht mit den venv auskenne, konnte nicht rausfinden wie ich das gsm/humpack in einem venv installieren kann, aber im pylibs sind die alten gsm/humpack sodass wenn du es installieren kannst es laufen muesste. paar packages complaint er vielleicht und man muss sie haendisch installen)
+(hab es nicht geschafft mit venv, und es kann leicht sein dass requirements.txt nicht alles enthaelt, aber dann complaint er eh. manchmal geht auch statt 'pip install' 'python -m pip install...', da kennst du dich eh sicher gut aus. ich hatte hauptsaechlich probleme mit dependencies, version comflicts und env probleme bis es endlich alles in vs code (auf dem LG gram) jetzt geht! laeuft aber gut!)
 
 This project provides a simple javascript frontend for GSM\*/Ludos games:
 

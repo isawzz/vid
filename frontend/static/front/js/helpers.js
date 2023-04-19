@@ -1565,7 +1565,6 @@ function getCirclePoints(rad, n, disp = 0) {
 	}
 	return pts;
 }
-
 function polyPointsFrom(w, h, x, y, pointArr) {
 
 	x -= w / 2;
